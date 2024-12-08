@@ -31,6 +31,7 @@ const PropertyDetails = () => {
       "https://source.unsplash.com/random/1200x800?kitchen,modern&2",
       "https://source.unsplash.com/random/1200x800?bedroom,luxury&3",
     ],
+    floorplan: "https://source.unsplash.com/random/1200x800?floorplan,architecture",
   };
 
   return (
@@ -120,6 +121,21 @@ const PropertyDetails = () => {
                       </div>
                     ))}
                   </div>
+                </div>
+
+                {/* Floorplan Section */}
+                <div className="mt-12">
+                  <h2 className="text-xl font-semibold mb-6">Floorplan</h2>
+                  <div className="rounded-lg overflow-hidden border border-muted">
+                    <img
+                      src={property.floorplan}
+                      alt={`${property.title} Floorplan`}
+                      className="w-full h-auto"
+                    />
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    * Floorplan measurements are approximate and subject to change.
+                  </p>
                 </div>
               </div>
             </div>
