@@ -1,38 +1,27 @@
 import { Navigation } from "@/components/Navigation";
 import { Button } from "@/components/ui/button";
-import { Search, MapPin, Building2, Home } from "lucide-react";
+import { Search } from "lucide-react";
 import Footer from "@/components/Footer";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+import { BuildersSection } from "@/components/home/BuildersSection";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Searching for:", searchQuery);
+    navigate(`/properties?search=${encodeURIComponent(searchQuery)}`);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Navigation />
       
-      {/* Breadcrumbs */}
-      <div className="max-w-7xl mx-auto px-4 pt-20">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink href="/">Home</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>New Homes</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
-      
       {/* Hero Section */}
-      <section className="pt-8 pb-16 px-4 sm:px-6 lg:px-8">
+      <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary animate-fade-up">
             Find Your Dream Home
@@ -43,62 +32,29 @@ const Index = () => {
           
           {/* Search Bar */}
           <div className="mt-8 max-w-3xl mx-auto animate-fade-up" style={{ animationDelay: "0.2s" }}>
-            <div className="glass-card p-4 flex flex-col sm:flex-row gap-4">
+            <form onSubmit={handleSearch} className="glass-card p-4 flex flex-col sm:flex-row gap-4">
               <div className="flex-1 flex items-center gap-2 bg-white rounded-lg px-4 py-2 border">
                 <Search className="h-5 w-5 text-muted-foreground" />
                 <input
                   type="text"
-                  placeholder="Search by location..."
+                  placeholder="Search by location, development name..."
                   className="flex-1 outline-none bg-transparent"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <Button size="lg" className="shrink-0">
+              <Button type="submit" size="lg" className="shrink-0">
                 Search Properties
               </Button>
-            </div>
+            </form>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
+      {/* Trending Properties Section */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-secondary">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: MapPin,
-                title: "Prime Locations",
-                description: "Find properties in the most sought-after neighborhoods",
-              },
-              {
-                icon: Building2,
-                title: "New Developments",
-                description: "Explore the latest construction projects and pre-sales",
-              },
-              {
-                icon: Home,
-                title: "Luxury Living",
-                description: "Discover homes with premium finishes and amenities",
-              },
-            ].map((feature, index) => (
-              <div
-                key={feature.title}
-                className="glass-card p-6 text-center animate-fade-up"
-                style={{ animationDelay: `${0.1 * (index + 1)}s` }}
-              >
-                <feature.icon className="h-8 w-8 mx-auto text-accent" />
-                <h3 className="mt-4 text-xl font-semibold">{feature.title}</h3>
-                <p className="mt-2 text-muted-foreground">{feature.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Properties */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-bold text-center mb-12">Featured Properties</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">Trending Properties</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map((_, index) => (
               <div
@@ -131,6 +87,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Builders Section */}
+      <BuildersSection />
 
       {/* Footer */}
       <Footer />
