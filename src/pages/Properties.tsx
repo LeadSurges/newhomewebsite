@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Navigation } from "@/components/Navigation";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -9,8 +8,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, Heart, MapPin, Bed, Bath } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const Properties = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -34,28 +40,35 @@ const Properties = () => {
   const properties = [
     {
       id: 1,
-      title: "Modern Downtown Condo",
-      price: "$750,000",
-      location: searchState.location || "Downtown Area",
-      bedrooms: 2,
+      title: "Mirabella Luxury Condominiums - West Tower",
+      price: "From $600,000",
+      location: "1926 Lake Shore Boulevard West, Toronto, ON",
+      bedrooms: "1.5 - 2.5",
       bathrooms: 2,
-      sqft: "1,200",
+      sqft: "550 - 978",
+      developer: "Mirabella Development Corporation",
+      status: "MOVE IN NOW",
+      featured: true,
+      virtualTour: true,
       image: "https://source.unsplash.com/random/800x600?modern,condo&1",
     },
     {
       id: 2,
-      title: "Luxury Waterfront Home",
-      price: "$1,250,000",
+      title: "Luxury Waterfront Residences",
+      price: "From $750,000",
       location: searchState.location || "Waterfront District",
-      bedrooms: 3,
+      bedrooms: "2 - 3",
       bathrooms: 2.5,
-      sqft: "2,500",
+      sqft: "800 - 1,200",
+      developer: "Premium Developments",
+      status: "MOVE IN 2026",
+      featured: false,
+      virtualTour: true,
       image: "https://source.unsplash.com/random/800x600?luxury,home&2",
     },
   ];
 
   const handleSearch = () => {
-    // Update URL with search parameters
     const newSearchParams = new URLSearchParams();
     if (searchState.location) newSearchParams.set("city", searchState.location);
     if (searchState.priceRange) newSearchParams.set("price", searchState.priceRange);
@@ -67,110 +80,176 @@ const Properties = () => {
     <div className="min-h-screen bg-white">
       <Navigation />
       
-      {/* Search Section */}
-      <section className="pt-24 pb-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="glass-card p-6">
-            <div className="grid md:grid-cols-4 gap-4">
-              <Input
-                placeholder="Location"
-                value={searchState.location}
-                onChange={(e) =>
-                  setSearchState({ ...searchState, location: e.target.value })
-                }
-                className="w-full"
-              />
-              <Select
-                value={searchState.priceRange}
-                onValueChange={(value) =>
-                  setSearchState({ ...searchState, priceRange: value })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Price Range" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0-500000">Under $500,000</SelectItem>
-                  <SelectItem value="500000-1000000">$500,000 - $1M</SelectItem>
-                  <SelectItem value="1000000-plus">$1M+</SelectItem>
-                </SelectContent>
-              </Select>
-              <Select
-                value={searchState.propertyType}
-                onValueChange={(value) =>
-                  setSearchState({ ...searchState, propertyType: value })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Property Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="condo">Condo</SelectItem>
-                  <SelectItem value="house">House</SelectItem>
-                  <SelectItem value="townhouse">Townhouse</SelectItem>
-                </SelectContent>
-              </Select>
-              <Button className="w-full" onClick={handleSearch}>
-                <Search className="h-4 w-4 mr-2" />
-                Search
-              </Button>
-            </div>
+      {/* Breadcrumbs */}
+      <div className="max-w-7xl mx-auto px-4 pt-20">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/ontario">Ontario</BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{searchState.location || "All Locations"}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
+      
+      {/* Filter Bar */}
+      <section className="sticky top-16 z-10 bg-white border-b py-4">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex gap-2 overflow-x-auto pb-2">
+            <Select
+              value={searchState.propertyType}
+              onValueChange={(value) =>
+                setSearchState({ ...searchState, propertyType: value })
+              }
+            >
+              <SelectTrigger className="w-[160px]">
+                <SelectValue placeholder="Home type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="condo">Condo</SelectItem>
+                <SelectItem value="house">House</SelectItem>
+                <SelectItem value="townhouse">Townhouse</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select
+              value={searchState.priceRange}
+              onValueChange={(value) =>
+                setSearchState({ ...searchState, priceRange: value })
+              }
+            >
+              <SelectTrigger className="w-[160px]">
+                <SelectValue placeholder="Any price" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0-500000">Under $500,000</SelectItem>
+                <SelectItem value="500000-1000000">$500,000 - $1M</SelectItem>
+                <SelectItem value="1000000-plus">$1M+</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select
+              value={searchState.bedrooms}
+              onValueChange={(value) =>
+                setSearchState({ ...searchState, bedrooms: value })
+              }
+            >
+              <SelectTrigger className="w-[160px]">
+                <SelectValue placeholder="0+ beds" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">1+ bed</SelectItem>
+                <SelectItem value="2">2+ beds</SelectItem>
+                <SelectItem value="3">3+ beds</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Button variant="outline" className="whitespace-nowrap">
+              <SlidersHorizontal className="h-4 w-4 mr-2" />
+              More filters
+            </Button>
+
+            <Button variant="outline" className="ml-auto whitespace-nowrap">
+              Save search
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Filter Tags */}
-      <div className="px-4 sm:px-6 lg:px-8 mb-8">
-        <div className="max-w-7xl mx-auto flex gap-4 flex-wrap">
-          {searchState.location && (
-            <div className="filter-chip">{searchState.location}</div>
-          )}
-          <div className="filter-chip">2+ Beds</div>
-          <div className="filter-chip">2+ Baths</div>
-          <div className="filter-chip">New Construction</div>
-          <Button variant="outline" size="sm">
-            <SlidersHorizontal className="h-4 w-4 mr-2" />
-            More Filters
-          </Button>
-        </div>
+      {/* Results Count and Sort */}
+      <div className="max-w-7xl mx-auto px-4 py-6 flex justify-between items-center">
+        <h1 className="text-xl font-semibold">
+          {properties.length} Communities
+        </h1>
+        <Select defaultValue="featured">
+          <SelectTrigger className="w-[160px]">
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="featured">Featured</SelectItem>
+            <SelectItem value="price-asc">Price: Low to High</SelectItem>
+            <SelectItem value="price-desc">Price: High to Low</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Results Grid */}
-      <section className="px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {properties.map((property) => (
-              <Link
-                to={`/properties/${property.id}`}
-                key={property.id}
-                className="property-card rounded-lg"
-              >
-                <div className="relative">
-                  <img
-                    src={property.image}
-                    alt={property.title}
-                    className="property-image rounded-t-lg"
-                  />
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-accent text-white px-4 py-1 rounded-full text-sm font-medium">
-                      New
+      <section className="max-w-7xl mx-auto px-4 pb-16">
+        <div className="grid md:grid-cols-2 gap-6">
+          {properties.map((property) => (
+            <Link
+              to={`/properties/${property.id}`}
+              key={property.id}
+              className="property-card rounded-lg group"
+            >
+              <div className="relative">
+                <img
+                  src={property.image}
+                  alt={property.title}
+                  className="property-image rounded-t-lg"
+                />
+                <div className="absolute top-4 left-4 flex gap-2">
+                  {property.virtualTour && (
+                    <span className="bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-medium">
+                      VIRTUAL TOUR
+                    </span>
+                  )}
+                  {property.status && (
+                    <span className="bg-black text-white px-3 py-1 rounded-full text-sm font-medium">
+                      {property.status}
+                    </span>
+                  )}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-4 right-4 bg-white/80 hover:bg-white"
+                >
+                  <Heart className="h-5 w-5" />
+                </Button>
+                {property.featured && (
+                  <div className="absolute bottom-4 left-4">
+                    <span className="bg-primary text-white px-3 py-1 rounded-full text-sm font-medium">
+                      FEATURED
                     </span>
                   </div>
+                )}
+              </div>
+              <div className="p-6">
+                <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-600">
+                  {property.title}
+                </h3>
+                <p className="text-lg font-bold text-primary mb-4">
+                  {property.price}
+                </p>
+                <div className="flex items-center text-muted-foreground mb-4">
+                  <MapPin className="h-4 w-4 mr-2" />
+                  {property.location}
                 </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{property.title}</h3>
-                  <p className="text-2xl font-bold text-accent mb-4">
-                    {property.price}
-                  </p>
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>{property.bedrooms} beds</span>
-                    <span>{property.bathrooms} baths</span>
-                    <span>{property.sqft} sqft</span>
-                  </div>
+                <p className="text-sm text-muted-foreground mb-4">
+                  {property.developer}
+                </p>
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span className="flex items-center">
+                    <Bed className="h-4 w-4 mr-1" />
+                    {property.bedrooms} beds
+                  </span>
+                  <span className="flex items-center">
+                    <Bath className="h-4 w-4 mr-1" />
+                    {property.bathrooms} baths
+                  </span>
+                  <span>{property.sqft} SqFt</span>
                 </div>
-              </Link>
-            ))}
-          </div>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
     </div>
