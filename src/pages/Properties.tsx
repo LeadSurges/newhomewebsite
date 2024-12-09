@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navigation } from "@/components/Navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -10,15 +10,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, SlidersHorizontal } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const Properties = () => {
-  const [searchParams, setSearchParams] = useState({
-    location: "",
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchState, setSearchState] = useState({
+    location: searchParams.get("city") || "",
     priceRange: "",
     propertyType: "",
     bedrooms: "",
   });
+
+  // Update search input when URL parameter changes
+  useEffect(() => {
+    console.log("URL city parameter changed:", searchParams.get("city"));
+    setSearchState(prev => ({
+      ...prev,
+      location: searchParams.get("city") || ""
+    }));
+  }, [searchParams]);
 
   // Temporary mock data for demonstration
   const properties = [
@@ -26,7 +36,7 @@ const Properties = () => {
       id: 1,
       title: "Modern Downtown Condo",
       price: "$750,000",
-      location: "Downtown Area",
+      location: searchState.location || "Downtown Area",
       bedrooms: 2,
       bathrooms: 2,
       sqft: "1,200",
@@ -36,14 +46,22 @@ const Properties = () => {
       id: 2,
       title: "Luxury Waterfront Home",
       price: "$1,250,000",
-      location: "Waterfront District",
+      location: searchState.location || "Waterfront District",
       bedrooms: 3,
       bathrooms: 2.5,
       sqft: "2,500",
       image: "https://source.unsplash.com/random/800x600?luxury,home&2",
     },
-    // Add more mock properties as needed
   ];
+
+  const handleSearch = () => {
+    // Update URL with search parameters
+    const newSearchParams = new URLSearchParams();
+    if (searchState.location) newSearchParams.set("city", searchState.location);
+    if (searchState.priceRange) newSearchParams.set("price", searchState.priceRange);
+    if (searchState.propertyType) newSearchParams.set("type", searchState.propertyType);
+    setSearchParams(newSearchParams);
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -56,16 +74,16 @@ const Properties = () => {
             <div className="grid md:grid-cols-4 gap-4">
               <Input
                 placeholder="Location"
-                value={searchParams.location}
+                value={searchState.location}
                 onChange={(e) =>
-                  setSearchParams({ ...searchParams, location: e.target.value })
+                  setSearchState({ ...searchState, location: e.target.value })
                 }
                 className="w-full"
               />
               <Select
-                value={searchParams.priceRange}
+                value={searchState.priceRange}
                 onValueChange={(value) =>
-                  setSearchParams({ ...searchParams, priceRange: value })
+                  setSearchState({ ...searchState, priceRange: value })
                 }
               >
                 <SelectTrigger>
@@ -78,9 +96,9 @@ const Properties = () => {
                 </SelectContent>
               </Select>
               <Select
-                value={searchParams.propertyType}
+                value={searchState.propertyType}
                 onValueChange={(value) =>
-                  setSearchParams({ ...searchParams, propertyType: value })
+                  setSearchState({ ...searchState, propertyType: value })
                 }
               >
                 <SelectTrigger>
@@ -92,7 +110,7 @@ const Properties = () => {
                   <SelectItem value="townhouse">Townhouse</SelectItem>
                 </SelectContent>
               </Select>
-              <Button className="w-full">
+              <Button className="w-full" onClick={handleSearch}>
                 <Search className="h-4 w-4 mr-2" />
                 Search
               </Button>
@@ -104,6 +122,9 @@ const Properties = () => {
       {/* Filter Tags */}
       <div className="px-4 sm:px-6 lg:px-8 mb-8">
         <div className="max-w-7xl mx-auto flex gap-4 flex-wrap">
+          {searchState.location && (
+            <div className="filter-chip">{searchState.location}</div>
+          )}
           <div className="filter-chip">2+ Beds</div>
           <div className="filter-chip">2+ Baths</div>
           <div className="filter-chip">New Construction</div>
