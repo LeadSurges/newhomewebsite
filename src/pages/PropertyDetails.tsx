@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useParams } from "react-router-dom";
 import { 
   Bed, Bath, Maximize, MapPin, Calendar, Building2, 
-  Home, DollarSign, Car, Box, Coffee, Dumbbell, Pool, Wifi
+  Home, DollarSign, Car, Box, Coffee, Dumbbell, Waves, Wifi
 } from "lucide-react";
 import {
   Accordion,
