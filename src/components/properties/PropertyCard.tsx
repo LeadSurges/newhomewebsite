@@ -97,7 +97,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   return (
     <Link
       to={`/properties/${property.id}`}
-      className="property-card rounded-lg group"
+      className="property-card rounded-lg group relative"
     >
       <div className="relative">
         <img
@@ -125,7 +125,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             </Button>
           </>
         )}
-        <div className="absolute top-8 left-4 flex gap-2">
+        <div className="absolute top-12 left-4 flex gap-2">
           {property.featured && (
             <span className="bg-[#9b87f5] text-white px-3 py-1 rounded-full text-sm font-medium">
               FEATURED
