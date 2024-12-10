@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Search, User, UserPlus } from "lucide-react";
+import { Search, User, UserPlus, Heart } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
@@ -81,6 +81,14 @@ export const DesktopNav = () => {
           <Search className="h-5 w-5" />
         </Button>
       </Link>
+
+      {user && (
+        <Link to="/favorites">
+          <Button variant="ghost" size="icon">
+            <Heart className="h-5 w-5" />
+          </Button>
+        </Link>
+      )}
 
       {user ? (
         <>

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { UserPlus } from "lucide-react";
+import { UserPlus, Heart } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Separator } from "@/components/ui/separator";
 
@@ -63,6 +63,13 @@ export const MobileNav = ({ isOpen }: { isOpen: boolean }) => {
 
           {user ? (
             <>
+              <Link
+                to="/favorites"
+                className="flex items-center px-3 py-2 rounded-md text-base font-medium nav-link"
+              >
+                <Heart className="h-5 w-5 mr-2" />
+                My Favorites
+              </Link>
               <Link
                 to="/admin/properties"
                 className="block px-3 py-2 rounded-md text-base font-medium nav-link"

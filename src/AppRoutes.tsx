@@ -1,27 +1,30 @@
-import { Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
-import Properties from "./pages/Properties";
-import PropertyDetails from "./pages/PropertyDetails";
-import BuilderProfile from "./pages/BuilderProfile";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import AdminProperties from "./pages/AdminProperties";
-import AdminBuilders from "./pages/AdminBuilders";
-import UploadProperty from "./pages/UploadProperty";
-import Contact from "./pages/Contact";
+import { Route, Routes } from "react-router-dom";
+import Index from "@/pages/Index";
+import Properties from "@/pages/Properties";
+import PropertyDetails from "@/pages/PropertyDetails";
+import SignIn from "@/pages/SignIn";
+import SignUp from "@/pages/SignUp";
+import Contact from "@/pages/Contact";
+import Favorites from "@/pages/Favorites";
+import AdminProperties from "@/pages/admin/AdminProperties";
+import AdminBuilders from "@/pages/admin/AdminBuilders";
+import BuilderProfile from "@/pages/BuilderProfile";
+import UploadProperty from "@/pages/UploadProperty";
 
-export const AppRoutes = () => (
-  <Routes>
-    <Route path="/" element={<Index />} />
-    <Route path="/properties" element={<Properties />} />
-    <Route path="/properties/:id" element={<PropertyDetails />} />
-    <Route path="/properties/upload" element={<UploadProperty />} />
-    <Route path="/builders/:id" element={<BuilderProfile />} />
-    <Route path="/signin" element={<SignIn />} />
-    <Route path="/signup" element={<SignUp />} />
-    <Route path="/contact" element={<Contact />} />
-    <Route path="/admin/properties" element={<AdminProperties />} />
-    <Route path="/admin/builders" element={<AdminBuilders />} />
-    <Route path="/admin/properties/new" element={<UploadProperty />} />
-  </Routes>
-);
+export const AppRoutes = () => {
+  return (
+    <Routes>
+      <Route path="/" element={<Index />} />
+      <Route path="/properties" element={<Properties />} />
+      <Route path="/properties/:id" element={<PropertyDetails />} />
+      <Route path="/signin" element={<SignIn />} />
+      <Route path="/signup" element={<SignUp />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/favorites" element={<Favorites />} />
+      <Route path="/admin/properties" element={<AdminProperties />} />
+      <Route path="/admin/builders" element={<AdminBuilders />} />
+      <Route path="/builders/:id" element={<BuilderProfile />} />
+      <Route path="/upload-property" element={<UploadProperty />} />
+    </Routes>
+  );
+};
