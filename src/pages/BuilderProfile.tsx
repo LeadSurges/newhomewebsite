@@ -8,8 +8,8 @@ import { Star } from "lucide-react";
 import { useEffect } from "react";
 import type { Database } from "@/integrations/supabase/types";
 
+type Builder = Database["public"]["Tables"]["builders"]["Row"];
 type BuilderReview = Database["public"]["Tables"]["builder_reviews"]["Row"];
-
 type Profile = {
   username: string | null;
   avatar_url: string | null;
@@ -31,7 +31,7 @@ const BuilderProfile = () => {
     }
   }, [id, navigate]);
 
-  const { data: builder } = useQuery({
+  const { data: builder } = useQuery<Builder>({
     queryKey: ["builder", id],
     queryFn: async () => {
       if (!id) throw new Error("No builder ID provided");
@@ -73,7 +73,7 @@ const BuilderProfile = () => {
         .from("builder_reviews")
         .select(`
           *,
-          profiles:profiles(
+          profiles (
             username,
             avatar_url
           )
@@ -83,12 +83,10 @@ const BuilderProfile = () => {
       if (error) throw error;
       
       // Transform the data to match our interface
-      const transformedData = data.map(review => ({
+      return data.map(review => ({
         ...review,
         profiles: Array.isArray(review.profiles) ? review.profiles[0] : review.profiles
       }));
-
-      return transformedData as ReviewWithProfile[];
     },
     enabled: !!id,
   });
