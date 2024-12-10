@@ -18,14 +18,12 @@ export const BuilderHeader = ({ builder, averageRating, reviewCount }: BuilderHe
             <img
               src={builder.logo_url}
               alt={builder.name}
-              className="w-24 h-24 object-cover rounded-lg"
+              className="w-24 h-24 object-contain rounded-lg bg-white p-2"
             />
           )}
-          <div>
-            <h1 className="text-4xl font-bold mb-4">{builder.name}</h1>
-            <p className="text-lg text-muted-foreground mb-6">
-              {builder.description}
-            </p>
+          <div className="space-y-4">
+            <h1 className="text-4xl font-bold">{builder.name}</h1>
+            
             <div className="flex items-center gap-4">
               <div className="flex items-center">
                 {[1, 2, 3, 4, 5].map((value) => (
@@ -43,6 +41,23 @@ export const BuilderHeader = ({ builder, averageRating, reviewCount }: BuilderHe
                 ({reviewCount} reviews)
               </span>
             </div>
+
+            {(builder.address || builder.phone || builder.website) && (
+              <div className="space-y-2 text-muted-foreground">
+                {builder.address && <p>{builder.address}</p>}
+                {builder.phone && <p>{builder.phone}</p>}
+                {builder.website && (
+                  <a 
+                    href={builder.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline"
+                  >
+                    {builder.website}
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
