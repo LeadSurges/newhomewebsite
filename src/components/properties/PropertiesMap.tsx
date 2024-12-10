@@ -52,8 +52,19 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
 
         setMap(mapInstance);
 
+        // Create a custom marker SVG
+        const createCustomMarker = (number: string) => {
+          return {
+            path: google.maps.SymbolPath.CIRCLE,
+            fillColor: '#4A89F3',
+            fillOpacity: 1,
+            strokeWeight: 0,
+            scale: 20, // Size of the circle
+          };
+        };
+
         // Create markers for all properties
-        properties.forEach(property => {
+        properties.forEach((property, index) => {
           const geocoder = new google.maps.Geocoder();
           
           geocoder.geocode({ address: property.location }, (results, status) => {
@@ -62,6 +73,13 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
                 map: mapInstance,
                 position: results[0].geometry.location,
                 title: property.title,
+                icon: createCustomMarker((index + 1).toString()),
+                label: {
+                  text: (index + 1).toString(),
+                  color: 'white',
+                  fontSize: '14px',
+                  fontWeight: 'bold'
+                }
               });
 
               // Create info window with property details
