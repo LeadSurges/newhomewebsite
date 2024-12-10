@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatPrice } from "@/utils/formatters";
-import { Heart, Building2 } from "lucide-react";
+import { Heart, Building2, Bed, Bath, Ruler } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -120,13 +120,22 @@ export const PropertyCard = ({ property, size = "default" }: PropertyCardProps) 
             <p className="text-muted-foreground text-sm">{property.location}</p>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
               {bedroomsDisplay && (
-                <span>{bedroomsDisplay} {parseInt(bedroomsDisplay) === 1 ? 'bed' : 'beds'}</span>
+                <div className="flex items-center gap-1">
+                  <Bed className="h-4 w-4" />
+                  <span>{bedroomsDisplay} {parseInt(bedroomsDisplay) === 1 ? 'bed' : 'beds'}</span>
+                </div>
               )}
               {bathroomsDisplay && (
-                <span>{bathroomsDisplay} {parseInt(bathroomsDisplay) === 1 ? 'bath' : 'baths'}</span>
+                <div className="flex items-center gap-1">
+                  <Bath className="h-4 w-4" />
+                  <span>{bathroomsDisplay} {parseInt(bathroomsDisplay) === 1 ? 'bath' : 'baths'}</span>
+                </div>
               )}
               {squareFeetDisplay && (
-                <span>{squareFeetDisplay} sq ft</span>
+                <div className="flex items-center gap-1">
+                  <Ruler className="h-4 w-4" />
+                  <span>{squareFeetDisplay} sq ft</span>
+                </div>
               )}
             </div>
             {property.builders && (
