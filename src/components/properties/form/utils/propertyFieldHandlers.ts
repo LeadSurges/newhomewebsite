@@ -1,6 +1,8 @@
 import { FormData } from "../../types";
 
 export const handleMinBedroomsChange = (value: string, formData: FormData, setFormData: (data: FormData) => void) => {
+  console.log("handleMinBedroomsChange - value:", value);
+  
   if (value === "") {
     setFormData({ ...formData, bedrooms_min: "" });
     return;
@@ -19,6 +21,8 @@ export const handleMinBedroomsChange = (value: string, formData: FormData, setFo
 };
 
 export const handleMaxBedroomsChange = (value: string, formData: FormData, setFormData: (data: FormData) => void) => {
+  console.log("handleMaxBedroomsChange - value:", value);
+  
   if (value === "") {
     setFormData({ ...formData, bedrooms_max: "" });
     return;
@@ -29,14 +33,16 @@ export const handleMaxBedroomsChange = (value: string, formData: FormData, setFo
   
   setFormData({ 
     ...formData, 
-    bedrooms_max: value,
-    bedrooms_min: minBedrooms && maxBedrooms && minBedrooms > maxBedrooms 
+    bedrooms_max: maxBedrooms.toString(),
+    bedrooms_min: minBedrooms && minBedrooms > maxBedrooms 
       ? maxBedrooms.toString() 
       : formData.bedrooms_min
   });
 };
 
 export const handleMinBathroomsChange = (value: string, formData: FormData, setFormData: (data: FormData) => void) => {
+  console.log("handleMinBathroomsChange - value:", value);
+  
   if (value === "") {
     setFormData({ ...formData, bathrooms_min: "" });
     return;
@@ -55,6 +61,8 @@ export const handleMinBathroomsChange = (value: string, formData: FormData, setF
 };
 
 export const handleMaxBathroomsChange = (value: string, formData: FormData, setFormData: (data: FormData) => void) => {
+  console.log("handleMaxBathroomsChange - value:", value);
+  
   if (value === "") {
     setFormData({ ...formData, bathrooms_max: "" });
     return;
@@ -65,14 +73,16 @@ export const handleMaxBathroomsChange = (value: string, formData: FormData, setF
   
   setFormData({ 
     ...formData, 
-    bathrooms_max: value,
-    bathrooms_min: minBathrooms && maxBathrooms && minBathrooms > maxBathrooms 
+    bathrooms_max: maxBathrooms.toString(),
+    bathrooms_min: minBathrooms && minBathrooms > maxBathrooms 
       ? maxBathrooms.toString() 
       : formData.bathrooms_min
   });
 };
 
 export const handleMinSquareFeetChange = (value: string, formData: FormData, setFormData: (data: FormData) => void) => {
+  console.log("handleMinSquareFeetChange - value:", value);
+  
   if (value === "") {
     setFormData({ ...formData, square_feet_min: "" });
     return;
@@ -91,6 +101,8 @@ export const handleMinSquareFeetChange = (value: string, formData: FormData, set
 };
 
 export const handleMaxSquareFeetChange = (value: string, formData: FormData, setFormData: (data: FormData) => void) => {
+  console.log("handleMaxSquareFeetChange - value:", value);
+  
   if (value === "") {
     setFormData({ ...formData, square_feet_max: "" });
     return;
@@ -101,8 +113,8 @@ export const handleMaxSquareFeetChange = (value: string, formData: FormData, set
   
   setFormData({ 
     ...formData, 
-    square_feet_max: value,
-    square_feet_min: minSqFt && maxSqFt && minSqFt > maxSqFt 
+    square_feet_max: maxSqFt.toString(),
+    square_feet_min: minSqFt && minSqFt > maxSqFt 
       ? maxSqFt.toString() 
       : formData.square_feet_min
   });

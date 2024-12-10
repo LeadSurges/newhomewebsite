@@ -27,6 +27,8 @@ export const PropertyStats = ({
   square_feet_max,
 }: PropertyStatsProps) => {
   const formatRange = (value?: number | string, min?: string, max?: string) => {
+    console.log("formatRange inputs:", { value, min, max });
+    
     // If there's a single value, use that
     if (value) return value.toString();
     

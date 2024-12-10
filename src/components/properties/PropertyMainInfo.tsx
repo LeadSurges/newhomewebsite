@@ -34,6 +34,15 @@ export const PropertyMainInfo = ({
   price_range_min,
   price_range_max,
 }: PropertyMainInfoProps) => {
+  console.log("PropertyMainInfo - Range values:", {
+    bedrooms_min,
+    bedrooms_max,
+    bathrooms_min,
+    bathrooms_max,
+    square_feet_min,
+    square_feet_max
+  });
+
   const formatJsonValue = (value: any): string => {
     if (typeof value === 'string' || typeof value === 'number') {
       return String(value);
