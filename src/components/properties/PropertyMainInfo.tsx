@@ -3,28 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PropertyStats } from "./PropertyStats";
 import { Link } from "react-router-dom";
-
-interface PropertyMainInfoProps {
-  title: string;
-  location: string;
-  price: number;
-  price_range_min?: number;
-  price_range_max?: number;
-  description: string;
-  bedrooms?: number;
-  bathrooms?: number;
-  square_feet?: number;
-  created_at: string;
-  builder?: {
-    name: string;
-    id: string;
-  } | null;
-  maintenance_fee_per_sqft?: number;
-  parking_cost?: number;
-  storage_cost?: number;
-  deposit_structure?: any;
-  incentives?: any;
-}
+import { PropertyMainInfoProps, DepositStructure, Incentives } from "./types";
 
 export const PropertyMainInfo = ({
   title,
@@ -127,15 +106,15 @@ export const PropertyMainInfo = ({
           </>
         )}
 
-        {deposit_structure && (
+        {deposit_structure && Object.keys(deposit_structure).length > 0 && (
           <>
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-4">Deposit Structure</h2>
               <div className="space-y-2">
-                {typeof deposit_structure === 'object' && Object.entries(deposit_structure).map(([key, value]) => (
+                {Object.entries(deposit_structure as DepositStructure).map(([key, value]) => (
                   <div key={key} className="flex justify-between items-center">
                     <span className="text-muted-foreground">{key}</span>
-                    <span className="font-medium">{value}</span>
+                    <span className="font-medium">{String(value)}</span>
                   </div>
                 ))}
               </div>
@@ -144,15 +123,15 @@ export const PropertyMainInfo = ({
           </>
         )}
 
-        {incentives && (
+        {incentives && Object.keys(incentives).length > 0 && (
           <>
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-4">Incentives</h2>
               <div className="space-y-2">
-                {typeof incentives === 'object' && Object.entries(incentives).map(([key, value]) => (
+                {Object.entries(incentives as Incentives).map(([key, value]) => (
                   <div key={key} className="flex justify-between items-center">
                     <span className="text-muted-foreground">{key}</span>
-                    <span className="font-medium">{value}</span>
+                    <span className="font-medium">{String(value)}</span>
                   </div>
                 ))}
               </div>

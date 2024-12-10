@@ -39,3 +39,33 @@ export interface BuilderReview {
   created_at: string;
   updated_at: string;
 }
+
+export interface DepositStructure {
+  [key: string]: string | number;
+}
+
+export interface Incentives {
+  [key: string]: string | number;
+}
+
+export interface PropertyMainInfoProps {
+  title: string;
+  location: string;
+  price: number;
+  price_range_min?: number;
+  price_range_max?: number;
+  description: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  square_feet?: number;
+  created_at: string;
+  builder?: {
+    name: string;
+    id: string;
+  } | null;
+  maintenance_fee_per_sqft?: number;
+  parking_cost?: number;
+  storage_cost?: number;
+  deposit_structure?: DepositStructure;
+  incentives?: Incentives;
+}
