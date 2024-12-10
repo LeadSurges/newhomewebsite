@@ -5,6 +5,7 @@ export type BaseProperty = Database["public"]["Tables"]["properties"]["Row"];
 export type Property = BaseProperty & {
   builders?: {
     name: string;
+    id: string;
   } | null;
 };
 

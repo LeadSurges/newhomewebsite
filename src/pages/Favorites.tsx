@@ -18,7 +18,13 @@ const Favorites = () => {
         .from("favorites")
         .select(`
           property_id,
-          properties (*)
+          properties (
+            *,
+            builders (
+              id,
+              name
+            )
+          )
         `)
         .eq("user_id", user.id);
 
