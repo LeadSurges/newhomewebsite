@@ -13,7 +13,7 @@ type Builder = Database["public"]["Tables"]["builders"]["Row"];
 type BuilderReview = Database["public"]["Tables"]["builder_reviews"]["Row"];
 
 interface ReviewWithProfile extends BuilderReview {
-  profile: Profile | null;
+  profiles: Profile | null;
 }
 
 const BuilderProfile = () => {
@@ -72,7 +72,7 @@ const BuilderProfile = () => {
         .from("builder_reviews")
         .select(`
           *,
-          profile:profiles(*)
+          profiles!builder_reviews_user_id_fkey(*)
         `)
         .eq("builder_id", id);
 
@@ -81,7 +81,11 @@ const BuilderProfile = () => {
         throw reviewsError;
       }
 
-      return reviewsData as ReviewWithProfile[];
+      // Transform the data to match our expected type
+      return reviewsData?.map(review => ({
+        ...review,
+        profiles: review.profiles?.[0] || null
+      })) as ReviewWithProfile[];
     },
     enabled: !!id,
   });
@@ -110,10 +114,7 @@ const BuilderProfile = () => {
         />
         <BuilderReviews 
           builderId={builder.id} 
-          reviews={reviews?.map(review => ({
-            ...review,
-            profiles: review.profile
-          }))} 
+          reviews={reviews} 
         />
       </div>
     </div>
