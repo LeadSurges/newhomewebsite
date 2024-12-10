@@ -19,6 +19,7 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Initialize map
   useEffect(() => {
     const loadMap = async () => {
       if (!mapRef.current) return;
@@ -26,12 +27,16 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
       try {
         setIsLoading(true);
         setError(null);
+        console.log("Initializing map...");
 
         const google = await getMapLoader();
         console.log("Google Maps API loaded successfully");
 
+        // Default to Toronto coordinates
+        const defaultCenter = { lat: 43.6532, lng: -79.3832 };
+
         const mapInstance = new google.maps.Map(mapRef.current, {
-          center: { lat: 43.6532, lng: -79.3832 }, // Toronto coordinates
+          center: defaultCenter,
           zoom: 12,
           mapTypeControl: false,
           fullscreenControl: false,
@@ -48,6 +53,7 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
 
         setMap(mapInstance);
         setIsLoading(false);
+        console.log("Map initialized successfully");
       } catch (err) {
         console.error("Error loading Google Maps:", err);
         setError('Failed to load Google Maps. Please try again later.');
@@ -64,9 +70,12 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
     };
   }, []);
 
+  // Handle properties updates
   useEffect(() => {
     const createMarkers = async () => {
-      if (!map) return;
+      if (!map || !properties.length) return;
+
+      console.log("Creating markers for properties:", properties);
 
       // Clear existing markers
       markersRef.current.forEach(marker => marker?.setMap(null));
@@ -90,6 +99,8 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
           });
           map.fitBounds(bounds);
         }
+
+        console.log("Markers created successfully");
       } catch (err) {
         console.error("Error creating markers:", err);
         setError('Failed to display property locations on the map.');

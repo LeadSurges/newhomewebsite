@@ -30,12 +30,14 @@ export const geocodeProperty = async (
   const geocoder = new google.maps.Geocoder();
   
   try {
+    console.log(`Geocoding property: ${property.title} at ${property.location}`);
+    
     const results = await new Promise<google.maps.GeocoderResult[]>((resolve, reject) => {
       geocoder.geocode({ address: property.location }, (results, status) => {
         if (status === 'OK' && results) {
           resolve(results);
         } else {
-          reject(new Error(`Geocoding failed for ${property.location}`));
+          reject(new Error(`Geocoding failed for ${property.location}: ${status}`));
         }
       });
     });
@@ -70,6 +72,7 @@ export const geocodeProperty = async (
       infoWindow.close();
     });
 
+    console.log(`Created marker for property: ${property.title}`);
     return marker;
   } catch (error) {
     console.error('Error geocoding property:', error);
