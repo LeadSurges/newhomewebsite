@@ -182,6 +182,7 @@ const Properties = () => {
                   <PropertiesMap 
                     properties={properties} 
                     onPropertyClick={handlePropertyClick}
+                    location={filters.location}
                   />
                 </div>
               </div>
