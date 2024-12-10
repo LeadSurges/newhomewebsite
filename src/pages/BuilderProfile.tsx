@@ -1,19 +1,16 @@
 import { Navigation } from "@/components/Navigation";
 import { useParams, useNavigate } from "react-router-dom";
-import { PropertyCard } from "@/components/properties/PropertyCard";
-import { BuilderReview } from "@/components/builders/BuilderReview";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Star } from "lucide-react";
 import { useEffect } from "react";
 import type { Database } from "@/integrations/supabase/types";
+import { BuilderHeader } from "@/components/builders/BuilderHeader";
+import { BuilderProperties } from "@/components/builders/BuilderProperties";
+import { BuilderReviews } from "@/components/builders/BuilderReviews";
+import type { Profile } from "@/types/profile";
 
 type Builder = Database["public"]["Tables"]["builders"]["Row"];
 type BuilderReview = Database["public"]["Tables"]["builder_reviews"]["Row"];
-type Profile = {
-  username: string | null;
-  avatar_url: string | null;
-};
 
 interface ReviewWithProfile extends BuilderReview {
   profiles: Profile | null;
@@ -82,7 +79,6 @@ const BuilderProfile = () => {
 
       if (error) throw error;
       
-      // Transform the data to match our interface
       return data.map(review => ({
         ...review,
         profiles: Array.isArray(review.profiles) ? review.profiles[0] : review.profiles
@@ -104,86 +100,19 @@ const BuilderProfile = () => {
       <Navigation />
       
       <div className="pt-20">
-        {/* Builder Header */}
-        <div className="bg-secondary py-12">
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="flex items-center gap-6">
-              {builder.logo_url && (
-                <img
-                  src={builder.logo_url}
-                  alt={builder.name}
-                  className="w-24 h-24 object-cover rounded-lg"
-                />
-              )}
-              <div>
-                <h1 className="text-4xl font-bold mb-4">{builder.name}</h1>
-                <p className="text-lg text-muted-foreground mb-6">
-                  {builder.description}
-                </p>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center">
-                    {[1, 2, 3, 4, 5].map((value) => (
-                      <Star
-                        key={value}
-                        className={`h-5 w-5 ${
-                          value <= averageRating
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="text-muted-foreground">
-                    ({reviews?.length || 0} reviews)
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Properties Grid */}
-        <div className="max-w-7xl mx-auto px-4 py-12">
-          <h2 className="text-2xl font-bold mb-8">Properties by {builder.name}</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties?.map((property) => (
-              <PropertyCard key={property.id} property={property} />
-            ))}
-          </div>
-        </div>
-
-        {/* Reviews Section */}
-        <div className="max-w-7xl mx-auto px-4 py-12">
-          <h2 className="text-2xl font-bold mb-8">Reviews</h2>
-          <div className="space-y-8">
-            <BuilderReview builderId={builder.id} />
-            
-            <div className="space-y-4">
-              {reviews?.map((review) => (
-                <div key={review.id} className="bg-secondary rounded-lg p-6">
-                  <div className="flex items-center gap-2 mb-2">
-                    {[1, 2, 3, 4, 5].map((value) => (
-                      <Star
-                        key={value}
-                        className={`h-4 w-4 ${
-                          value <= review.rating
-                            ? "text-yellow-400 fill-yellow-400"
-                            : "text-gray-300"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    By {review.profiles?.username || "Anonymous"}
-                  </p>
-                  {review.comment && (
-                    <p className="text-muted-foreground">{review.comment}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <BuilderHeader 
+          builder={builder} 
+          averageRating={averageRating} 
+          reviewCount={reviews?.length || 0} 
+        />
+        <BuilderProperties 
+          properties={properties} 
+          builderName={builder.name} 
+        />
+        <BuilderReviews 
+          builderId={builder.id} 
+          reviews={reviews} 
+        />
       </div>
     </div>
   );
