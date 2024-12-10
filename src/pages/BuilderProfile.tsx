@@ -72,7 +72,7 @@ const BuilderProfile = () => {
         .from("builder_reviews")
         .select(`
           *,
-          profiles(username, avatar_url)
+          profiles (username, avatar_url)
         `)
         .eq("builder_id", id);
 
@@ -81,7 +81,11 @@ const BuilderProfile = () => {
         throw error;
       }
 
-      return (data || []) as ReviewWithProfile[];
+      // Transform the data to match our expected type
+      return (data || []).map(review => ({
+        ...review,
+        profiles: review.profiles ? review.profiles[0] || null : null
+      })) as ReviewWithProfile[];
     },
     enabled: !!id,
   });
