@@ -16,22 +16,11 @@ export function LocationSearchInput({ value, onChange }: LocationSearchInputProp
     setInputValue(value)
   }, [value])
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Submitting location search:", inputValue)
-    onChange(inputValue)
-  }
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value
     console.log("Location input changed:", newValue)
     setInputValue(newValue)
     onChange(newValue) // Always update parent with the new value
-  }
-
-  const handleBlur = () => {
-    console.log("Location input blur, value:", inputValue)
-    onChange(inputValue)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -42,18 +31,32 @@ export function LocationSearchInput({ value, onChange }: LocationSearchInputProp
     }
   }
 
+  const handleClear = () => {
+    console.log("Clearing location input")
+    setInputValue("")
+    onChange("")
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="relative flex-grow max-w-md">
+    <form className="relative flex-grow max-w-md">
       <Input
         type="text"
         placeholder="Search by location..."
         value={inputValue}
         onChange={handleChange}
-        onBlur={handleBlur}
         onKeyDown={handleKeyDown}
-        className="pl-10 h-10"
+        className="pl-10 h-10 pr-8"
       />
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+      {inputValue && (
+        <button
+          type="button"
+          onClick={handleClear}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+        >
+          ×
+        </button>
+      )}
     </form>
   )
 }
