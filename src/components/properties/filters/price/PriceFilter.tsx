@@ -50,7 +50,7 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-background border-none">
       <div className="space-y-2">
         <PriceOption
           price={null}

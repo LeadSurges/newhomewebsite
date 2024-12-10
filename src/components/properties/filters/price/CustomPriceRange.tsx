@@ -27,7 +27,7 @@ export function CustomPriceRange({
             value={min}
             onChange={(e) => onMinChange(e.target.value)}
             placeholder="Min price"
-            className="w-full bg-white border-gray-300"
+            className="w-full"
           />
         </div>
         <div>
@@ -36,14 +36,14 @@ export function CustomPriceRange({
             value={max}
             onChange={(e) => onMaxChange(e.target.value)}
             placeholder="Max price"
-            className="w-full bg-white border-gray-300"
+            className="w-full"
           />
         </div>
       </div>
 
       <Button 
         variant="outline" 
-        className="w-full bg-white hover:bg-gray-50"
+        className="w-full"
         onClick={onApply}
       >
         Apply Custom Range
