@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { Loader } from "@googlemaps/js-api-loader";
-import { supabase } from "@/integrations/supabase/client";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader as LoadingSpinner } from "lucide-react";
+import { getMapLoader } from "@/utils/mapLoader";
 
 interface PropertyMapProps {
   location: string;
@@ -21,16 +20,7 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
         setError(null);
         console.log("Initializing map for location:", location);
         
-        const { data: { secret }, error: secretError } = await supabase.functions.invoke('get-maps-key');
-        if (secretError || !secret) {
-          throw new Error("Failed to load Google Maps API key");
-        }
-
-        const loader = new Loader({
-          apiKey: secret,
-          version: "weekly",
-        });
-
+        const loader = await getMapLoader();
         const google = await loader.load();
         const geocoder = new google.maps.Geocoder();
 

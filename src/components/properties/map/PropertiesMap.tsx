@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { Loader } from "@googlemaps/js-api-loader";
 import type { Database } from "@/integrations/supabase/types";
 import { geocodeProperty } from "./mapUtils";
-import { supabase } from "@/integrations/supabase/client";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader as LoadingSpinner } from "lucide-react";
+import { getMapLoader } from "@/utils/mapLoader";
 
 type Property = Database["public"]["Tables"]["properties"]["Row"];
 
@@ -26,18 +25,7 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
         setIsLoading(true);
         setError(null);
 
-        // Get the API key from Supabase Edge Function
-        const { data: { secret }, error: secretError } = await supabase.functions.invoke('get-maps-key');
-        
-        if (secretError || !secret) {
-          throw new Error('Failed to load Google Maps API key');
-        }
-
-        const loader = new Loader({
-          apiKey: secret,
-          version: "weekly",
-        });
-
+        const loader = await getMapLoader();
         const google = await loader.load();
         console.log("Google Maps API loaded successfully");
 
