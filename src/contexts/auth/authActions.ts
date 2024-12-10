@@ -60,14 +60,11 @@ export const useAuthActions = () => {
   const signInWithGoogle = async () => {
     try {
       console.log("AuthActions: Starting Google sign in process...");
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/properties`,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          },
+          skipBrowserRedirect: false,
         },
       });
       
@@ -76,20 +73,7 @@ export const useAuthActions = () => {
         throw error;
       }
 
-      if (!data.url) {
-        console.error("AuthActions: No redirect URL received");
-        throw new Error("Failed to initiate Google sign in");
-      }
-
-      console.log("AuthActions: Redirecting to Google OAuth URL:", data.url);
-      // Instead of using window.location.href, use the built-in redirect
-      await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/properties`,
-          skipBrowserRedirect: false,
-        },
-      });
+      console.log("AuthActions: Google sign in initiated successfully");
     } catch (error: any) {
       console.error("AuthActions: Google sign in error:", error);
       toast({
