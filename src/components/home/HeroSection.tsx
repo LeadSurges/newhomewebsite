@@ -2,15 +2,28 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 export const HeroSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Searching for:", searchQuery);
-    navigate(`/properties?search=${encodeURIComponent(searchQuery)}`);
+    console.log("Searching for location:", searchQuery);
+
+    if (!searchQuery.trim()) {
+      toast({
+        title: "Please enter a location",
+        description: "Enter a city, neighborhood, or address to search properties",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Navigate to properties page with search query
+    navigate(`/properties?location=${encodeURIComponent(searchQuery.trim())}`);
   };
 
   return (
@@ -38,7 +51,7 @@ export const HeroSection = () => {
               <Search className="h-5 w-5 text-muted-foreground" />
               <input
                 type="text"
-                placeholder="Search by location, development name..."
+                placeholder="Search by city, neighborhood, or address..."
                 className="flex-1 outline-none bg-transparent"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
