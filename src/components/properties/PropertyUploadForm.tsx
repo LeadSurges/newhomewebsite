@@ -26,6 +26,7 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     square_feet_min: initialData?.square_feet?.toString() || "",
     square_feet_max: "", // This will be handled in the form but not stored directly
     featured: initialData?.featured || false,
+    builder_id: initialData?.builder_id || undefined,
     home_type: initialData?.home_type || null,
     construction_status: initialData?.construction_status || null,
     ownership_type: initialData?.ownership_type || null,
@@ -97,6 +98,7 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
         garage_spaces: formData.garage_spaces === "4+" ? 4 : Number(formData.garage_spaces),
         completion_year: formData.completion_year ? Number(formData.completion_year) : null,
         keywords: formData.keywords,
+        builder_id: formData.builder_id,
       };
 
       if (initialData) {
