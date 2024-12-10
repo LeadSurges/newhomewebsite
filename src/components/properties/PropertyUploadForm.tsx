@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { ImagePlus, FileText } from "lucide-react";
+import { PropertyFormFields } from "./PropertyFormFields";
+import { FileUploadField } from "./FileUploadField";
+import type { FormData } from "./types";
 
 export const PropertyUploadForm = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
     price: "",
@@ -20,6 +19,7 @@ export const PropertyUploadForm = () => {
     square_feet: "",
     featured: false,
   });
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFloorplan, setSelectedFloorplan] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
@@ -114,146 +114,30 @@ export const PropertyUploadForm = () => {
     <form onSubmit={handleSubmit} className="space-y-8">
       <Card>
         <CardContent className="pt-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="price">Price</Label>
-                <Input
-                  id="price"
-                  type="number"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                  required
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="location">Location</Label>
-                <Input
-                  id="location"
-                  value={formData.location}
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="bedrooms">Bedrooms</Label>
-                <Input
-                  id="bedrooms"
-                  type="number"
-                  value={formData.bedrooms}
-                  onChange={(e) => setFormData({ ...formData, bedrooms: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="bathrooms">Bathrooms</Label>
-                <Input
-                  id="bathrooms"
-                  type="number"
-                  value={formData.bathrooms}
-                  onChange={(e) => setFormData({ ...formData, bathrooms: e.target.value })}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="square_feet">Square Feet</Label>
-                <Input
-                  id="square_feet"
-                  type="number"
-                  value={formData.square_feet}
-                  onChange={(e) => setFormData({ ...formData, square_feet: e.target.value })}
-                />
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="featured"
-                  checked={formData.featured}
-                  onCheckedChange={(checked) => 
-                    setFormData({ ...formData, featured: checked as boolean })
-                  }
-                />
-                <Label htmlFor="featured">Featured Property</Label>
-              </div>
-            </div>
-          </div>
+          <PropertyFormFields formData={formData} setFormData={setFormData} />
 
           <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
-              <Label>Property Images</Label>
-              <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="picture" className="flex items-center gap-2">
-                  <ImagePlus className="w-4 h-4" />
-                  Choose Image
-                </Label>
-                <Input
-                  id="picture"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files) {
-                      setSelectedFile(e.target.files[0]);
-                      setPreview(URL.createObjectURL(e.target.files[0]));
-                    }
-                  }}
-                />
-                {preview && (
-                  <div className="mt-2">
-                    <img src={preview} alt="Preview" className="max-w-sm rounded-lg border" />
-                  </div>
-                )}
-              </div>
-            </div>
+            <FileUploadField
+              id="picture"
+              label="Property Images"
+              icon={ImagePlus}
+              preview={preview}
+              onChange={(file) => {
+                setSelectedFile(file);
+                setPreview(URL.createObjectURL(file));
+              }}
+            />
 
-            <div className="space-y-4">
-              <Label>Floor Plans</Label>
-              <div className="grid w-full max-w-sm items-center gap-1.5">
-                <Label htmlFor="floorplan" className="flex items-center gap-2">
-                  <FileText className="w-4 h-4" />
-                  Choose Floorplan
-                </Label>
-                <Input
-                  id="floorplan"
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files) {
-                      setSelectedFloorplan(e.target.files[0]);
-                      setFloorplanPreview(URL.createObjectURL(e.target.files[0]));
-                    }
-                  }}
-                />
-                {floorplanPreview && (
-                  <div className="mt-2">
-                    <img src={floorplanPreview} alt="Floorplan Preview" className="max-w-sm rounded-lg border" />
-                  </div>
-                )}
-              </div>
-            </div>
+            <FileUploadField
+              id="floorplan"
+              label="Floor Plans"
+              icon={FileText}
+              preview={floorplanPreview}
+              onChange={(file) => {
+                setSelectedFloorplan(file);
+                setFloorplanPreview(URL.createObjectURL(file));
+              }}
+            />
           </div>
         </CardContent>
       </Card>

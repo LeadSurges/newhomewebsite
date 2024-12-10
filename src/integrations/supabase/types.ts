@@ -69,6 +69,7 @@ export type Database = {
           created_at: string
           description: string | null
           featured: boolean | null
+          floorplan_url: string | null
           id: string
           image_url: string | null
           location: string
@@ -84,6 +85,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           featured?: boolean | null
+          floorplan_url?: string | null
           id?: string
           image_url?: string | null
           location: string
@@ -99,6 +101,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           featured?: boolean | null
+          floorplan_url?: string | null
           id?: string
           image_url?: string | null
           location?: string
