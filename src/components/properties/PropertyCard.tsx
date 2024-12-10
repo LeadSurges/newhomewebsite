@@ -18,9 +18,15 @@ interface PropertyCardProps {
     square_feet?: number;
     image_url?: string;
     builders?: {
-      id: string;
       name: string;
+      id: string;
     } | null;
+    bedrooms_min?: string;
+    bedrooms_max?: string;
+    bathrooms_min?: string;
+    bathrooms_max?: string;
+    square_feet_min?: string;
+    square_feet_max?: string;
   };
   size?: "default" | "small";
 }
@@ -31,13 +37,42 @@ export const PropertyCard = ({ property, size = "default" }: PropertyCardProps) 
   const favorite = isFavorite(property.id);
 
   const handleFavoriteClick = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation when clicking the favorite button
+    e.preventDefault();
     if (favorite) {
       await removeFavorite(property.id);
     } else {
       await addFavorite(property.id);
     }
   };
+
+  const formatRange = (value?: number | string, min?: string, max?: string) => {
+    if (min && max) {
+      return `${min} - ${max}`;
+    }
+    if (min) {
+      return `${min}+`;
+    }
+    if (max) {
+      return `Up to ${max}`;
+    }
+    if (value) {
+      return value.toString();
+    }
+    return null;
+  };
+
+  const formatSquareFeet = (value?: string) => {
+    if (!value) return null;
+    return parseInt(value).toLocaleString();
+  };
+
+  const bedroomsDisplay = formatRange(property.bedrooms, property.bedrooms_min, property.bedrooms_max);
+  const bathroomsDisplay = formatRange(property.bathrooms, property.bathrooms_min, property.bathrooms_max);
+  const squareFeetDisplay = formatRange(
+    property.square_feet?.toString(),
+    property.square_feet_min ? formatSquareFeet(property.square_feet_min) : undefined,
+    property.square_feet_max ? formatSquareFeet(property.square_feet_max) : undefined
+  );
 
   return (
     <Link to={`/properties/${property.id}`} className="block">
@@ -84,14 +119,14 @@ export const PropertyCard = ({ property, size = "default" }: PropertyCardProps) 
             </p>
             <p className="text-muted-foreground text-sm">{property.location}</p>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              {property.bedrooms && (
-                <span>{property.bedrooms} {property.bedrooms === 1 ? 'bed' : 'beds'}</span>
+              {bedroomsDisplay && (
+                <span>{bedroomsDisplay} {parseInt(bedroomsDisplay) === 1 ? 'bed' : 'beds'}</span>
               )}
-              {property.bathrooms && (
-                <span>{property.bathrooms} {property.bathrooms === 1 ? 'bath' : 'baths'}</span>
+              {bathroomsDisplay && (
+                <span>{bathroomsDisplay} {parseInt(bathroomsDisplay) === 1 ? 'bath' : 'baths'}</span>
               )}
-              {property.square_feet && (
-                <span>{property.square_feet} sq ft</span>
+              {squareFeetDisplay && (
+                <span>{squareFeetDisplay} sq ft</span>
               )}
             </div>
             {property.builders && (
