@@ -3,22 +3,46 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { signUp } = useAuth();
   const navigate = useNavigate();
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
+
+    // Validate email format
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    // Validate password
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long");
+      return;
+    }
+
     setIsLoading(true);
     try {
       await signUp(email, password);
       navigate("/admin/properties");
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error signing up:", error);
+      // Extract error message from Supabase error response
+      const errorMessage = error.message || "An error occurred during sign up";
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -33,6 +57,12 @@ export default function SignUp() {
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+          
           <div className="rounded-md shadow-sm space-y-4">
             <div>
               <Input
@@ -63,4 +93,4 @@ export default function SignUp() {
       </div>
     </div>
   );
-};
+}
