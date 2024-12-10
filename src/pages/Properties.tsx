@@ -119,57 +119,61 @@ const Properties = () => {
         keywords="luxury properties, new homes, real estate listings, premium real estate"
       />
       <Navigation />
-      <SearchFilters onFilterChange={handleFilterChange} />
       
-      <main className="max-w-[1920px] mx-auto px-4 py-8">
-        <div className="flex justify-end mb-4 gap-2">
-          <Button
-            variant={showMap ? "outline" : "default"}
-            size="sm"
-            onClick={() => setShowMap(false)}
-          >
-            <List className="h-4 w-4 mr-2" />
-            List
-          </Button>
-          <Button
-            variant={showMap ? "default" : "outline"}
-            size="sm"
-            onClick={() => setShowMap(true)}
-          >
-            <Map className="h-4 w-4 mr-2" />
-            Map
-          </Button>
-        </div>
+      {/* Add pt-16 to create space for the fixed header */}
+      <div className="pt-16">
+        <SearchFilters onFilterChange={handleFilterChange} />
+        
+        <main className="max-w-[1920px] mx-auto px-4 py-8">
+          <div className="flex justify-end mb-4 gap-2">
+            <Button
+              variant={showMap ? "outline" : "default"}
+              size="sm"
+              onClick={() => setShowMap(false)}
+            >
+              <List className="h-4 w-4 mr-2" />
+              List
+            </Button>
+            <Button
+              variant={showMap ? "default" : "outline"}
+              size="sm"
+              onClick={() => setShowMap(true)}
+            >
+              <Map className="h-4 w-4 mr-2" />
+              Map
+            </Button>
+          </div>
 
-        <div className="flex flex-col lg:flex-row gap-6">
-          <div className={`${showMap ? 'lg:w-1/2' : 'w-full'}`}>
-            {isLoading ? (
-              <div className="text-center py-8">Loading properties...</div>
-            ) : properties && properties.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-6">
-                {properties.map((property) => (
-                  <PropertyCard key={property.id} property={property} />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8 text-muted-foreground">
-                No properties found matching your criteria
+          <div className="flex flex-col lg:flex-row gap-6">
+            <div className={`${showMap ? 'lg:w-1/2' : 'w-full'}`}>
+              {isLoading ? (
+                <div className="text-center py-8">Loading properties...</div>
+              ) : properties && properties.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-6">
+                  {properties.map((property) => (
+                    <PropertyCard key={property.id} property={property} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  No properties found matching your criteria
+                </div>
+              )}
+            </div>
+
+            {showMap && properties && (
+              <div className="lg:w-1/2 h-[calc(100vh-200px)] lg:sticky lg:top-40"> {/* Updated top value to account for header + filters */}
+                <div className="glass-card h-full">
+                  <PropertiesMap 
+                    properties={properties} 
+                    onPropertyClick={handlePropertyClick}
+                  />
+                </div>
               </div>
             )}
           </div>
-
-          {showMap && properties && (
-            <div className="lg:w-1/2 h-[calc(100vh-200px)] lg:sticky lg:top-24">
-              <div className="glass-card h-full">
-                <PropertiesMap 
-                  properties={properties} 
-                  onPropertyClick={handlePropertyClick}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-      </main>
+        </main>
+      </div>
       
       <Footer />
     </div>

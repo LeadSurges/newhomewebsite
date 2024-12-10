@@ -49,10 +49,10 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
   }
 
   return (
-    <div className="w-full border-b bg-white sticky top-0 z-10">
+    <div className="w-full border-b bg-white sticky top-16 z-10"> {/* Changed top-0 to top-16 to account for header height */}
       <form onSubmit={handleSubmit} className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex flex-col md:flex-row gap-3 items-center">
-          {/* Search Section - Now in a row */}
+          {/* Search Section */}
           <div className="w-full md:w-1/4">
             <SearchSection
               location={location}
@@ -62,7 +62,7 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
             />
           </div>
 
-          {/* Filters Section - Now in a row */}
+          {/* Filters Section */}
           <div className="flex-1 flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
             <FiltersSection
               priceRange={priceRange}
