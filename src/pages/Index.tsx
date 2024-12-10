@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import { BuildersSection } from "@/components/home/BuildersSection";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { SEO } from "@/components/SEO";
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -18,6 +19,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <SEO />
       <Navigation />
       
       {/* Hero Section */}
