@@ -63,7 +63,7 @@ export const useAuthActions = () => {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/properties`,
+          redirectTo: window.location.origin,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
@@ -81,7 +81,7 @@ export const useAuthActions = () => {
         throw new Error("Failed to initiate Google sign in");
       }
 
-      console.log("AuthActions: Redirecting to Google OAuth URL");
+      console.log("AuthActions: Redirecting to Google OAuth URL:", data.url);
       window.location.href = data.url;
     } catch (error: any) {
       console.error("AuthActions: Google sign in error:", error);
