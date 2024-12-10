@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { ChevronDown, LucideIcon } from "lucide-react"
@@ -39,18 +38,21 @@ export function FilterDropdown({
           <ChevronDown className="h-4 w-4 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-[200px]">
+      <DropdownMenuContent 
+        align="start" 
+        className="w-[200px] bg-background border-none shadow-md"
+      >
         {children ? (
           children
         ) : (
           options?.map((option) => (
-            <DropdownMenuItem
+            <div
               key={option}
               onClick={() => onChange?.(option)}
-              className="cursor-pointer"
+              className="px-2 py-1.5 text-sm cursor-pointer hover:bg-accent hover:text-accent-foreground"
             >
               {option}
-            </DropdownMenuItem>
+            </div>
           ))
         )}
       </DropdownMenuContent>

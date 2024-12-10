@@ -2,7 +2,6 @@ import { DollarSign, Home, Bed, Bath, Construction } from "lucide-react"
 import { FilterDropdown } from "./FilterDropdown"
 import { PriceFilter } from "./price/PriceFilter"
 import { LocationSearchInput } from "./common/LocationSearchInput"
-import { FilterButton } from "./common/FilterButton"
 
 interface MainFiltersProps {
   location: string
@@ -51,7 +50,7 @@ export function MainFilters({
       <FilterDropdown
         label={formatPriceDisplay(priceRange)}
         icon={DollarSign}
-        className="min-w-[140px] bg-white border-gray-300 hover:bg-gray-50"
+        className="min-w-[140px]"
       >
         <PriceFilter
           value={priceRange}
@@ -65,7 +64,7 @@ export function MainFilters({
         value={homeType}
         options={["Condo", "Townhouse", "Single family home"]}
         onChange={onHomeTypeChange}
-        className="min-w-[140px] bg-white border-gray-300 hover:bg-gray-50"
+        className="min-w-[140px]"
       />
 
       <FilterDropdown
@@ -77,7 +76,7 @@ export function MainFilters({
           const num = parseInt(val);
           onBedroomRangeChange([num, 7]);
         }}
-        className="min-w-[120px] bg-white border-gray-300 hover:bg-gray-50"
+        className="min-w-[120px]"
       />
 
       <FilterDropdown
@@ -89,7 +88,7 @@ export function MainFilters({
           const num = parseInt(val);
           onBathroomRangeChange([num, 5]);
         }}
-        className="min-w-[120px] bg-white border-gray-300 hover:bg-gray-50"
+        className="min-w-[120px]"
       />
 
       <FilterDropdown
@@ -98,7 +97,7 @@ export function MainFilters({
         value={constructionStatus}
         options={["Preconstruction", "Construction", "Complete"]}
         onChange={onConstructionStatusChange}
-        className="min-w-[150px] bg-white border-gray-300 hover:bg-gray-50"
+        className="min-w-[150px]"
       />
     </>
   )

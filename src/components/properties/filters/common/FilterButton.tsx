@@ -22,7 +22,7 @@ export function FilterButton({
     <Button
       variant={variant}
       onClick={onClick}
-      className={`min-w-[100px] flex items-center gap-2 bg-white border-gray-300 hover:bg-gray-50 ${className}`}
+      className={`min-w-[100px] flex items-center gap-2 ${className}`}
     >
       {Icon && <Icon className="h-4 w-4" />}
       {children || label}

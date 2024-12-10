@@ -14,7 +14,7 @@ export function LocationSearchInput({ value, onChange }: LocationSearchInputProp
         placeholder="Search by location..."
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="pl-10 h-10 bg-white border-gray-300"
+        className="pl-10 h-10"
       />
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
     </div>
