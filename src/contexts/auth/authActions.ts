@@ -9,18 +9,24 @@ export const useAuthActions = () => {
   const signIn = async (email: string, password: string) => {
     try {
       console.log("AuthActions: Starting email sign in...");
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-      if (error) throw error;
       
-      console.log("AuthActions: Email sign in successful");
-      toast({
-        title: "Welcome back!",
-        description: "You have successfully signed in.",
-      });
-      navigate("/properties");
+      if (error) {
+        console.error("AuthActions: Email sign in error:", error);
+        throw error;
+      }
+
+      if (data.user) {
+        console.log("AuthActions: Email sign in successful for user:", data.user.id);
+        toast({
+          title: "Welcome back!",
+          description: "You have successfully signed in.",
+        });
+        navigate("/properties");
+      }
     } catch (error: any) {
       console.error("AuthActions: Email sign in error:", error);
       toast({
@@ -35,17 +41,23 @@ export const useAuthActions = () => {
   const signUp = async (email: string, password: string) => {
     try {
       console.log("AuthActions: Starting sign up process...");
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
-      if (error) throw error;
       
-      console.log("AuthActions: Sign up successful");
-      toast({
-        title: "Account created!",
-        description: "Please check your email to verify your account.",
-      });
+      if (error) {
+        console.error("AuthActions: Sign up error:", error);
+        throw error;
+      }
+
+      if (data.user) {
+        console.log("AuthActions: Sign up successful for user:", data.user.id);
+        toast({
+          title: "Account created!",
+          description: "Please check your email to verify your account.",
+        });
+      }
     } catch (error: any) {
       console.error("AuthActions: Sign up error:", error);
       toast({
@@ -64,7 +76,6 @@ export const useAuthActions = () => {
         provider: "google",
         options: {
           redirectTo: `${window.location.origin}/properties`,
-          skipBrowserRedirect: false,
         },
       });
       
