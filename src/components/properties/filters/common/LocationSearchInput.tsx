@@ -20,7 +20,7 @@ export function LocationSearchInput({ value, onChange }: LocationSearchInputProp
     const newValue = e.target.value
     console.log("Location input changed:", newValue)
     setInputValue(newValue)
-    onChange(newValue) // Always update parent with the new value
+    onChange(newValue)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -31,14 +31,16 @@ export function LocationSearchInput({ value, onChange }: LocationSearchInputProp
     }
   }
 
-  const handleClear = () => {
+  const handleClear = (e: React.MouseEvent) => {
+    e.preventDefault() // Prevent form submission
+    e.stopPropagation() // Prevent event bubbling
     console.log("Clearing location input")
     setInputValue("")
     onChange("")
   }
 
   return (
-    <form className="relative flex-grow max-w-md">
+    <div className="relative flex-grow max-w-md">
       <Input
         type="text"
         placeholder="Search by location..."
@@ -57,6 +59,6 @@ export function LocationSearchInput({ value, onChange }: LocationSearchInputProp
           ×
         </button>
       )}
-    </form>
+    </div>
   )
 }

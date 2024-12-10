@@ -26,6 +26,11 @@ export const HeroSection = () => {
     navigate(`/properties?location=${encodeURIComponent(searchQuery.trim())}`);
   };
 
+  const handleClear = () => {
+    console.log("Clearing search query");
+    setSearchQuery("");
+  };
+
   return (
     <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto text-center">
@@ -47,7 +52,7 @@ export const HeroSection = () => {
             onSubmit={handleSearch}
             className="glass-card p-4 flex flex-col sm:flex-row gap-4"
           >
-            <div className="flex-1 flex items-center gap-2 bg-white rounded-lg px-4 py-2 border">
+            <div className="flex-1 flex items-center gap-2 bg-white rounded-lg px-4 py-2 border relative">
               <Search className="h-5 w-5 text-muted-foreground" />
               <input
                 type="text"
@@ -56,6 +61,15 @@ export const HeroSection = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={handleClear}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  ×
+                </button>
+              )}
             </div>
             <Button type="submit" size="lg" className="shrink-0">
               Search Properties
