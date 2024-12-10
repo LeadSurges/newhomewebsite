@@ -73,7 +73,7 @@ const BuilderProfile = () => {
         .from("builder_reviews")
         .select(`
           *,
-          profiles:user_id (
+          profiles:profiles(
             username,
             avatar_url
           )
