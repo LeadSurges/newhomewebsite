@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PropertyStats } from "./PropertyStats";
 import { Link } from "react-router-dom";
-import { PropertyMainInfoProps, DepositStructure, Incentives } from "./types";
+import { PropertyMainInfoProps } from "./types";
 
 export const PropertyMainInfo = ({
   title,

@@ -4,6 +4,7 @@ import { PropertyHero } from "@/components/properties/PropertyHero";
 import { PropertyMainInfo } from "@/components/properties/PropertyMainInfo";
 import { PropertyMap } from "@/components/properties/PropertyMap";
 import { PropertyContactForm } from "@/components/properties/PropertyContactForm";
+import { FloorplanCard } from "@/components/properties/FloorplanCard";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -41,35 +42,12 @@ const PropertyDetails = () => {
 
   if (!property) return null;
 
-  const propertyDetails = [
-    {
-      icon: Building2,
-      label: "Builder",
-      value: property.builders?.name || "N/A",
-    },
-    {
-      icon: MapPin,
-      label: "Location",
-      value: property.location,
-    },
-    {
-      icon: Calendar,
-      label: "Completion",
-      value: property.completion_year ? `${property.completion_year}` : "TBA",
-    },
-    {
-      icon: Home,
-      label: "Type",
-      value: property.home_type || "N/A",
-    },
-  ];
-
   // Type cast the deposit_structure and incentives to their respective types
   const propertyMainInfo = {
     ...property,
     builder: property.builders,
-    deposit_structure: property.deposit_structure as DepositStructure | undefined,
-    incentives: property.incentives as Incentives | undefined
+    deposit_structure: property.deposit_structure as DepositStructure,
+    incentives: property.incentives as Incentives
   };
 
   return (
@@ -86,6 +64,20 @@ const PropertyDetails = () => {
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
             <PropertyMainInfo {...propertyMainInfo} />
+
+            {property.floorplan_url && (
+              <Card className="p-6">
+                <h2 className="text-xl font-semibold mb-6">Floor Plans</h2>
+                <FloorplanCard
+                  name={property.title}
+                  price={property.price}
+                  bedrooms={property.bedrooms}
+                  bathrooms={property.bathrooms}
+                  squareFeet={property.square_feet}
+                  imageUrl={property.floorplan_url}
+                />
+              </Card>
+            )}
 
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-4">Location</h2>
