@@ -70,4 +70,5 @@ export interface PropertyMainInfoProps {
   bathrooms_max?: string;
   square_feet_min?: string;
   square_feet_max?: string;
+  home_type?: string | null;
 }

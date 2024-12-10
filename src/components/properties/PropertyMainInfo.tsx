@@ -1,4 +1,4 @@
-import { MapPin, DollarSign, Building2 } from "lucide-react";
+import { MapPin, DollarSign, Building2, Home } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PropertyStats } from "./PropertyStats";
@@ -28,6 +28,7 @@ export const PropertyMainInfo = ({
   bathrooms_max,
   square_feet_min,
   square_feet_max,
+  home_type,
 }: PropertyMainInfoProps) => {
   const formatPrice = (value?: number) => {
     return value ? `$${value.toLocaleString()}` : 'N/A';
@@ -66,6 +67,13 @@ export const PropertyMainInfo = ({
             <MapPin className="h-5 w-5 mr-2" />
             {location}
           </div>
+
+          {home_type && (
+            <div className="flex items-center text-muted-foreground">
+              <Home className="h-5 w-5 mr-2" />
+              {home_type}
+            </div>
+          )}
           
           <div className="text-2xl font-bold text-primary">
             <div className="flex items-center">
