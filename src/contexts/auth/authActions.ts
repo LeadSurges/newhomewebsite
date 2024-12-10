@@ -8,17 +8,21 @@ export const useAuthActions = () => {
 
   const signIn = async (email: string, password: string) => {
     try {
+      console.log("AuthActions: Starting email sign in...");
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       if (error) throw error;
+      
+      console.log("AuthActions: Email sign in successful");
       toast({
         title: "Welcome back!",
         description: "You have successfully signed in.",
       });
       navigate("/properties");
     } catch (error: any) {
+      console.error("AuthActions: Email sign in error:", error);
       toast({
         variant: "destructive",
         title: "Error signing in",
@@ -30,16 +34,20 @@ export const useAuthActions = () => {
 
   const signUp = async (email: string, password: string) => {
     try {
+      console.log("AuthActions: Starting sign up process...");
       const { error } = await supabase.auth.signUp({
         email,
         password,
       });
       if (error) throw error;
+      
+      console.log("AuthActions: Sign up successful");
       toast({
         title: "Account created!",
         description: "Please check your email to verify your account.",
       });
     } catch (error: any) {
+      console.error("AuthActions: Sign up error:", error);
       toast({
         variant: "destructive",
         title: "Error signing up",
@@ -65,32 +73,22 @@ export const useAuthActions = () => {
       
       if (error) {
         console.error("AuthActions: Google sign in error:", error);
-        toast({
-          variant: "destructive",
-          title: "Error signing in with Google",
-          description: error.message,
-        });
         throw error;
       }
-      
+
       if (!data.url) {
-        console.error("AuthActions: No redirect URL received from Supabase");
-        toast({
-          variant: "destructive",
-          title: "Error signing in with Google",
-          description: "Failed to initiate Google sign in. Please try again.",
-        });
-        return;
+        console.error("AuthActions: No redirect URL received");
+        throw new Error("Failed to initiate Google sign in");
       }
-      
-      console.log("AuthActions: Redirecting to Google sign in with URL:", data.url);
+
+      console.log("AuthActions: Redirecting to Google OAuth URL");
       window.location.href = data.url;
     } catch (error: any) {
       console.error("AuthActions: Google sign in error:", error);
       toast({
         variant: "destructive",
         title: "Error signing in with Google",
-        description: error.message || "An unexpected error occurred",
+        description: error.message,
       });
       throw error;
     }
@@ -101,6 +99,7 @@ export const useAuthActions = () => {
       console.log("AuthActions: Starting sign out process...");
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
+      
       console.log("AuthActions: Sign out successful");
       toast({
         title: "Signed out",
