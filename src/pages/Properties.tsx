@@ -7,46 +7,37 @@ import { SEO } from "@/components/SEO";
 // Temporary mock data until we connect to Supabase
 const properties = [
   {
-    id: 1,
+    id: "1",
     title: "Luxury Condo",
-    price: "$1,250,000",
+    price: 1250000,
     location: "Downtown Area",
-    bedrooms: "2",
+    bedrooms: 2,
     bathrooms: 2,
-    sqft: "1200",
-    developer: "Luxury Developers",
-    status: "For Sale",
+    square_feet: 1200,
     featured: true,
-    virtualTour: true,
-    image: "https://source.unsplash.com/random/800x600?luxury,condo"
+    image_url: "https://source.unsplash.com/random/800x600?luxury,condo"
   },
   {
-    id: 2,
+    id: "2",
     title: "Modern House",
-    price: "$1,800,000",
+    price: 1800000,
     location: "Uptown Area",
-    bedrooms: "4",
+    bedrooms: 4,
     bathrooms: 3,
-    sqft: "2500",
-    developer: "Modern Homes Inc.",
-    status: "For Sale",
+    square_feet: 2500,
     featured: false,
-    virtualTour: false,
-    image: "https://source.unsplash.com/random/800x600?modern,house"
+    image_url: "https://source.unsplash.com/random/800x600?modern,house"
   },
   {
-    id: 3,
+    id: "3",
     title: "Stylish Apartment",
-    price: "$950,000",
+    price: 950000,
     location: "City Center",
-    bedrooms: "1",
+    bedrooms: 1,
     bathrooms: 1,
-    sqft: "800",
-    developer: "City Living",
-    status: "For Sale",
+    square_feet: 800,
     featured: true,
-    virtualTour: true,
-    image: "https://source.unsplash.com/random/800x600?stylish,apartment"
+    image_url: "https://source.unsplash.com/random/800x600?stylish,apartment"
   },
 ];
 

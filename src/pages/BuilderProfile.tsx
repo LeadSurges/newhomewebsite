@@ -14,20 +14,16 @@ const BuilderProfile = () => {
     reviews: 27,
     properties: [
       {
-        id: 1,
+        id: "1",
         title: "The Pinnacle at One Yonge",
-        price: "From $800,000",
+        price: 800000,
         location: "1 Yonge Street",
-        bedrooms: "1 - 3",
+        bedrooms: 2,
         bathrooms: 2,
-        sqft: "500 - 2,000",
-        developer: "Pinnacle International",
-        status: "Pre-construction",
+        square_feet: 1200,
         featured: true,
-        virtualTour: true,
-        image: "https://source.unsplash.com/random/800x600?condo",
+        image_url: "https://source.unsplash.com/random/800x600?condo",
       },
-      // Add more properties as needed
     ],
   };
 

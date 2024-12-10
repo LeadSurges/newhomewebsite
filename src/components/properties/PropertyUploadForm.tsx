@@ -40,13 +40,13 @@ export const PropertyUploadForm = () => {
       const { error: insertError } = await supabase
         .from("properties")
         .insert({
-          title: formData.title || "",
+          title: formData.title,
           description: formData.description,
-          price: formData.price || 0,
-          location: formData.location || "",
-          bedrooms: formData.bedrooms,
-          bathrooms: formData.bathrooms,
-          square_feet: formData.square_feet,
+          price: Number(formData.price),
+          location: formData.location,
+          bedrooms: formData.bedrooms ? Number(formData.bedrooms) : null,
+          bathrooms: formData.bathrooms ? Number(formData.bathrooms) : null,
+          square_feet: formData.square_feet ? Number(formData.square_feet) : null,
           image_url,
         });
 
@@ -68,7 +68,7 @@ export const PropertyUploadForm = () => {
         square_feet: "",
       });
       setSelectedFile(null);
-      setPreview("");
+      setPreview(null);
 
     } catch (error: any) {
       toast({
@@ -117,7 +117,6 @@ export const PropertyUploadForm = () => {
         placeholder="Bedrooms"
         value={formData.bedrooms}
         onChange={(e) => setFormData({ ...formData, bedrooms: e.target.value })}
-        required
         className="input"
       />
       <input
@@ -125,7 +124,6 @@ export const PropertyUploadForm = () => {
         placeholder="Bathrooms"
         value={formData.bathrooms}
         onChange={(e) => setFormData({ ...formData, bathrooms: e.target.value })}
-        required
         className="input"
       />
       <input
@@ -133,7 +131,6 @@ export const PropertyUploadForm = () => {
         placeholder="Square Feet"
         value={formData.square_feet}
         onChange={(e) => setFormData({ ...formData, square_feet: e.target.value })}
-        required
         className="input"
       />
       <input
