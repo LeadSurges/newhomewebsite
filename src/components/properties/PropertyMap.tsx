@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { Loader as GoogleMapsLoader } from "@googlemaps/js-api-loader";
+import { useGoogleMaps } from "@/hooks/useGoogleMaps";
 
 interface PropertyMapProps {
   location: string;
@@ -11,55 +10,55 @@ interface PropertyMapProps {
 
 export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
+  const { googleMaps, error: mapsError, isLoading: isMapsLoading } = useGoogleMaps();
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const mapInstanceRef = useRef<google.maps.Map | null>(null);
+  const markerRef = useRef<google.maps.Marker | null>(null);
 
   useEffect(() => {
-    let map: google.maps.Map | null = null;
-    let marker: google.maps.Marker | null = null;
+    if (!googleMaps || !mapRef.current || !location) {
+      return;
+    }
 
-    const initMap = async () => {
-      if (!mapRef.current || !location) {
-        console.error("Map reference or location not available");
-        setError("Unable to load map");
-        setIsLoading(false);
-        return;
-      }
-
+    const initializeMap = async () => {
       try {
-        console.log("Initializing map for location:", location);
+        console.log('Initializing map with location:', location);
         setIsLoading(true);
         setError(null);
 
-        // Get API key from Supabase function
-        const { data: { secret }, error: secretError } = await supabase.functions.invoke('get-maps-key');
-        
-        if (secretError || !secret) {
-          console.error("Failed to get Maps API key:", secretError);
-          setError("Failed to load map configuration");
-          setIsLoading(false);
-          return;
+        // Default to Toronto if geocoding fails
+        const defaultLocation = new googleMaps.LatLng(43.6532, -79.3832);
+
+        // Create map instance
+        if (!mapInstanceRef.current) {
+          mapInstanceRef.current = new googleMaps.Map(mapRef.current, {
+            center: defaultLocation,
+            zoom: 15,
+            mapTypeControl: false,
+            fullscreenControl: false,
+            streetViewControl: false,
+            styles: [
+              {
+                featureType: "poi",
+                elementType: "labels",
+                stylers: [{ visibility: "off" }],
+              },
+            ],
+          });
         }
 
-        // Initialize Google Maps
-        const loader = new GoogleMapsLoader({
-          apiKey: secret,
-          version: "weekly",
-        });
-
-        const google = await loader.load();
-        const geocoder = new google.maps.Geocoder();
-        
-        // Add ", Ontario, Canada" to the location if it's not already specified
+        // Geocode the location
+        const geocoder = new googleMaps.Geocoder();
         const fullLocation = location.toLowerCase().includes('ontario') 
           ? location 
           : `${location}, Ontario, Canada`;
 
-        console.log("Geocoding location:", fullLocation);
+        console.log('Geocoding location:', fullLocation);
         
-        const geocodeResult = await new Promise<google.maps.GeocoderResult[]>((resolve, reject) => {
+        const results = await new Promise<google.maps.GeocoderResult[]>((resolve, reject) => {
           geocoder.geocode({ address: fullLocation }, (results, status) => {
-            if (status === "OK" && results && results.length > 0) {
+            if (status === "OK" && results) {
               resolve(results);
             } else {
               reject(new Error(`Geocoding failed: ${status}`));
@@ -67,63 +66,51 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
           });
         });
 
-        const coordinates = geocodeResult[0].geometry.location;
-        console.log("Successfully geocoded location:", coordinates.toString());
+        const coordinates = results[0].geometry.location;
+        console.log('Successfully geocoded to coordinates:', coordinates.toString());
 
-        // Create map
-        map = new google.maps.Map(mapRef.current, {
-          center: coordinates,
-          zoom: 15,
-          mapTypeControl: false,
-          fullscreenControl: false,
-          streetViewControl: false,
-          styles: [
-            {
-              featureType: "poi",
-              elementType: "labels",
-              stylers: [{ visibility: "off" }],
-            },
-          ],
-        });
+        // Update map center
+        mapInstanceRef.current.setCenter(coordinates);
 
-        // Add marker
-        marker = new google.maps.Marker({
-          map,
+        // Clear existing marker
+        if (markerRef.current) {
+          markerRef.current.setMap(null);
+        }
+
+        // Add new marker
+        markerRef.current = new googleMaps.Marker({
+          map: mapInstanceRef.current,
           position: coordinates,
-          animation: google.maps.Animation.DROP,
+          animation: googleMaps.Animation.DROP,
         });
 
         setIsLoading(false);
       } catch (err) {
-        console.error("Error initializing map:", err);
-        setError("Failed to load the map. Please try again later.");
+        console.error('Error initializing map:', err);
+        setError('Failed to load the map location');
         setIsLoading(false);
       }
     };
 
-    initMap();
+    initializeMap();
 
     // Cleanup function
     return () => {
-      if (marker) {
-        marker.setMap(null);
-      }
-      if (map) {
-        // @ts-ignore - type definition issue with Google Maps
-        map = null;
+      if (markerRef.current) {
+        markerRef.current.setMap(null);
       }
     };
-  }, [location]);
+  }, [googleMaps, location]);
 
-  if (error) {
+  if (mapsError || error) {
     return (
       <Alert variant="destructive" className={className}>
-        <AlertDescription>{error}</AlertDescription>
+        <AlertDescription>{mapsError || error}</AlertDescription>
       </Alert>
     );
   }
 
-  if (isLoading) {
+  if (isMapsLoading || isLoading) {
     return (
       <div className={`flex items-center justify-center bg-secondary/50 rounded-lg ${className}`}>
         <Loader className="h-8 w-8 animate-spin text-primary" />
