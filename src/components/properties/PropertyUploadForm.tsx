@@ -8,27 +8,31 @@ import { PropertyFormFields } from "./PropertyFormFields";
 import { FileUploadField } from "./FileUploadField";
 import type { FormData } from "./types";
 
-export const PropertyUploadForm = () => {
+interface PropertyUploadFormProps {
+  initialData?: Property;
+}
+
+export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => {
   const [formData, setFormData] = useState<FormData>({
-    title: "",
-    description: "",
-    price: "",
-    location: "",
-    bedrooms_min: "",
-    bedrooms_max: "",
-    bathrooms_min: "",
-    bathrooms_max: "",
-    square_feet_min: "",
-    square_feet_max: "",
-    featured: false,
-    home_type: null,
-    construction_status: null,
-    ownership_type: null,
-    quick_move_in: false,
-    master_planned: false,
-    garage_spaces: null,
-    completion_year: null,
-    keywords: [],
+    title: initialData?.title || "",
+    description: initialData?.description || "",
+    price: initialData?.price?.toString() || "",
+    location: initialData?.location || "",
+    bedrooms_min: initialData?.bedrooms?.toString() || "",
+    bedrooms_max: initialData?.bedrooms_max?.toString() || "",
+    bathrooms_min: initialData?.bathrooms?.toString() || "",
+    bathrooms_max: initialData?.bathrooms_max?.toString() || "",
+    square_feet_min: initialData?.square_feet?.toString() || "",
+    square_feet_max: initialData?.square_feet_max?.toString() || "",
+    featured: initialData?.featured || false,
+    home_type: initialData?.home_type || null,
+    construction_status: initialData?.construction_status || null,
+    ownership_type: initialData?.ownership_type || null,
+    quick_move_in: initialData?.quick_move_in || false,
+    master_planned: initialData?.master_planned || false,
+    garage_spaces: initialData?.garage_spaces?.toString() || null,
+    completion_year: initialData?.completion_year?.toString() || null,
+    keywords: initialData?.keywords || [],
   });
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -42,7 +46,7 @@ export const PropertyUploadForm = () => {
     
     try {
       // Upload main image if selected
-      let image_url = "";
+      let image_url = initialData?.image_url || "";
       if (selectedFile) {
         const { data: uploadData, error: uploadError } = await supabase.storage
           .from("property-images")
@@ -58,7 +62,7 @@ export const PropertyUploadForm = () => {
       }
 
       // Upload floorplan if selected
-      let floorplan_url = "";
+      let floorplan_url = initialData?.floorplan_url || "";
       if (selectedFloorplan) {
         const { data: floorplanData, error: floorplanError } = await supabase.storage
           .from("property-images")
@@ -73,66 +77,85 @@ export const PropertyUploadForm = () => {
         floorplan_url = publicUrl;
       }
 
-      // Insert property data
-      const { error: insertError } = await supabase
-        .from("properties")
-        .insert({
-          title: formData.title,
-          description: formData.description,
-          price: Number(formData.price),
-          location: formData.location,
-          bedrooms: Number(formData.bedrooms_min),
-          bedrooms_max: Number(formData.bedrooms_max),
-          bathrooms: Number(formData.bathrooms_min),
-          bathrooms_max: Number(formData.bathrooms_max),
-          square_feet: Number(formData.square_feet_min),
-          square_feet_max: Number(formData.square_feet_max),
-          image_url,
-          featured: formData.featured,
-          floorplan_url,
-          home_type: formData.home_type,
-          construction_status: formData.construction_status,
-          ownership_type: formData.ownership_type,
-          quick_move_in: formData.quick_move_in,
-          master_planned: formData.master_planned,
-          garage_spaces: formData.garage_spaces === "4+" ? 4 : Number(formData.garage_spaces),
-          completion_year: formData.completion_year ? Number(formData.completion_year) : null,
-          keywords: formData.keywords,
+      const propertyData = {
+        title: formData.title,
+        description: formData.description,
+        price: Number(formData.price),
+        location: formData.location,
+        bedrooms: Number(formData.bedrooms_min),
+        bedrooms_max: Number(formData.bedrooms_max),
+        bathrooms: Number(formData.bathrooms_min),
+        bathrooms_max: Number(formData.bathrooms_max),
+        square_feet: Number(formData.square_feet_min),
+        square_feet_max: Number(formData.square_feet_max),
+        image_url,
+        featured: formData.featured,
+        floorplan_url,
+        home_type: formData.home_type,
+        construction_status: formData.construction_status,
+        ownership_type: formData.ownership_type,
+        quick_move_in: formData.quick_move_in,
+        master_planned: formData.master_planned,
+        garage_spaces: formData.garage_spaces === "4+" ? 4 : Number(formData.garage_spaces),
+        completion_year: formData.completion_year ? Number(formData.completion_year) : null,
+        keywords: formData.keywords,
+      };
+
+      if (initialData) {
+        // Update existing property
+        const { error: updateError } = await supabase
+          .from("properties")
+          .update(propertyData)
+          .eq("id", initialData.id);
+
+        if (updateError) throw updateError;
+
+        toast({
+          title: "Success",
+          description: "Property has been updated successfully.",
         });
+      } else {
+        // Insert new property
+        const { error: insertError } = await supabase
+          .from("properties")
+          .insert(propertyData);
 
-      if (insertError) throw insertError;
+        if (insertError) throw insertError;
 
-      toast({
-        title: "Success",
-        description: "Property has been uploaded successfully.",
-      });
+        toast({
+          title: "Success",
+          description: "Property has been uploaded successfully.",
+        });
+      }
 
-      // Reset form
-      setFormData({
-        title: "",
-        description: "",
-        price: "",
-        location: "",
-        bedrooms_min: "",
-        bedrooms_max: "",
-        bathrooms_min: "",
-        bathrooms_max: "",
-        square_feet_min: "",
-        square_feet_max: "",
-        featured: false,
-        home_type: null,
-        construction_status: null,
-        ownership_type: null,
-        quick_move_in: false,
-        master_planned: false,
-        garage_spaces: null,
-        completion_year: null,
-        keywords: [],
-      });
-      setSelectedFile(null);
-      setSelectedFloorplan(null);
-      setPreview(null);
-      setFloorplanPreview(null);
+      // Reset form only for new properties
+      if (!initialData) {
+        setFormData({
+          title: "",
+          description: "",
+          price: "",
+          location: "",
+          bedrooms_min: "",
+          bedrooms_max: "",
+          bathrooms_min: "",
+          bathrooms_max: "",
+          square_feet_min: "",
+          square_feet_max: "",
+          featured: false,
+          home_type: null,
+          construction_status: null,
+          ownership_type: null,
+          quick_move_in: false,
+          master_planned: false,
+          garage_spaces: null,
+          completion_year: null,
+          keywords: [],
+        });
+        setSelectedFile(null);
+        setSelectedFloorplan(null);
+        setPreview(null);
+        setFloorplanPreview(null);
+      }
 
     } catch (error: any) {
       toast({

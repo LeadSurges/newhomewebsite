@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { PropertyUploadForm } from "@/components/properties/PropertyUploadForm";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 type Property = Database['public']['Tables']['properties']['Row'];
 
@@ -12,13 +15,14 @@ export default function AdminProperties() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [editingProperty, setEditingProperty] = useState<Property | null>(null);
 
   const { data: properties, isLoading } = useQuery({
     queryKey: ["admin-properties"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("properties")
-        .select("*")
+        .select("*, builders(name)")
         .order("created_at", { ascending: false });
 
       if (error) {
@@ -66,12 +70,24 @@ export default function AdminProperties() {
               </p>
             </div>
             <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={() => navigate(`/admin/properties/${property.id}/edit`)}
-              >
-                Edit
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    onClick={() => setEditingProperty(property)}
+                  >
+                    Edit
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Edit Property</DialogTitle>
+                  </DialogHeader>
+                  {editingProperty && (
+                    <PropertyUploadForm initialData={editingProperty} />
+                  )}
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         ))}

@@ -127,7 +127,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         )}
         <div className="absolute top-4 left-4 flex gap-2">
           {property.featured && (
-            <span className="bg-primary text-white px-3 py-1 rounded-full text-sm font-medium">
+            <span className="bg-[#9b87f5] text-white px-3 py-1 rounded-full text-sm font-medium">
               FEATURED
             </span>
           )}
