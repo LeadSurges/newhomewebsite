@@ -116,23 +116,30 @@ const Properties = () => {
         <SearchFilters onFilterChange={handleFilterChange} />
         
         <main className="max-w-[1920px] mx-auto px-4 py-8">
-          <div className="flex justify-end mb-4 gap-2">
-            <Button
-              variant={showMap ? "outline" : "default"}
-              size="sm"
-              onClick={() => setShowMap(false)}
-            >
-              <List className="h-4 w-4 mr-2" />
-              List
-            </Button>
-            <Button
-              variant={showMap ? "default" : "outline"}
-              size="sm"
-              onClick={() => setShowMap(true)}
-            >
-              <Map className="h-4 w-4 mr-2" />
-              Map
-            </Button>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-semibold">
+              Properties in {filters.location || "All Locations"}
+            </h1>
+            <div className="flex gap-2">
+              <Button
+                variant={showMap ? "outline" : "default"}
+                size="sm"
+                onClick={() => setShowMap(false)}
+                className="w-24"
+              >
+                <List className="h-4 w-4 mr-2" />
+                List
+              </Button>
+              <Button
+                variant={showMap ? "default" : "outline"}
+                size="sm"
+                onClick={() => setShowMap(true)}
+                className="w-24"
+              >
+                <Map className="h-4 w-4 mr-2" />
+                Map
+              </Button>
+            </div>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-6">
@@ -140,7 +147,7 @@ const Properties = () => {
               {isLoading ? (
                 <div className="text-center py-8">Loading properties...</div>
               ) : properties && properties.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6">
                   {properties.map((property) => (
                     <PropertyCard key={property.id} property={property} />
                   ))}

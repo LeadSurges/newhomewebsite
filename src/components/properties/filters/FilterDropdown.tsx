@@ -3,34 +3,50 @@ import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, LucideIcon } from "lucide-react"
 
 interface FilterDropdownProps {
   label: string
-  children: React.ReactNode
+  icon: LucideIcon
+  value: string | null
+  options: string[]
+  onChange: (value: string) => void
   className?: string
 }
 
-export function FilterDropdown({ label, children, className }: FilterDropdownProps) {
+export function FilterDropdown({
+  label,
+  icon: Icon,
+  value,
+  options,
+  onChange,
+  className,
+}: FilterDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button 
           variant="outline" 
-          size="sm"
-          className={`h-9 px-3 text-sm w-[140px] ${className}`}
+          className={`h-10 px-4 flex items-center gap-2 ${className}`}
         >
-          {label}
-          <ChevronDown className="ml-1 h-3 w-3" />
+          <Icon className="h-4 w-4" />
+          <span>{value || label}</span>
+          <ChevronDown className="h-4 w-4 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent 
-        className="w-[320px] p-4 bg-white border shadow-lg backdrop-blur-sm" 
-        sideOffset={8}
-      >
-        {children}
+      <DropdownMenuContent align="start" className="w-[200px]">
+        {options.map((option) => (
+          <DropdownMenuItem
+            key={option}
+            onClick={() => onChange(option)}
+            className="cursor-pointer"
+          >
+            {option}
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   )
