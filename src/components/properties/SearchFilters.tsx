@@ -102,6 +102,11 @@ export function SearchFilters({ onFilterChange, initialFilters }: SearchFiltersP
     onFilterChange(filters)
   }
 
+  // Wrapper function to match the expected signature of onApply
+  const handleMoreFiltersApply = () => {
+    handleSubmit({ preventDefault: () => {} } as React.FormEvent)
+  }
+
   return (
     <div className="w-full border-b bg-white sticky top-16 z-10 shadow-sm">
       <form onSubmit={handleSubmit} className="max-w-7xl mx-auto px-4 py-3">
@@ -144,7 +149,7 @@ export function SearchFilters({ onFilterChange, initialFilters }: SearchFiltersP
                 onGarageChange={setGarage}
                 onCompletionYearChange={setCompletionYear}
                 onKeywordsChange={setKeywords}
-                onApply={handleSubmit}
+                onApply={handleMoreFiltersApply}
               />
             </SheetContent>
           </Sheet>
