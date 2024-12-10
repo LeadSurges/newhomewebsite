@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader as LoadingSpinner } from "lucide-react";
+import { Loader } from "lucide-react";
 import { getMapLoader } from "@/utils/mapLoader";
 
 interface PropertyMapProps {
@@ -12,10 +12,14 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const markerRef = useRef<google.maps.Marker | null>(null);
 
   useEffect(() => {
     const initMap = async () => {
-      if (!mapRef.current || !location) return;
+      if (!mapRef.current || !location) {
+        console.error("Map reference or location not available");
+        return;
+      }
       
       try {
         setIsLoading(true);
@@ -44,6 +48,11 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
 
         console.log("Location geocoded successfully:", results[0].geometry.location.toString());
 
+        // Clear existing marker if any
+        if (markerRef.current) {
+          markerRef.current.setMap(null);
+        }
+
         const map = new google.maps.Map(mapRef.current, {
           center: results[0].geometry.location,
           zoom: 15,
@@ -60,7 +69,8 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
           ],
         });
 
-        new google.maps.Marker({
+        // Create and store the marker reference
+        markerRef.current = new google.maps.Marker({
           map,
           position: results[0].geometry.location,
           animation: google.maps.Animation.DROP,
@@ -75,6 +85,13 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
     };
 
     initMap();
+
+    // Cleanup function
+    return () => {
+      if (markerRef.current) {
+        markerRef.current.setMap(null);
+      }
+    };
   }, [location]);
 
   if (error) {
@@ -88,7 +105,7 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
   if (isLoading) {
     return (
       <div className={`flex items-center justify-center bg-secondary/50 rounded-lg ${className}`} style={{ height: "300px" }}>
-        <LoadingSpinner className="h-8 w-8 animate-spin text-primary" />
+        <Loader className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
