@@ -1,13 +1,10 @@
 import { Navigation } from "@/components/Navigation";
 import { SearchFilters } from "@/components/properties/SearchFilters";
-import { PropertyCard } from "@/components/properties/PropertyCard";
 import { PropertiesMap } from "@/components/properties/PropertiesMap";
 import { SEO } from "@/components/SEO";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Map, List } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { PropertiesList } from "@/components/properties/PropertiesList";
 import { PropertiesHeader } from "@/components/properties/PropertiesHeader";
@@ -15,7 +12,7 @@ import { PropertiesHeader } from "@/components/properties/PropertiesHeader";
 const Properties = () => {
   const [searchParams] = useSearchParams();
   const [filters, setFilters] = useState({
-    location: "",
+    location: searchParams.get("location") || "",
     priceRange: [0, 5000000],
     bedroomRange: [1, 7],
     bathroomRange: [1, 5],
@@ -34,14 +31,14 @@ const Properties = () => {
 
   // Handle URL parameters
   useEffect(() => {
-    const city = searchParams.get("city");
+    const location = searchParams.get("location");
     const homeType = searchParams.get("homeType");
     const quickMoveIn = searchParams.get("quickMoveIn") === "true";
 
-    if (city || homeType || quickMoveIn) {
+    if (location || homeType || quickMoveIn) {
       setFilters(prev => ({
         ...prev,
-        location: city || prev.location,
+        location: location || prev.location,
         homeType: homeType || prev.homeType,
         quickMoveIn: quickMoveIn
       }));

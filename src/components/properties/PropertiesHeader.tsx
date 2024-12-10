@@ -15,7 +15,7 @@ export const PropertiesHeader = ({
   return (
     <div className="flex justify-between items-center mb-6">
       <h1 className="text-2xl font-semibold">
-        Properties in {location || "All Locations"}
+        Properties {location ? `in ${location}` : "in All Locations"}
       </h1>
       <div className="flex gap-2">
         <Button
