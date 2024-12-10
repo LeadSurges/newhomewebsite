@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import { BuildersSection } from "@/components/home/BuildersSection";
 import { HeroSection } from "@/components/home/HeroSection";
 import { TrendingProperties } from "@/components/home/TrendingProperties";
+import { OntarioLocations } from "@/components/home/OntarioLocations";
 import { SEO } from "@/components/SEO";
 
 const Index = () => {
@@ -13,6 +14,7 @@ const Index = () => {
       <HeroSection />
       <TrendingProperties />
       <BuildersSection />
+      <OntarioLocations />
       <Footer />
     </div>
   );
