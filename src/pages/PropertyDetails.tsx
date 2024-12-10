@@ -14,6 +14,10 @@ const PropertyDetails = () => {
   const { data: property, isLoading } = useQuery({
     queryKey: ['property', id],
     queryFn: async () => {
+      if (!id?.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i)) {
+        throw new Error('Invalid property ID format');
+      }
+
       const { data, error } = await supabase
         .from('properties')
         .select('*')
@@ -23,7 +27,8 @@ const PropertyDetails = () => {
       if (error) throw error;
       console.log("Fetched property:", data);
       return data;
-    }
+    },
+    enabled: !!id
   });
 
   if (isLoading) {
@@ -38,9 +43,8 @@ const PropertyDetails = () => {
     <div className="min-h-screen bg-white">
       <SEO 
         title={`${property.title} | LuxuryHomes`}
-        description={property.description}
+        description={property.description || ''}
         keywords={`${property.title}, ${property.location}, luxury property, real estate`}
-        image={property.image_url}
       />
       <Navigation />
       
