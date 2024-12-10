@@ -6,8 +6,9 @@ interface FileUploadFieldProps {
   id: string;
   label: string;
   icon: LucideIcon;
-  preview: string | null;
-  onChange: (file: File) => void;
+  preview: string[] | null;
+  onChange: (files: FileList) => void;
+  multiple?: boolean;
 }
 
 export const FileUploadField = ({
@@ -16,6 +17,7 @@ export const FileUploadField = ({
   icon: Icon,
   preview,
   onChange,
+  multiple = false,
 }: FileUploadFieldProps) => {
   return (
     <div className="space-y-4">
@@ -29,15 +31,23 @@ export const FileUploadField = ({
           id={id}
           type="file"
           accept="image/*"
+          multiple={multiple}
           onChange={(e) => {
-            if (e.target.files?.[0]) {
-              onChange(e.target.files[0]);
+            if (e.target.files && e.target.files.length > 0) {
+              onChange(e.target.files);
             }
           }}
         />
-        {preview && (
-          <div className="mt-2">
-            <img src={preview} alt={`${label} Preview`} className="max-w-sm rounded-lg border" />
+        {preview && preview.length > 0 && (
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            {preview.map((url, index) => (
+              <img 
+                key={index} 
+                src={url} 
+                alt={`${label} Preview ${index + 1}`} 
+                className="max-w-sm rounded-lg border" 
+              />
+            ))}
           </div>
         )}
       </div>

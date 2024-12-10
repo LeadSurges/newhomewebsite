@@ -5,28 +5,33 @@ import type { FormData } from "../types";
 import type { Property } from "@/types/property";
 
 export const usePropertySubmit = (initialData?: Property) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [selectedFloorplan, setSelectedFloorplan] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(initialData?.image_url || null);
+  const [previews, setPreviews] = useState<string[]>(initialData?.image_url ? initialData.image_url.split(',') : []);
   const [floorplanPreview, setFloorplanPreview] = useState<string | null>(initialData?.floorplan_url || null);
   const { toast } = useToast();
 
   const handleSubmit = async (formData: FormData) => {
     try {
-      // Upload main image if selected
-      let image_url = initialData?.image_url || "";
-      if (selectedFile) {
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from("property-images")
-          .upload(`${Date.now()}-${selectedFile.name}`, selectedFile);
+      // Upload main images if selected
+      let image_urls: string[] = initialData?.image_url ? initialData.image_url.split(',') : [];
+      if (selectedFiles.length > 0) {
+        const uploadPromises = selectedFiles.map(async (file) => {
+          const { data: uploadData, error: uploadError } = await supabase.storage
+            .from("property-images")
+            .upload(`${Date.now()}-${file.name}`, file);
 
-        if (uploadError) throw uploadError;
+          if (uploadError) throw uploadError;
 
-        const { data: { publicUrl } } = supabase.storage
-          .from("property-images")
-          .getPublicUrl(uploadData.path);
+          const { data: { publicUrl } } = supabase.storage
+            .from("property-images")
+            .getPublicUrl(uploadData.path);
 
-        image_url = publicUrl;
+          return publicUrl;
+        });
+
+        const newUrls = await Promise.all(uploadPromises);
+        image_urls = newUrls;
       }
 
       // Upload floorplan if selected
@@ -59,7 +64,7 @@ export const usePropertySubmit = (initialData?: Property) => {
         square_feet: formData.square_feet_min ? Number(formData.square_feet_min) : null,
         square_feet_min: formData.square_feet_min || null,
         square_feet_max: formData.square_feet_max || null,
-        image_url,
+        image_url: image_urls.join(','),
         featured: formData.featured,
         floorplan_url,
         home_type: formData.home_type,
@@ -116,12 +121,12 @@ export const usePropertySubmit = (initialData?: Property) => {
   };
 
   return {
-    selectedFile,
-    setSelectedFile,
+    selectedFiles,
+    setSelectedFiles,
     selectedFloorplan,
     setSelectedFloorplan,
-    preview,
-    setPreview,
+    previews,
+    setPreviews,
     floorplanPreview,
     setFloorplanPreview,
     handleSubmit,

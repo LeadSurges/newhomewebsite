@@ -42,12 +42,12 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
   });
 
   const {
-    selectedFile,
-    setSelectedFile,
+    selectedFiles,
+    setSelectedFiles,
     selectedFloorplan,
     setSelectedFloorplan,
-    preview,
-    setPreview,
+    previews,
+    setPreviews,
     floorplanPreview,
     setFloorplanPreview,
     handleSubmit,
@@ -83,9 +83,9 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
         amenities: [],
         features_and_finishes: "",
       });
-      setSelectedFile(null);
+      setSelectedFiles([]);
       setSelectedFloorplan(null);
-      setPreview(null);
+      setPreviews([]);
       setFloorplanPreview(null);
     }
   };
@@ -101,10 +101,13 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
               id="picture"
               label="Property Images"
               icon={ImagePlus}
-              preview={preview}
-              onChange={(file) => {
-                setSelectedFile(file);
-                setPreview(URL.createObjectURL(file));
+              preview={previews}
+              multiple={true}
+              onChange={(files) => {
+                const fileArray = Array.from(files);
+                setSelectedFiles(fileArray);
+                const newPreviews = fileArray.map(file => URL.createObjectURL(file));
+                setPreviews(newPreviews);
               }}
             />
 
@@ -112,10 +115,12 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
               id="floorplan"
               label="Floor Plans"
               icon={FileText}
-              preview={floorplanPreview}
-              onChange={(file) => {
-                setSelectedFloorplan(file);
-                setFloorplanPreview(URL.createObjectURL(file));
+              preview={floorplanPreview ? [floorplanPreview] : null}
+              onChange={(files) => {
+                if (files[0]) {
+                  setSelectedFloorplan(files[0]);
+                  setFloorplanPreview(URL.createObjectURL(files[0]));
+                }
               }}
             />
           </div>
