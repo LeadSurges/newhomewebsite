@@ -1,7 +1,11 @@
 import { PropertyCard } from "@/components/properties/PropertyCard";
 import type { Database } from "@/integrations/supabase/types";
 
-type Property = Database["public"]["Tables"]["properties"]["Row"];
+type Property = Database["public"]["Tables"]["properties"]["Row"] & {
+  builders?: {
+    name: string;
+  } | null;
+};
 
 interface BuilderPropertiesProps {
   properties: Property[] | null;
