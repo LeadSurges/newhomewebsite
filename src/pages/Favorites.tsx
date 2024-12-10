@@ -1,9 +1,9 @@
-import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PropertiesList } from "@/components/properties/PropertiesList";
 import { useAuth } from "@/contexts/AuthContext";
+import type { Property } from "@/types/property";
 
 const Favorites = () => {
   const { user } = useAuth();
@@ -18,20 +18,7 @@ const Favorites = () => {
         .from("favorites")
         .select(`
           property_id,
-          properties (
-            id,
-            title,
-            price,
-            location,
-            bedrooms,
-            bathrooms,
-            square_feet,
-            image_url,
-            builders (
-              id,
-              name
-            )
-          )
+          properties (*)
         `)
         .eq("user_id", user.id);
 
@@ -41,7 +28,7 @@ const Favorites = () => {
       }
 
       console.log("Fetched favorites:", favoriteProperties);
-      return favoriteProperties.map(f => f.properties);
+      return favoriteProperties.map(f => f.properties) as Property[];
     },
     enabled: !!user,
   });
