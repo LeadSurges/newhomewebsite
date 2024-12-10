@@ -24,8 +24,11 @@ export const PropertyMainInfo = ({
   incentives,
 }: PropertyMainInfoProps) => {
   const formatPrice = (value?: number) => {
-    return value ? `From $${value.toLocaleString()}` : 'N/A';
+    return value ? `$${value.toLocaleString()}` : 'N/A';
   };
+
+  console.log('Deposit Structure:', deposit_structure);
+  console.log('Incentives:', incentives);
 
   return (
     <Card>
@@ -91,13 +94,13 @@ export const PropertyMainInfo = ({
                 {parking_cost && (
                   <div>
                     <p className="text-sm text-muted-foreground">Parking Cost</p>
-                    <p className="font-medium">From ${parking_cost.toLocaleString()}</p>
+                    <p className="font-medium">${parking_cost.toLocaleString()}</p>
                   </div>
                 )}
                 {storage_cost && (
                   <div>
                     <p className="text-sm text-muted-foreground">Storage Cost</p>
-                    <p className="font-medium">From ${storage_cost.toLocaleString()}</p>
+                    <p className="font-medium">${storage_cost.toLocaleString()}</p>
                   </div>
                 )}
               </div>
@@ -110,11 +113,13 @@ export const PropertyMainInfo = ({
           <>
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-4">Deposit Structure</h2>
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {Object.entries(deposit_structure).map(([key, value]) => (
-                  <div key={key} className="flex justify-between items-center">
-                    <span className="text-muted-foreground">{key}</span>
-                    <span className="font-medium">{String(value)}</span>
+                  <div key={key} className="p-4 rounded-lg border bg-card">
+                    <p className="text-sm text-muted-foreground">{key}</p>
+                    <p className="font-medium mt-1">
+                      {typeof value === 'number' ? formatPrice(value) : value}
+                    </p>
                   </div>
                 ))}
               </div>
@@ -127,11 +132,13 @@ export const PropertyMainInfo = ({
           <>
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-4">Incentives</h2>
-              <div className="space-y-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {Object.entries(incentives).map(([key, value]) => (
-                  <div key={key} className="flex justify-between items-center">
-                    <span className="text-muted-foreground">{key}</span>
-                    <span className="font-medium">{String(value)}</span>
+                  <div key={key} className="p-4 rounded-lg border bg-card">
+                    <p className="text-sm text-muted-foreground">{key}</p>
+                    <p className="font-medium mt-1">
+                      {typeof value === 'number' ? formatPrice(value) : value}
+                    </p>
                   </div>
                 ))}
               </div>
