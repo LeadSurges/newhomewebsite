@@ -10,10 +10,11 @@ export const GoogleSignInButton = ({ onClick }: GoogleSignInButtonProps) => {
 
   const handleClick = async () => {
     try {
-      console.log("Initiating Google sign in...");
+      console.log("GoogleSignInButton: Starting Google sign in process...");
       await onClick();
+      console.log("GoogleSignInButton: Google sign in completed successfully");
     } catch (error: any) {
-      console.error('Google sign in error:', error);
+      console.error('GoogleSignInButton: Error during sign in:', error);
       toast({
         variant: "destructive",
         title: "Error signing in with Google",

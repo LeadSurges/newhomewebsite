@@ -48,7 +48,7 @@ export const useAuthActions = () => {
 
   const signInWithGoogle = async () => {
     try {
-      console.log("Starting Google sign in process...");
+      console.log("AuthActions: Starting Google sign in process...");
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
@@ -61,13 +61,13 @@ export const useAuthActions = () => {
       });
       
       if (error) {
-        console.error("Google sign in error:", error);
+        console.error("AuthActions: Google sign in error:", error);
         throw error;
       }
       
-      console.log("Google sign in successful:", data);
+      console.log("AuthActions: Google sign in successful:", data);
     } catch (error: any) {
-      console.error("Google sign in error:", error);
+      console.error("AuthActions: Google sign in error:", error);
       toast({
         variant: "destructive",
         title: "Error signing in with Google",
@@ -79,13 +79,16 @@ export const useAuthActions = () => {
 
   const signOut = async () => {
     try {
+      console.log("AuthActions: Starting sign out process...");
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
+      console.log("AuthActions: Sign out successful");
       toast({
         title: "Signed out",
         description: "You have been successfully signed out.",
       });
     } catch (error: any) {
+      console.error("AuthActions: Sign out error:", error);
       toast({
         variant: "destructive",
         title: "Error signing out",
