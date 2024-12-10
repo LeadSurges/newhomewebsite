@@ -6,8 +6,11 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Star } from "lucide-react";
 import { useEffect } from "react";
+import type { Database } from "@/integrations/supabase/types";
 
-interface ReviewWithProfile extends Database['public']['Tables']['builder_reviews']['Row'] {
+type BuilderReview = Database["public"]["Tables"]["builder_reviews"]["Row"];
+
+interface ReviewWithProfile extends BuilderReview {
   profiles: {
     username: string | null;
     avatar_url: string | null;
@@ -76,7 +79,7 @@ const BuilderProfile = () => {
         .eq("builder_id", id);
 
       if (error) throw error;
-      return data;
+      return data as ReviewWithProfile[];
     },
     enabled: !!id,
   });
