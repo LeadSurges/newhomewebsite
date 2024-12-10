@@ -26,8 +26,10 @@ export function LocationSearchInput({ value, onChange }: LocationSearchInputProp
     const newValue = e.target.value
     console.log("Location input changed:", newValue)
     setInputValue(newValue)
-    // Update parent component immediately on change
-    onChange(newValue)
+    // Only update parent if there's a value or if we're explicitly clearing it
+    if (newValue === '' || newValue.trim().length > 0) {
+      onChange(newValue)
+    }
   }
 
   const handleBlur = () => {
