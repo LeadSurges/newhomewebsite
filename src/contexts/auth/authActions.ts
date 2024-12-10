@@ -63,7 +63,7 @@ export const useAuthActions = () => {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: window.location.origin,
+          redirectTo: `${window.location.origin}/properties`,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
@@ -82,7 +82,14 @@ export const useAuthActions = () => {
       }
 
       console.log("AuthActions: Redirecting to Google OAuth URL:", data.url);
-      window.location.href = data.url;
+      // Instead of using window.location.href, use the built-in redirect
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/properties`,
+          skipBrowserRedirect: false,
+        },
+      });
     } catch (error: any) {
       console.error("AuthActions: Google sign in error:", error);
       toast({
