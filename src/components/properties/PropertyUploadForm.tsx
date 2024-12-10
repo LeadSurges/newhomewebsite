@@ -20,11 +20,11 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     price: initialData?.price?.toString() || "",
     location: initialData?.location || "",
     bedrooms_min: initialData?.bedrooms?.toString() || "",
-    bedrooms_max: initialData?.bedrooms_max?.toString() || "",
+    bedrooms_max: "", // This will be handled in the form but not stored directly
     bathrooms_min: initialData?.bathrooms?.toString() || "",
-    bathrooms_max: initialData?.bathrooms_max?.toString() || "",
+    bathrooms_max: "", // This will be handled in the form but not stored directly
     square_feet_min: initialData?.square_feet?.toString() || "",
-    square_feet_max: initialData?.square_feet_max?.toString() || "",
+    square_feet_max: "", // This will be handled in the form but not stored directly
     featured: initialData?.featured || false,
     home_type: initialData?.home_type || null,
     construction_status: initialData?.construction_status || null,
@@ -38,8 +38,8 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFloorplan, setSelectedFloorplan] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [floorplanPreview, setFloorplanPreview] = useState<string | null>(null);
+  const [preview, setPreview] = useState<string | null>(initialData?.image_url || null);
+  const [floorplanPreview, setFloorplanPreview] = useState<string | null>(initialData?.floorplan_url || null);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -84,11 +84,8 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
         price: Number(formData.price),
         location: formData.location,
         bedrooms: Number(formData.bedrooms_min),
-        bedrooms_max: Number(formData.bedrooms_max),
         bathrooms: Number(formData.bathrooms_min),
-        bathrooms_max: Number(formData.bathrooms_max),
         square_feet: Number(formData.square_feet_min),
-        square_feet_max: Number(formData.square_feet_max),
         image_url,
         featured: formData.featured,
         floorplan_url,
@@ -199,7 +196,9 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
         </CardContent>
       </Card>
 
-      <Button type="submit" className="w-full">Upload Property</Button>
+      <Button type="submit" className="w-full">
+        {initialData ? "Update Property" : "Upload Property"}
+      </Button>
     </form>
   );
 };
