@@ -10,22 +10,86 @@ interface PropertyFeaturesFieldsProps {
 }
 
 const AMENITIES_OPTIONS = [
-  "Pool",
-  "Gym",
-  "Concierge",
+  // Security & Concierge
+  "24/7 Security",
+  "Security Cameras",
+  "Gated Entry",
+  "Concierge Services",
+  
+  // Parking
+  "Reserved Parking",
+  "Visitor Parking",
+  "EV Charging Stations",
+  
+  // Pools & Water Features
+  "Outdoor Pool",
+  "Indoor Heated Pool",
+  "Infinity Pool",
+  "Rooftop Pool",
+  "Hot Tub",
+  "Jacuzzi",
+  
+  // Fitness & Sports
+  "Fitness Center",
+  "Yoga Studio",
+  "Spin Room",
+  "Personal Training Room",
+  "Tennis Court",
+  "Basketball Court",
+  "Squash Court",
+  "Putting Green",
+  
+  // Social Spaces
+  "Residents' Lounge",
   "Party Room",
-  "Guest Suite",
+  "Game Room",
   "Rooftop Terrace",
   "BBQ Area",
-  "Pet Spa",
-  "Bike Storage",
-  "Electric Vehicle Charging",
-  "Security System",
-  "Theater Room",
-  "Business Center",
-  "Yoga Studio",
-  "Steam Room",
+  "Fire Pit",
+  "Cinema Room",
+  "Co-Working Space",
+  "Meeting Rooms",
+  
+  // Wellness
+  "Spa",
   "Sauna",
+  "Steam Room",
+  "Massage Room",
+  "Meditation Garden",
+  
+  // Children & Pets
+  "Kids' Playroom",
+  "Playground",
+  "Daycare Facility",
+  "Pet Park",
+  "Pet Washing Station",
+  
+  // Convenience
+  "On-Site Retail",
+  "On-Site Dining",
+  "Package Room",
+  "Storage Units",
+  "Laundry Facilities",
+  "Bike Storage",
+  "Bike Repair Station",
+  
+  // Green Features
+  "Community Garden",
+  "Solar Panels",
+  "Energy-Efficient Features",
+  "Water-Saving Features",
+  
+  // Luxury
+  "Private Elevator",
+  "Wine Cellar",
+  "Wine Tasting Room",
+  "Cigar Lounge",
+  "Library",
+  
+  // Outdoor
+  "Walking Trails",
+  "Sports Field",
+  "Open Lawn Area",
 ];
 
 export const PropertyFeaturesFields = ({ formData, setFormData }: PropertyFeaturesFieldsProps) => {
@@ -55,7 +119,7 @@ export const PropertyFeaturesFields = ({ formData, setFormData }: PropertyFeatur
 
       <div className="space-y-2">
         <Label>Amenities</Label>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-4 max-h-[400px] overflow-y-auto p-4 border rounded-lg">
           {AMENITIES_OPTIONS.map((amenity) => (
             <div key={amenity} className="flex items-center space-x-2">
               <Checkbox
@@ -63,7 +127,7 @@ export const PropertyFeaturesFields = ({ formData, setFormData }: PropertyFeatur
                 checked={formData.amenities.includes(amenity)}
                 onCheckedChange={() => toggleAmenity(amenity)}
               />
-              <Label htmlFor={`amenity-${amenity}`}>{amenity}</Label>
+              <Label htmlFor={`amenity-${amenity}`} className="text-sm">{amenity}</Label>
             </div>
           ))}
         </div>
