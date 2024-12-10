@@ -1,68 +1,63 @@
-import { useEffect, useRef, useState } from "react";
-import type { Database } from "@/integrations/supabase/types";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader as LoadingSpinner } from "lucide-react";
-import { Loader } from "@googlemaps/js-api-loader";
+import { useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader } from "lucide-react";
+import type { Database } from "@/integrations/supabase/types";
 
 type Property = Database["public"]["Tables"]["properties"]["Row"];
 
 interface PropertiesMapProps {
   properties: Property[];
-  onPropertyClick: (propertyId: string) => void;
+  onPropertyClick?: (propertyId: string) => void;
 }
 
 export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const mapInstanceRef = useRef<google.maps.Map | null>(null);
   const markersRef = useRef<google.maps.Marker[]>([]);
 
   useEffect(() => {
     const initMap = async () => {
-      if (!mapRef.current) return;
-      
       try {
-        setIsLoading(true);
-        setError(null);
-        console.log("Initializing map with properties:", properties);
-
-        const { data: { secret } } = await supabase.functions.invoke('get-maps-key');
+        // Get Maps API key
+        const { data: { secret }, error: secretError } = await supabase.functions.invoke('get-maps-key');
         
-        if (!secret) {
-          throw new Error("No Google Maps API key found");
+        if (secretError || !secret) {
+          console.error("Failed to get Maps API key:", secretError);
+          return;
         }
 
-        const loader = new Loader({
+        // Load Google Maps
+        const loader = new google.maps.Loader({
           apiKey: secret,
           version: "weekly",
         });
 
-        const google = await loader.load();
-        console.log("Google Maps API loaded successfully");
+        await loader.load();
+        console.log("Google Maps loaded successfully");
 
-        // Default to Toronto coordinates
-        const defaultCenter = { lat: 43.6532, lng: -79.3832 };
-        
-        const mapInstance = new google.maps.Map(mapRef.current, {
-          center: defaultCenter,
+        if (!mapRef.current) return;
+
+        // Initialize map
+        const mapOptions: google.maps.MapOptions = {
+          center: { lat: 43.6532, lng: -79.3832 }, // Toronto
           zoom: 11,
-          styles: [
-            {
-              featureType: "poi",
-              elementType: "labels",
-              stylers: [{ visibility: "off" }],
-            },
-          ],
-        });
+          mapTypeControl: false,
+          fullscreenControl: false,
+          streetViewControl: false,
+        };
+
+        const map = new google.maps.Map(mapRef.current, mapOptions);
+        mapInstanceRef.current = map;
 
         // Clear existing markers
         markersRef.current.forEach(marker => marker.setMap(null));
         markersRef.current = [];
 
-        // Create markers for all properties
+        // Create bounds to fit all markers
         const bounds = new google.maps.LatLngBounds();
 
+        // Add markers for properties
         for (const [index, property] of properties.entries()) {
           const geocoder = new google.maps.Geocoder();
           
@@ -77,9 +72,11 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
               });
             });
 
+            const position = results[0].geometry.location;
+            
             const marker = new google.maps.Marker({
-              map: mapInstance,
-              position: results[0].geometry.location,
+              map,
+              position,
               title: property.title,
               icon: {
                 path: google.maps.SymbolPath.CIRCLE,
@@ -103,15 +100,17 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
                   <p class="text-sm">$${property.price.toLocaleString()}</p>
                   <p class="text-xs text-gray-600">${property.location}</p>
                 </div>
-              `,
+              `
             });
 
             marker.addListener("click", () => {
-              onPropertyClick(property.id);
+              if (onPropertyClick) {
+                onPropertyClick(property.id);
+              }
             });
 
             marker.addListener("mouseover", () => {
-              infoWindow.open(mapInstance, marker);
+              infoWindow.open(map, marker);
             });
 
             marker.addListener("mouseout", () => {
@@ -119,56 +118,44 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
             });
 
             markersRef.current.push(marker);
-            bounds.extend(results[0].geometry.location);
+            bounds.extend(position);
           } catch (error) {
             console.error(`Error creating marker for property ${property.title}:`, error);
           }
         }
 
-        // Adjust map to fit all markers
+        // Fit map to show all markers
         if (markersRef.current.length > 0) {
-          mapInstance.fitBounds(bounds);
+          map.fitBounds(bounds);
         }
 
-        setIsLoading(false);
-        console.log("Map initialized successfully with", markersRef.current.length, "markers");
       } catch (error) {
         console.error("Error initializing map:", error);
-        setError('Failed to load the map. Please try again later.');
-        setIsLoading(false);
       }
     };
 
     initMap();
 
-    // Cleanup markers on unmount
+    // Cleanup
     return () => {
-      markersRef.current.forEach(marker => marker.setMap(null));
-      markersRef.current = [];
+      if (markersRef.current) {
+        markersRef.current.forEach(marker => marker.setMap(null));
+        markersRef.current = [];
+      }
     };
   }, [properties, onPropertyClick]);
 
-  if (error) {
+  if (!properties.length) {
     return (
-      <Alert variant="destructive" className="my-4">
-        <AlertDescription>{error}</AlertDescription>
+      <Alert>
+        <AlertDescription>No properties to display on the map.</AlertDescription>
       </Alert>
     );
   }
 
-  if (isLoading) {
-    return (
-      <div className="w-full h-full min-h-[400px] flex items-center justify-center bg-secondary/50 rounded-lg">
-        <LoadingSpinner className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
   return (
-    <div 
-      ref={mapRef} 
-      className="w-full h-full rounded-lg"
-      style={{ minHeight: "400px" }}
-    />
+    <div className="relative w-full h-full min-h-[400px]">
+      <div ref={mapRef} className="w-full h-full rounded-lg" />
+    </div>
   );
 };
