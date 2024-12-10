@@ -47,16 +47,34 @@ const Properties = () => {
         query = query.or(`location.ilike.%${filters.city}%,location.ilike.%${filters.city},%`);
       }
 
-      // Apply range filters
-      query = query
-        .gte("price", filters.priceRange[0])
-        .lte("price", filters.priceRange[1])
-        .gte("bedrooms", filters.bedroomRange[0])
-        .lte("bedrooms", filters.bedroomRange[1])
-        .gte("bathrooms", filters.bathroomRange[0])
-        .lte("bathrooms", filters.bathroomRange[1])
-        .gte("square_feet", filters.squareFeetRange[0])
-        .lte("square_feet", filters.squareFeetRange[1]);
+      // Apply range filters - now using gte/lte instead of gt/lt
+      if (filters.priceRange[0] > 0) {
+        query = query.gte("price", filters.priceRange[0]);
+      }
+      if (filters.priceRange[1] < 5000000) {
+        query = query.lte("price", filters.priceRange[1]);
+      }
+
+      if (filters.bedroomRange[0] > 1) {
+        query = query.gte("bedrooms", filters.bedroomRange[0]);
+      }
+      if (filters.bedroomRange[1] < 7) {
+        query = query.lte("bedrooms", filters.bedroomRange[1]);
+      }
+
+      if (filters.bathroomRange[0] > 1) {
+        query = query.gte("bathrooms", filters.bathroomRange[0]);
+      }
+      if (filters.bathroomRange[1] < 5) {
+        query = query.lte("bathrooms", filters.bathroomRange[1]);
+      }
+
+      if (filters.squareFeetRange[0] > 500) {
+        query = query.gte("square_feet", filters.squareFeetRange[0]);
+      }
+      if (filters.squareFeetRange[1] < 10000) {
+        query = query.lte("square_feet", filters.squareFeetRange[1]);
+      }
 
       // Apply additional filters
       if (filters.homeType) {
