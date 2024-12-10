@@ -1,7 +1,6 @@
 import { Heart, MapPin, Bed, Bath } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { PropertyMap } from "./PropertyMap";
 
 interface PropertyCardProps {
   property: {
@@ -69,7 +68,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           {property.location}
         </div>
         <p className="text-sm text-muted-foreground mb-4">{property.developer}</p>
-        <div className="flex justify-between text-sm text-muted-foreground mb-4">
+        <div className="flex justify-between text-sm text-muted-foreground">
           <span className="flex items-center">
             <Bed className="h-4 w-4 mr-1" />
             {property.bedrooms} beds
@@ -80,7 +79,6 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           </span>
           <span>{property.sqft} SqFt</span>
         </div>
-        <PropertyMap location={property.location} className="mt-4" />
       </div>
     </Link>
   );
