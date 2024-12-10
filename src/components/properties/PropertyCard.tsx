@@ -1,10 +1,11 @@
-import { Heart, MapPin, Bed, Bath, Star } from "lucide-react";
+import { Heart, MapPin, Bed, Bath, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 interface PropertyCardProps {
   property: {
@@ -17,49 +18,80 @@ interface PropertyCardProps {
     square_feet: number | null;
     featured: boolean;
     image_url: string | null;
+    builders: { name: string } | null;
   };
 }
 
 export const PropertyCard = ({ property }: PropertyCardProps) => {
   const { user } = useAuth();
   const { toast } = useToast();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Check if user is admin
-  const { data: isAdmin } = useQuery({
-    queryKey: ["is-admin", user?.id],
+  // Split image_url into array if multiple images
+  const images = property.image_url ? property.image_url.split(',') : ['/placeholder.svg'];
+
+  // Check if property is favorited
+  const { data: isFavorited } = useQuery({
+    queryKey: ["favorite", property.id, user?.id],
     queryFn: async () => {
       if (!user) return false;
-      const { data, error } = await supabase.rpc("is_admin", {
-        user_id: user.id,
-      });
-      if (error) throw error;
-      return data;
+      const { data } = await supabase
+        .from("favorites")
+        .select()
+        .eq("property_id", property.id)
+        .eq("user_id", user.id)
+        .single();
+      return !!data;
     },
     enabled: !!user,
   });
 
-  const toggleFeatured = async () => {
-    try {
-      const { error } = await supabase
-        .from("properties")
-        .update({ featured: !property.featured })
-        .eq("id", property.id);
+  const toggleFavorite = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!user) {
+      toast({
+        title: "Please sign in",
+        description: "You need to be signed in to favorite properties",
+      });
+      return;
+    }
 
-      if (error) throw error;
+    try {
+      if (isFavorited) {
+        await supabase
+          .from("favorites")
+          .delete()
+          .eq("property_id", property.id)
+          .eq("user_id", user.id);
+      } else {
+        await supabase
+          .from("favorites")
+          .insert([{ property_id: property.id, user_id: user.id }]);
+      }
 
       toast({
-        title: property.featured ? "Property unfeatured" : "Property featured",
+        title: isFavorited ? "Removed from favorites" : "Added to favorites",
         description: `${property.title} has been ${
-          property.featured ? "removed from" : "added to"
-        } featured properties.`,
+          isFavorited ? "removed from" : "added to"
+        } your favorites.`,
       });
     } catch (error: any) {
       toast({
         variant: "destructive",
-        title: "Error updating property",
+        title: "Error updating favorites",
         description: error.message,
       });
     }
+  };
+
+  const nextImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const prevImage = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
 
   return (
@@ -69,10 +101,30 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
     >
       <div className="relative">
         <img
-          src={property.image_url || "/placeholder.svg"}
+          src={images[currentImageIndex]}
           alt={property.title}
           className="property-image rounded-t-lg w-full h-[300px] object-cover"
         />
+        {images.length > 1 && (
+          <>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white"
+              onClick={prevImage}
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white"
+              onClick={nextImage}
+            >
+              <ChevronRight className="h-5 w-5" />
+            </Button>
+          </>
+        )}
         <div className="absolute top-4 left-4 flex gap-2">
           {property.featured && (
             <span className="bg-primary text-white px-3 py-1 rounded-full text-sm font-medium">
@@ -84,14 +136,22 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
           variant="ghost"
           size="icon"
           className="absolute top-4 right-4 bg-white/80 hover:bg-white"
+          onClick={toggleFavorite}
         >
-          <Heart className="h-5 w-5" />
+          <Heart 
+            className={`h-5 w-5 ${isFavorited ? 'fill-red-500 text-red-500' : ''}`} 
+          />
         </Button>
       </div>
       <div className="p-6">
         <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-600">
           {property.title}
         </h3>
+        {property.builders?.name && (
+          <p className="text-sm text-muted-foreground mb-2">
+            Built by {property.builders.name}
+          </p>
+        )}
         <p className="text-lg font-bold text-primary mb-4">
           ${property.price.toLocaleString()}
         </p>
@@ -116,21 +176,6 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             <span>{property.square_feet.toLocaleString()} SqFt</span>
           )}
         </div>
-        {isAdmin && (
-          <div className="mt-4 border-t pt-4">
-            <Button
-              onClick={(e) => {
-                e.preventDefault();
-                toggleFeatured();
-              }}
-              variant={property.featured ? "destructive" : "default"}
-              className="w-full"
-            >
-              <Star className="mr-2 h-4 w-4" />
-              {property.featured ? "Remove from Featured" : "Add to Featured"}
-            </Button>
-          </div>
-        )}
       </div>
     </Link>
   );

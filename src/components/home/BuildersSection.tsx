@@ -8,14 +8,35 @@ export const BuildersSection = () => {
   const { data: builders } = useQuery({
     queryKey: ["builders-home"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: buildersData, error: buildersError } = await supabase
         .from("builders")
         .select("*")
         .eq("type", "builder")
-        .limit(4);
+        .limit(6);
 
-      if (error) throw error;
-      return data;
+      if (buildersError) throw buildersError;
+
+      // Fetch average ratings for each builder
+      const buildersWithRatings = await Promise.all(
+        buildersData.map(async (builder) => {
+          const { data: reviews } = await supabase
+            .from("builder_reviews")
+            .select("rating")
+            .eq("builder_id", builder.id);
+
+          const averageRating =
+            reviews?.reduce((acc, review) => acc + review.rating, 0) /
+              (reviews?.length || 1) || 0;
+
+          return {
+            ...builder,
+            averageRating: Math.round(averageRating * 2) / 2,
+            reviewCount: reviews?.length || 0,
+          };
+        })
+      );
+
+      return buildersWithRatings;
     },
   });
 
@@ -39,23 +60,38 @@ export const BuildersSection = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {builders?.map((builder) => (
             <Link
               key={builder.id}
               to={`/builders/${builder.id}`}
-              className="group p-6 bg-card rounded-lg hover:shadow-lg transition-shadow"
+              className="group p-4 bg-card rounded-lg hover:shadow-lg transition-shadow"
             >
-              <div className="aspect-square mb-4 overflow-hidden rounded-lg flex items-center justify-center bg-secondary">
+              <div className="aspect-square mb-3 overflow-hidden rounded-lg flex items-center justify-center bg-secondary">
                 <img
                   src={builder.logo_url || "/placeholder.svg"}
                   alt={builder.name}
                   className="w-full h-full object-contain p-4"
                 />
               </div>
-              <h3 className="text-lg font-semibold group-hover:text-accent">
+              <h3 className="text-sm font-semibold group-hover:text-accent truncate">
                 {builder.name}
               </h3>
+              <div className="flex items-center mt-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <Star
+                    key={star}
+                    className={`h-3 w-3 ${
+                      star <= builder.averageRating
+                        ? "text-yellow-400 fill-yellow-400"
+                        : "text-gray-300"
+                    }`}
+                  />
+                ))}
+                <span className="text-xs text-muted-foreground ml-1">
+                  ({builder.reviewCount})
+                </span>
+              </div>
             </Link>
           ))}
         </div>

@@ -22,7 +22,6 @@ export const HeroSection = () => {
       return;
     }
 
-    // Navigate to properties page with search query
     navigate(`/properties?location=${encodeURIComponent(searchQuery.trim())}`);
   };
 
@@ -41,7 +40,7 @@ export const HeroSection = () => {
           className="mt-4 text-xl text-muted-foreground max-w-2xl mx-auto animate-fade-up"
           style={{ animationDelay: "0.1s" }}
         >
-          Discover new construction homes and luxury condos in prime locations
+          Discover your new construction home
         </p>
 
         <div
@@ -50,14 +49,14 @@ export const HeroSection = () => {
         >
           <form
             onSubmit={handleSearch}
-            className="glass-card p-4 flex flex-col sm:flex-row gap-4"
+            className="glass-card p-6 flex flex-col sm:flex-row gap-4"
           >
-            <div className="flex-1 flex items-center gap-2 bg-white rounded-lg px-4 py-2 border relative">
+            <div className="flex-1 flex items-center gap-2 bg-white rounded-lg px-6 py-3 border shadow-sm relative">
               <Search className="h-5 w-5 text-muted-foreground" />
               <input
                 type="text"
                 placeholder="Search by city, neighborhood, or address..."
-                className="flex-1 outline-none bg-transparent"
+                className="flex-1 outline-none bg-transparent text-lg"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -71,7 +70,7 @@ export const HeroSection = () => {
                 </button>
               )}
             </div>
-            <Button type="submit" size="lg" className="shrink-0">
+            <Button type="submit" size="lg" className="shrink-0 text-lg px-8">
               Search Properties
             </Button>
           </form>
