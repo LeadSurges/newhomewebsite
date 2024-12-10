@@ -1,9 +1,9 @@
 import { useState } from "react"
-import { Bed, Bath, DollarSign, Ruler, Search, Home, Construction, Key } from "lucide-react"
+import { Bed, Bath, DollarSign, Ruler, Home, Construction, Key } from "lucide-react"
 import { FilterDropdown } from "./filters/FilterDropdown"
 import { RangeFilter } from "./filters/RangeFilter"
+import { LocationFilter } from "./filters/LocationFilter"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -14,6 +14,7 @@ interface SearchFiltersProps {
 
 export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
   const [searchQuery, setSearchQuery] = useState("")
+  const [location, setLocation] = useState("")
   const [priceRange, setPriceRange] = useState([0, 5000000])
   const [bedroomRange, setBedroomRange] = useState([1, 7])
   const [bathroomRange, setBathroomRange] = useState([1, 5])
@@ -27,6 +28,7 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
     e.preventDefault()
     console.log("Submitting filters:", {
       searchQuery,
+      location,
       priceRange,
       bedroomRange,
       bathroomRange,
@@ -38,6 +40,7 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
     })
     onFilterChange({
       searchQuery,
+      location,
       priceRange,
       bedroomRange,
       bathroomRange,
@@ -65,16 +68,7 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
     <div className="w-full border-b bg-white sticky top-0 z-10">
       <form onSubmit={handleSubmit} className="max-w-7xl mx-auto p-4">
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center flex-wrap">
-          <div className="flex-1 relative min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              type="text"
-              placeholder="Search by location, development name..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9 w-full"
-            />
-          </div>
+          <LocationFilter value={location} onChange={setLocation} />
 
           <FilterDropdown label="Price">
             <RangeFilter
@@ -210,10 +204,7 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
             <Label htmlFor="quick-move-in">Quick Move-in</Label>
           </div>
 
-          <Button 
-            type="submit" 
-            className="w-full md:w-auto"
-          >
+          <Button type="submit" className="w-full md:w-auto">
             Apply Filters
           </Button>
         </div>

@@ -10,6 +10,7 @@ import { useState } from "react";
 const Properties = () => {
   const [filters, setFilters] = useState({
     searchQuery: "",
+    location: "",
     priceRange: [0, 5000000],
     bedroomRange: [1, 7],
     bathroomRange: [1, 5],
@@ -31,7 +32,12 @@ const Properties = () => {
 
       // Apply search filter
       if (filters.searchQuery) {
-        query = query.or(`title.ilike.%${filters.searchQuery}%,location.ilike.%${filters.searchQuery}%`);
+        query = query.or(`title.ilike.%${filters.searchQuery}%`);
+      }
+
+      // Apply location filter
+      if (filters.location) {
+        query = query.ilike('location', `%${filters.location}%`);
       }
 
       // Apply range filters
