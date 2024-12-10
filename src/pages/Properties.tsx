@@ -36,6 +36,7 @@ const Properties = () => {
     const quickMoveIn = searchParams.get("quickMoveIn") === "true";
 
     if (location || homeType || quickMoveIn) {
+      console.log("URL params changed, updating filters with location:", location);
       setFilters(prev => ({
         ...prev,
         location: location || prev.location,

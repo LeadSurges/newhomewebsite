@@ -42,6 +42,7 @@ export function SearchFilters({ onFilterChange, initialFilters }: SearchFiltersP
   // Update filters when initialFilters change
   useEffect(() => {
     if (initialFilters) {
+      console.log("Updating SearchFilters with new initialFilters:", initialFilters);
       setLocation(initialFilters.location)
       setPriceRange(initialFilters.priceRange)
       setBedroomRange(initialFilters.bedroomRange)
@@ -75,7 +76,7 @@ export function SearchFilters({ onFilterChange, initialFilters }: SearchFiltersP
       completionYear,
       keywords,
     }
-    console.log("Submitting filters:", filters)
+    console.log("Submitting filters from SearchFilters:", filters)
     onFilterChange(filters)
   }
 
@@ -94,7 +95,11 @@ export function SearchFilters({ onFilterChange, initialFilters }: SearchFiltersP
             bedroomRange={bedroomRange}
             bathroomRange={bathroomRange}
             constructionStatus={constructionStatus}
-            onLocationChange={setLocation}
+            onLocationChange={(value) => {
+              console.log("Location changed in MainFilters:", value);
+              setLocation(value);
+              handleSubmit({ preventDefault: () => {} } as React.FormEvent);
+            }}
             onPriceRangeChange={setPriceRange}
             onHomeTypeChange={setHomeType}
             onBedroomRangeChange={setBedroomRange}
