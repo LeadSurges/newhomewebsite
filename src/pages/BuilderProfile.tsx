@@ -16,6 +16,13 @@ interface ReviewWithProfile extends BuilderReview {
   profiles: Profile | null;
 }
 
+interface UserWithProfile {
+  profile: {
+    username: string | null;
+    avatar_url: string | null;
+  } | null;
+}
+
 const BuilderProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -86,7 +93,7 @@ const BuilderProfile = () => {
       
       return data.map(review => ({
         ...review,
-        profiles: review.user?.profile || null
+        profiles: (review.user as UserWithProfile | null)?.profile || null
       }));
     },
     enabled: !!id,
