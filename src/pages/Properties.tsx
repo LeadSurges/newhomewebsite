@@ -42,7 +42,7 @@ const properties = [
 ];
 
 const Properties = () => {
-  const handleSearch = (filters: any) => {
+  const handleFilterChange = (filters: any) => {
     console.log("Searching with filters:", filters);
   };
 
@@ -54,7 +54,7 @@ const Properties = () => {
         keywords="luxury properties, new homes, real estate listings, premium real estate"
       />
       <Navigation />
-      <SearchFilters onSearch={handleSearch} />
+      <SearchFilters onFilterChange={handleFilterChange} />
       
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
