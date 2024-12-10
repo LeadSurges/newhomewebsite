@@ -1,5 +1,11 @@
 import { Bed, Bath, Ruler } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { useState } from "react";
 
 interface FloorplanCardProps {
   name: string;
@@ -18,17 +24,30 @@ export const FloorplanCard = ({
   squareFeet,
   imageUrl,
 }: FloorplanCardProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <Card className="overflow-hidden">
       <div className="relative">
         <span className="absolute top-2 left-2 bg-green-600 text-white px-2 py-0.5 rounded-full text-xs font-medium">
           FOR SALE
         </span>
-        <img
-          src={imageUrl}
-          alt={`${name} Floorplan`}
-          className="w-full h-[200px] object-contain bg-white"
-        />
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          <DialogTrigger asChild>
+            <img
+              src={imageUrl}
+              alt={`${name} Floorplan`}
+              className="w-full h-[200px] object-contain bg-white cursor-pointer hover:opacity-90 transition-opacity"
+            />
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl w-full">
+            <img
+              src={imageUrl}
+              alt={`${name} Floorplan`}
+              className="w-full h-full object-contain"
+            />
+          </DialogContent>
+        </Dialog>
       </div>
       <CardContent className="p-4">
         <h3 className="text-lg font-bold mb-1">{name}</h3>
