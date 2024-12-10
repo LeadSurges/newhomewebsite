@@ -27,10 +27,18 @@ export const PropertyStats = ({
   square_feet_max,
 }: PropertyStatsProps) => {
   const formatRange = (value?: number | string, min?: string, max?: string) => {
+    // If there's a single value, use that
     if (value) return value.toString();
+    
+    // If we have both min and max, show a range
     if (min && max) return `${min} - ${max}`;
+    
+    // If we only have min, show min+
     if (min) return `${min}+`;
+    
+    // If we only have max, show up to max
     if (max) return `Up to ${max}`;
+    
     return undefined;
   };
 
@@ -46,6 +54,18 @@ export const PropertyStats = ({
     square_feet_min ? formatSquareFeet(square_feet_min) : undefined,
     square_feet_max ? formatSquareFeet(square_feet_max) : undefined
   );
+
+  console.log("PropertyStats - Ranges:", {
+    bedroomsDisplay,
+    bathroomsDisplay,
+    squareFeetDisplay,
+    bedrooms_min,
+    bedrooms_max,
+    bathrooms_min,
+    bathrooms_max,
+    square_feet_min,
+    square_feet_max
+  });
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
