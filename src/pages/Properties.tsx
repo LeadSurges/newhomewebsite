@@ -47,7 +47,7 @@ const Properties = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-secondary">
       <SEO 
         title="Properties | LuxuryHomes"
         description="Browse our collection of luxury properties and new construction homes. Find your perfect home today."
