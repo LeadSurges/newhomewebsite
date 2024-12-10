@@ -1,258 +1,153 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import type { Database } from "@/integrations/supabase/types";
-
-type PropertyInsert = Database["public"]["Tables"]["properties"]["Insert"];
-
-const propertySchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  price: z.coerce.number().min(1, "Price must be greater than 0"),
-  location: z.string().min(1, "Location is required"),
-  bedrooms: z.coerce.number().optional(),
-  bathrooms: z.coerce.number().optional(),
-  square_feet: z.coerce.number().optional(),
-});
-
-type PropertyFormValues = z.infer<typeof propertySchema>;
+import { useToast } from "@/components/ui/use-toast";
 
 export const PropertyUploadForm = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  
-  const form = useForm<PropertyFormValues>({
-    resolver: zodResolver(propertySchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      price: undefined,
-      location: "",
-      bedrooms: undefined,
-      bathrooms: undefined,
-      square_feet: undefined,
-    },
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    price: "",
+    location: "",
+    bedrooms: "",
+    bathrooms: "",
+    square_feet: "",
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+  const { toast } = useToast();
 
-  const onSubmit = async (values: PropertyFormValues) => {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
     try {
-      setIsLoading(true);
-      console.log("Form values:", values);
-      
-      const imageInput = document.querySelector<HTMLInputElement>('#property-image');
-      const imageFile = imageInput?.files?.[0];
-      
-      let image_url: string | null = null;
-      
-      if (imageFile) {
-        const formData = new FormData();
-        formData.append('image', imageFile);
-        
-        const response = await fetch('/functions/v1/upload-property-image', {
-          method: 'POST',
-          body: formData,
-        });
-        
-        if (!response.ok) {
-          throw new Error('Failed to upload image');
-        }
-        
-        const { publicUrl } = await response.json();
+      // Upload image if selected
+      let image_url = "";
+      if (selectedFile) {
+        const { data: uploadData, error: uploadError } = await supabase.storage
+          .from("property-images")
+          .upload(`${Date.now()}-${selectedFile.name}`, selectedFile);
+
+        if (uploadError) throw uploadError;
+
+        const { data: { publicUrl } } = supabase.storage
+          .from("property-images")
+          .getPublicUrl(uploadData.path);
+
         image_url = publicUrl;
       }
 
-      console.log("Inserting property with data:", { ...values, image_url });
-      
-      const propertyData: PropertyInsert = {
-        ...values,
-        image_url,
-      };
+      // Insert property data
+      const { error: insertError } = await supabase
+        .from("properties")
+        .insert({
+          title: formData.title || "",
+          description: formData.description,
+          price: formData.price || 0,
+          location: formData.location || "",
+          bedrooms: formData.bedrooms,
+          bathrooms: formData.bathrooms,
+          square_feet: formData.square_feet,
+          image_url,
+        });
 
-      const { data: property, error } = await supabase
-        .from('properties')
-        .insert(propertyData)
-        .select()
-        .single();
-
-      if (error) {
-        console.error("Supabase error:", error);
-        throw error;
-      }
-
-      console.log("Property created:", property);
+      if (insertError) throw insertError;
 
       toast({
-        title: "Success!",
+        title: "Success",
         description: "Property has been uploaded successfully.",
       });
 
-      navigate(`/properties/${property.id}`);
-    } catch (error) {
-      console.error('Error uploading property:', error);
-      toast({
-        title: "Error",
-        description: "Failed to upload property. Please try again.",
-        variant: "destructive",
+      // Reset form
+      setFormData({
+        title: "",
+        description: "",
+        price: "",
+        location: "",
+        bedrooms: "",
+        bathrooms: "",
+        square_feet: "",
       });
-    } finally {
-      setIsLoading(false);
+      setSelectedFile(null);
+      setPreview("");
+
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
     }
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Luxury Villa" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="A beautiful property with amazing views..."
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="price"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Price</FormLabel>
-              <FormControl>
-                <Input 
-                  type="number" 
-                  placeholder="500000" 
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : '')}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="location"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Location</FormLabel>
-              <FormControl>
-                <Input placeholder="Miami, FL" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="bedrooms"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Bedrooms</FormLabel>
-              <FormControl>
-                <Input 
-                  type="number" 
-                  placeholder="3" 
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="bathrooms"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Bathrooms</FormLabel>
-              <FormControl>
-                <Input 
-                  type="number" 
-                  placeholder="2" 
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="square_feet"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Square Feet</FormLabel>
-              <FormControl>
-                <Input 
-                  type="number" 
-                  placeholder="2000" 
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <div>
-          <FormLabel htmlFor="property-image">Property Image</FormLabel>
-          <Input
-            id="property-image"
-            type="file"
-            accept="image/*"
-            className="mt-2"
-          />
-        </div>
-
-        <Button type="submit" disabled={isLoading}>
-          {isLoading ? "Uploading..." : "Upload Property"}
-        </Button>
-      </form>
-    </Form>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <input
+        type="text"
+        placeholder="Title"
+        value={formData.title}
+        onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+        required
+        className="input"
+      />
+      <textarea
+        placeholder="Description"
+        value={formData.description}
+        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+        required
+        className="input"
+      />
+      <input
+        type="number"
+        placeholder="Price"
+        value={formData.price}
+        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+        required
+        className="input"
+      />
+      <input
+        type="text"
+        placeholder="Location"
+        value={formData.location}
+        onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+        required
+        className="input"
+      />
+      <input
+        type="number"
+        placeholder="Bedrooms"
+        value={formData.bedrooms}
+        onChange={(e) => setFormData({ ...formData, bedrooms: e.target.value })}
+        required
+        className="input"
+      />
+      <input
+        type="number"
+        placeholder="Bathrooms"
+        value={formData.bathrooms}
+        onChange={(e) => setFormData({ ...formData, bathrooms: e.target.value })}
+        required
+        className="input"
+      />
+      <input
+        type="number"
+        placeholder="Square Feet"
+        value={formData.square_feet}
+        onChange={(e) => setFormData({ ...formData, square_feet: e.target.value })}
+        required
+        className="input"
+      />
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => {
+          if (e.target.files) {
+            setSelectedFile(e.target.files[0]);
+            setPreview(URL.createObjectURL(e.target.files[0]));
+          }
+        }}
+      />
+      {preview && <img src={preview} alt="Preview" className="preview" />}
+      <button type="submit" className="btn">Upload Property</button>
+    </form>
   );
 };

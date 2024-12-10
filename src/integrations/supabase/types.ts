@@ -68,6 +68,7 @@ export type Database = {
           bedrooms: number | null
           created_at: string
           description: string | null
+          featured: boolean | null
           id: string
           image_url: string | null
           location: string
@@ -82,6 +83,7 @@ export type Database = {
           bedrooms?: number | null
           created_at?: string
           description?: string | null
+          featured?: boolean | null
           id?: string
           image_url?: string | null
           location: string
@@ -96,6 +98,7 @@ export type Database = {
           bedrooms?: number | null
           created_at?: string
           description?: string | null
+          featured?: boolean | null
           id?: string
           image_url?: string | null
           location?: string
