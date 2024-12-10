@@ -50,9 +50,9 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
 
   return (
     <div className="w-full border-b bg-white sticky top-0 z-10">
-      <form onSubmit={handleSubmit} className="max-w-7xl mx-auto p-4 space-y-6">
+      <form onSubmit={handleSubmit} className="max-w-7xl mx-auto px-4 py-6">
         {/* Search Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mb-6">
           <SearchSection
             location={location}
             city={city}
@@ -62,7 +62,7 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
         </div>
 
         {/* Filters Section */}
-        <div className="space-y-4">
+        <div className="space-y-6">
           <FiltersSection
             priceRange={priceRange}
             bedroomRange={bedroomRange}
@@ -80,7 +80,7 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
             onOwnershipTypeChange={setOwnershipType}
           />
 
-          <div className="flex items-center justify-between pt-4">
+          <div className="flex items-center justify-between border-t pt-6">
             <QuickMoveInFilter
               checked={quickMoveIn}
               onCheckedChange={setQuickMoveIn}
