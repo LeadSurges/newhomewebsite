@@ -5,14 +5,13 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import { Github } from "lucide-react";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { signUp, signInWithGithub, signInWithGoogle } = useAuth();
+  const { signUp, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const validateEmail = (email: string) => {
@@ -44,16 +43,6 @@ export default function SignUp() {
       setError(errorMessage);
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleGithubSignIn = async () => {
-    try {
-      await signInWithGithub();
-    } catch (error: any) {
-      console.error("Error signing in with Github:", error);
-      const errorMessage = error.message || "An error occurred during Github sign in";
-      setError(errorMessage);
     }
   };
 
@@ -108,16 +97,6 @@ export default function SignUp() {
               />
             </svg>
             Continue with Google
-          </Button>
-
-          <Button
-            onClick={handleGithubSignIn}
-            className="w-full"
-            variant="outline"
-            type="button"
-          >
-            <Github className="mr-2 h-4 w-4" />
-            Continue with Github
           </Button>
         </div>
 
