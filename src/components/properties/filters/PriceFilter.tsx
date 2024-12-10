@@ -10,7 +10,6 @@ interface PriceFilterProps {
 }
 
 const priceOptions = [
-  0,
   200000,
   300000,
   400000,
@@ -34,58 +33,29 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
   }
 
   const handlePriceSelect = (price: number) => {
+    console.log("Selected price:", price)
+    onChange([price, 100000000]) // Set a very high max to effectively show all properties above the selected price
     setMin(price.toString())
-    onChange([price, 5000000]) // Set max to 5M when selecting a minimum price
+    setMax("") // Clear max when selecting a minimum price
   }
 
   const handleCustomRange = () => {
     const minValue = parseInt(min) || 0
-    const maxValue = parseInt(max) || 5000000
+    const maxValue = parseInt(max) || 100000000
     onChange([minValue, maxValue])
   }
 
   return (
     <div className="p-4">
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div>
-          <Label>Min</Label>
-          <Input
-            type="text"
-            value={min}
-            onChange={(e) => setMin(e.target.value)}
-            placeholder="Min price"
-            className="mt-1"
-          />
-        </div>
-        <div>
-          <Label>Max</Label>
-          <Input
-            type="text"
-            value={max}
-            onChange={(e) => setMax(e.target.value)}
-            placeholder="Max price"
-            className="mt-1"
-          />
-        </div>
-      </div>
-
-      <Button 
-        variant="outline" 
-        className="w-full mb-4"
-        onClick={handleCustomRange}
-      >
-        Apply Custom Range
-      </Button>
-
-      <ScrollArea className="h-[300px] pr-4">
+      <ScrollArea className="h-[300px] mb-4">
         <div className="space-y-2">
           <Button
             variant="ghost"
             className="w-full justify-start font-normal"
             onClick={() => {
               setMin("0")
-              setMax("5000000")
-              onChange([0, 5000000])
+              setMax("")
+              onChange([0, 100000000])
             }}
           >
             Any price
@@ -94,7 +64,7 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
             <Button
               key={price}
               variant="ghost"
-              className="w-full justify-start font-normal"
+              className="w-full justify-start font-normal hover:bg-gray-100"
               onClick={() => handlePriceSelect(price)}
             >
               {formatPrice(price)}+
@@ -102,6 +72,38 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
           ))}
         </div>
       </ScrollArea>
+
+      <div className="border-t pt-4 mt-4">
+        <Label className="mb-2 block">Custom price range</Label>
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <Input
+              type="text"
+              value={min}
+              onChange={(e) => setMin(e.target.value)}
+              placeholder="Min price"
+              className="w-full"
+            />
+          </div>
+          <div>
+            <Input
+              type="text"
+              value={max}
+              onChange={(e) => setMax(e.target.value)}
+              placeholder="Max price"
+              className="w-full"
+            />
+          </div>
+        </div>
+
+        <Button 
+          variant="outline" 
+          className="w-full"
+          onClick={handleCustomRange}
+        >
+          Apply Custom Range
+        </Button>
+      </div>
     </div>
   )
 }
