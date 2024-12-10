@@ -9,12 +9,12 @@ const UploadProperty = () => {
       <SEO 
         title="Upload Property | LuxuryHomes"
         description="Upload a new property listing"
-        keywords="upload property, new listing, real estate"
+        keywords="upload property, new listing, real estate, luxury homes"
       />
       <Navigation />
       
-      <main className="max-w-3xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Upload New Property</h1>
+      <main className="max-w-4xl mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-8">Upload Property</h1>
         <PropertyUploadForm />
       </main>
       

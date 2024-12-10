@@ -1,59 +1,84 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2 } from "lucide-react";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+const propertySchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
+  price: z.string().min(1, "Price is required").transform(Number),
+  location: z.string().min(1, "Location is required"),
+  bedrooms: z.string().transform(Number).optional(),
+  bathrooms: z.string().transform(Number).optional(),
+  square_feet: z.string().transform(Number).optional(),
+});
 
 export const PropertyUploadForm = () => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  
+  const form = useForm<z.infer<typeof propertySchema>>({
+    resolver: zodResolver(propertySchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      price: "",
+      location: "",
+      bedrooms: "",
+      bathrooms: "",
+      square_feet: "",
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
+  const onSubmit = async (values: z.infer<typeof propertySchema>) => {
     try {
-      const formData = new FormData(e.currentTarget);
-      const title = formData.get("title") as string;
-      const description = formData.get("description") as string;
-      const price = parseFloat(formData.get("price") as string);
-      const location = formData.get("location") as string;
-      const bedrooms = parseInt(formData.get("bedrooms") as string);
-      const bathrooms = parseInt(formData.get("bathrooms") as string);
-      const squareFeet = parseFloat(formData.get("squareFeet") as string);
-
-      // Upload image if selected
-      let imagePath = null;
-      if (selectedImage) {
-        const fileExt = selectedImage.name.split('.').pop();
-        const filePath = `${crypto.randomUUID()}.${fileExt}`;
+      setIsLoading(true);
+      
+      const imageInput = document.querySelector<HTMLInputElement>('#property-image');
+      const imageFile = imageInput?.files?.[0];
+      
+      let image_url = null;
+      
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append('image', imageFile);
         
-        const { error: uploadError } = await supabase.storage
-          .from('property-images')
-          .upload(filePath, selectedImage);
-
-        if (uploadError) throw uploadError;
-        imagePath = filePath;
+        const response = await fetch('/functions/v1/upload-property-image', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to upload image');
+        }
+        
+        const { publicUrl } = await response.json();
+        image_url = publicUrl;
       }
-
-      // Create property record
+      
       const { data: property, error } = await supabase
         .from('properties')
-        .insert({
-          title,
-          description,
-          price,
-          location,
-          bedrooms,
-          bathrooms,
-          square_feet: squareFeet,
-          image_url: imagePath
-        })
+        .insert([
+          {
+            ...values,
+            image_url,
+          },
+        ])
         .select()
         .single();
 
@@ -68,9 +93,9 @@ export const PropertyUploadForm = () => {
     } catch (error) {
       console.error('Error uploading property:', error);
       toast({
-        variant: "destructive",
         title: "Error",
         description: "Failed to upload property. Please try again.",
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -78,86 +103,123 @@ export const PropertyUploadForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div>
-        <Input
-          type="text"
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
           name="title"
-          placeholder="Property Title"
-          required
-          className="w-full"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Title</FormLabel>
+              <FormControl>
+                <Input placeholder="Luxury Villa" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div>
-        <Textarea
+        <FormField
+          control={form.control}
           name="description"
-          placeholder="Property Description"
-          required
-          className="w-full"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="A beautiful property with amazing views..."
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Input
-          type="number"
+        <FormField
+          control={form.control}
           name="price"
-          placeholder="Price"
-          required
-          min="0"
-          step="0.01"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Price</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="500000" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        <Input
-          type="text"
+
+        <FormField
+          control={form.control}
           name="location"
-          placeholder="Location"
-          required
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Location</FormLabel>
+              <FormControl>
+                <Input placeholder="Miami, FL" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Input
-          type="number"
+        <FormField
+          control={form.control}
           name="bedrooms"
-          placeholder="Bedrooms"
-          required
-          min="0"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Bedrooms</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="3" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        <Input
-          type="number"
+
+        <FormField
+          control={form.control}
           name="bathrooms"
-          placeholder="Bathrooms"
-          required
-          min="0"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Bathrooms</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="2" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        <Input
-          type="number"
-          name="squareFeet"
-          placeholder="Square Feet"
-          required
-          min="0"
-        />
-      </div>
 
-      <div>
-        <Input
-          type="file"
-          accept="image/*"
-          onChange={(e) => setSelectedImage(e.target.files?.[0] || null)}
-          className="w-full"
+        <FormField
+          control={form.control}
+          name="square_feet"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Square Feet</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="2000" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <Button type="submit" disabled={isLoading} className="w-full">
-        {isLoading ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            Uploading...
-          </>
-        ) : (
-          "Upload Property"
-        )}
-      </Button>
-    </form>
+        <div>
+          <FormLabel htmlFor="property-image">Property Image</FormLabel>
+          <Input
+            id="property-image"
+            type="file"
+            accept="image/*"
+            className="mt-2"
+          />
+        </div>
+
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? "Uploading..." : "Upload Property"}
+        </Button>
+      </form>
+    </Form>
   );
 };

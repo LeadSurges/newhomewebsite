@@ -69,6 +69,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: string
+          image_url: string | null
           location: string
           price: number
           square_feet: number | null
@@ -82,6 +83,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          image_url?: string | null
           location: string
           price: number
           square_feet?: number | null
@@ -95,6 +97,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: string
+          image_url?: string | null
           location?: string
           price?: number
           square_feet?: number | null
