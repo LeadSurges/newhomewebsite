@@ -20,34 +20,37 @@ import {
 const propertySchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
-  price: z.string().min(1, "Price is required").transform(Number),
+  price: z.coerce.number().min(1, "Price must be greater than 0"),
   location: z.string().min(1, "Location is required"),
-  bedrooms: z.string().transform(Number).optional(),
-  bathrooms: z.string().transform(Number).optional(),
-  square_feet: z.string().transform(Number).optional(),
+  bedrooms: z.coerce.number().optional(),
+  bathrooms: z.coerce.number().optional(),
+  square_feet: z.coerce.number().optional(),
 });
+
+type PropertyFormValues = z.infer<typeof propertySchema>;
 
 export const PropertyUploadForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
   
-  const form = useForm<z.infer<typeof propertySchema>>({
+  const form = useForm<PropertyFormValues>({
     resolver: zodResolver(propertySchema),
     defaultValues: {
       title: "",
       description: "",
-      price: "",
+      price: undefined,
       location: "",
-      bedrooms: "",
-      bathrooms: "",
-      square_feet: "",
+      bedrooms: undefined,
+      bathrooms: undefined,
+      square_feet: undefined,
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof propertySchema>) => {
+  const onSubmit = async (values: PropertyFormValues) => {
     try {
       setIsLoading(true);
+      console.log("Form values:", values);
       
       const imageInput = document.querySelector<HTMLInputElement>('#property-image');
       const imageFile = imageInput?.files?.[0];
@@ -70,19 +73,24 @@ export const PropertyUploadForm = () => {
         const { publicUrl } = await response.json();
         image_url = publicUrl;
       }
+
+      console.log("Inserting property with data:", { ...values, image_url });
       
       const { data: property, error } = await supabase
         .from('properties')
-        .insert([
-          {
-            ...values,
-            image_url,
-          },
-        ])
+        .insert({
+          ...values,
+          image_url,
+        })
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
+
+      console.log("Property created:", property);
 
       toast({
         title: "Success!",
@@ -143,7 +151,12 @@ export const PropertyUploadForm = () => {
             <FormItem>
               <FormLabel>Price</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="500000" {...field} />
+                <Input 
+                  type="number" 
+                  placeholder="500000" 
+                  {...field}
+                  onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : '')}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -171,7 +184,12 @@ export const PropertyUploadForm = () => {
             <FormItem>
               <FormLabel>Bedrooms</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="3" {...field} />
+                <Input 
+                  type="number" 
+                  placeholder="3" 
+                  {...field}
+                  onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -185,7 +203,12 @@ export const PropertyUploadForm = () => {
             <FormItem>
               <FormLabel>Bathrooms</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="2" {...field} />
+                <Input 
+                  type="number" 
+                  placeholder="2" 
+                  {...field}
+                  onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -199,7 +222,12 @@ export const PropertyUploadForm = () => {
             <FormItem>
               <FormLabel>Square Feet</FormLabel>
               <FormControl>
-                <Input type="number" placeholder="2000" {...field} />
+                <Input 
+                  type="number" 
+                  placeholder="2000" 
+                  {...field}
+                  onChange={(e) => field.onChange(e.target.value ? Number(e.target.value) : undefined)}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
