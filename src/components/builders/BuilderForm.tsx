@@ -27,6 +27,9 @@ export const BuilderForm = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [type, setType] = useState("builder");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
+  const [website, setWebsite] = useState("");
   const [selectedLogo, setSelectedLogo] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const { toast } = useToast();
@@ -59,6 +62,9 @@ export const BuilderForm = () => {
           description,
           logo_url,
           type,
+          address,
+          phone,
+          website,
         });
 
       if (error) throw error;
@@ -72,6 +78,9 @@ export const BuilderForm = () => {
       setName("");
       setDescription("");
       setType("builder");
+      setAddress("");
+      setPhone("");
+      setWebsite("");
       setSelectedLogo(null);
       setLogoPreview(null);
 
@@ -124,6 +133,37 @@ export const BuilderForm = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="address">Address</Label>
+            <Input
+              id="address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              placeholder="Enter company address"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="phone">Phone Number</Label>
+            <Input
+              id="phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Enter phone number"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="website">Website</Label>
+            <Input
+              id="website"
+              type="url"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+              placeholder="https://example.com"
             />
           </div>
 
