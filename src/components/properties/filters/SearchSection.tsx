@@ -14,7 +14,7 @@ export function SearchSection({
   onCityChange,
 }: SearchSectionProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+    <>
       <SearchBar
         type="location"
         value={location}
@@ -27,6 +27,6 @@ export function SearchSection({
         onChange={onCityChange}
         placeholder="Search by city..."
       />
-    </div>
+    </>
   )
 }
