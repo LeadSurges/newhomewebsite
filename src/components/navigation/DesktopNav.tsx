@@ -19,7 +19,7 @@ export const DesktopNav = () => {
         <DropdownMenuTrigger className="flex items-center gap-1 text-sm">
           New Homes for Sale <ChevronDown className="h-4 w-4" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="w-56 bg-white border shadow-md">
           <DropdownMenuItem asChild>
             <Link to="/properties?homeType=Single family home" className="cursor-pointer">
               Single family homes
@@ -47,7 +47,7 @@ export const DesktopNav = () => {
         <DropdownMenuTrigger className="flex items-center gap-1 text-sm">
           Professionals <ChevronDown className="h-4 w-4" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="w-56 bg-white border shadow-md">
           <DropdownMenuItem asChild>
             <Link to="/contact?type=builder" className="cursor-pointer">
               Builder advertising
