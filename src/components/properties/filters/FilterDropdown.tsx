@@ -22,7 +22,10 @@ export function FilterDropdown({ label, children, className }: FilterDropdownPro
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-[320px] p-4">
+      <DropdownMenuContent 
+        className="w-[320px] p-4 bg-white border shadow-lg backdrop-blur-sm" 
+        sideOffset={8}
+      >
         {children}
       </DropdownMenuContent>
     </DropdownMenu>
