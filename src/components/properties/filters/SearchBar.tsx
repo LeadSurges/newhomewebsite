@@ -10,7 +10,7 @@ interface SearchBarProps {
 
 export function SearchBar({ type, value, onChange, placeholder }: SearchBarProps) {
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <div className="absolute left-3 top-1/2 -translate-y-1/2">
         {type === "location" ? (
           <Search className="h-5 w-5 text-muted-foreground" />
@@ -23,7 +23,7 @@ export function SearchBar({ type, value, onChange, placeholder }: SearchBarProps
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="pl-10 h-12"
+        className="pl-10 h-12 w-full"
       />
     </div>
   )

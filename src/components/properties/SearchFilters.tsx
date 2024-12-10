@@ -54,18 +54,18 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
       <form onSubmit={handleSubmit} className="max-w-7xl mx-auto p-4">
         <div className="flex flex-col space-y-4">
           {/* Search Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <SearchBar
               type="location"
               value={location}
               onChange={setLocation}
-              placeholder="Enter location..."
+              placeholder="Search by location..."
             />
             <SearchBar
               type="city"
               value={city}
               onChange={setCity}
-              placeholder="Enter city..."
+              placeholder="Search by city..."
             />
           </div>
 
@@ -109,7 +109,7 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
           </div>
 
           {/* Quick Move-in and Apply Button */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-4">
             <div className="flex items-center space-x-2">
               <Checkbox
                 id="quick-move-in"
@@ -118,7 +118,7 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
               />
               <Label htmlFor="quick-move-in">Quick Move-in</Label>
             </div>
-            <Button type="submit" size="lg">
+            <Button type="submit" size="lg" className="bg-primary text-white">
               Apply Filters
             </Button>
           </div>
