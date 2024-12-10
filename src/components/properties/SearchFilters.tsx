@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
+import { CitySearch } from "./filters/CitySearch"
 
 interface SearchFiltersProps {
   onFilterChange: (filters: any) => void;
@@ -14,6 +15,7 @@ interface SearchFiltersProps {
 
 export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
   const [location, setLocation] = useState("")
+  const [city, setCity] = useState("")
   const [priceRange, setPriceRange] = useState([0, 5000000])
   const [bedroomRange, setBedroomRange] = useState([1, 7])
   const [bathroomRange, setBathroomRange] = useState([1, 5])
@@ -27,6 +29,7 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
     e.preventDefault()
     console.log("Submitting filters:", {
       location,
+      city,
       priceRange,
       bedroomRange,
       bathroomRange,
@@ -38,6 +41,7 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
     })
     onFilterChange({
       location,
+      city,
       priceRange,
       bedroomRange,
       bathroomRange,
@@ -66,6 +70,7 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
       <form onSubmit={handleSubmit} className="max-w-7xl mx-auto p-4">
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center flex-wrap">
           <LocationFilter value={location} onChange={setLocation} />
+          <CitySearch value={city} onChange={setCity} />
 
           <FilterDropdown label="Price">
             <RangeFilter
