@@ -45,7 +45,7 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
   }
 
   return (
-    <div className="p-4 bg-white">
+    <div className="p-4">
       <div className="space-y-2">
         <Button
           variant="ghost"
