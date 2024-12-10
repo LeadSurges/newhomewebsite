@@ -12,7 +12,7 @@ export const GoogleSignInButton = ({ onClick }: GoogleSignInButtonProps) => {
     try {
       console.log("GoogleSignInButton: Starting Google sign in process...");
       await onClick();
-      console.log("GoogleSignInButton: Google sign in completed successfully");
+      console.log("GoogleSignInButton: Google sign in initiated successfully");
     } catch (error: any) {
       console.error('GoogleSignInButton: Error during sign in:', error);
       toast({
@@ -24,7 +24,12 @@ export const GoogleSignInButton = ({ onClick }: GoogleSignInButtonProps) => {
   };
 
   return (
-    <Button onClick={handleClick} className="w-full" variant="outline" type="button">
+    <Button 
+      onClick={handleClick} 
+      className="w-full" 
+      variant="outline" 
+      type="button"
+    >
       <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
         <path
           fill="currentColor"

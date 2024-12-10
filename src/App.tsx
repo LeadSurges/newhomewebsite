@@ -10,21 +10,29 @@ import { AppRoutes } from "./AppRoutes";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <HelmetProvider>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AuthProvider>
-          <TooltipProvider>
-            <Navigation />
-            <Toaster />
-            <Sonner />
-            <AppRoutes />
-          </TooltipProvider>
-        </AuthProvider>
-      </BrowserRouter>
-    </QueryClientProvider>
-  </HelmetProvider>
-);
+const App = () => {
+  console.log("App: Initializing application");
+  
+  return (
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <AuthProvider>
+            <TooltipProvider>
+              <div className="flex flex-col min-h-screen">
+                <Navigation />
+                <main className="flex-grow">
+                  <AppRoutes />
+                </main>
+                <Toaster />
+                <Sonner />
+              </div>
+            </TooltipProvider>
+          </AuthProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
+    </HelmetProvider>
+  );
+};
 
 export default App;
