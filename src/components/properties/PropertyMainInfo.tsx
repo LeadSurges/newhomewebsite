@@ -24,7 +24,7 @@ export const PropertyMainInfo = ({
   incentives,
 }: PropertyMainInfoProps) => {
   const formatPrice = (value?: number) => {
-    return value ? `$${value.toLocaleString()}` : 'N/A';
+    return value ? `From $${value.toLocaleString()}` : 'N/A';
   };
 
   return (
@@ -53,7 +53,7 @@ export const PropertyMainInfo = ({
           <div className="text-2xl font-bold text-primary">
             <div className="flex items-center">
               <DollarSign className="h-6 w-6 mr-1" />
-              {price?.toLocaleString()}
+              From ${price?.toLocaleString()}
             </div>
           </div>
         </div>
@@ -91,13 +91,13 @@ export const PropertyMainInfo = ({
                 {parking_cost && (
                   <div>
                     <p className="text-sm text-muted-foreground">Parking Cost</p>
-                    <p className="font-medium">${parking_cost.toLocaleString()}</p>
+                    <p className="font-medium">From ${parking_cost.toLocaleString()}</p>
                   </div>
                 )}
                 {storage_cost && (
                   <div>
                     <p className="text-sm text-muted-foreground">Storage Cost</p>
-                    <p className="font-medium">${storage_cost.toLocaleString()}</p>
+                    <p className="font-medium">From ${storage_cost.toLocaleString()}</p>
                   </div>
                 )}
               </div>
@@ -111,7 +111,7 @@ export const PropertyMainInfo = ({
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-4">Deposit Structure</h2>
               <div className="space-y-2">
-                {Object.entries(deposit_structure as DepositStructure).map(([key, value]) => (
+                {Object.entries(deposit_structure).map(([key, value]) => (
                   <div key={key} className="flex justify-between items-center">
                     <span className="text-muted-foreground">{key}</span>
                     <span className="font-medium">{String(value)}</span>
@@ -128,7 +128,7 @@ export const PropertyMainInfo = ({
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-4">Incentives</h2>
               <div className="space-y-2">
-                {Object.entries(incentives as Incentives).map(([key, value]) => (
+                {Object.entries(incentives).map(([key, value]) => (
                   <div key={key} className="flex justify-between items-center">
                     <span className="text-muted-foreground">{key}</span>
                     <span className="font-medium">{String(value)}</span>

@@ -30,15 +30,19 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
           ? location 
           : `${location}, Ontario, Canada`;
 
+        console.log("Geocoding location:", fullLocation);
+        
         const results = await new Promise<google.maps.GeocoderResult[]>((resolve, reject) => {
           geocoder.geocode({ address: fullLocation }, (results, status) => {
-            if (status === "OK" && results) {
+            if (status === "OK" && results && results.length > 0) {
               resolve(results);
             } else {
               reject(new Error(`Failed to geocode location: ${status}`));
             }
           });
         });
+
+        console.log("Location geocoded successfully:", results[0].geometry.location.toString());
 
         const map = new google.maps.Map(mapRef.current, {
           center: results[0].geometry.location,
@@ -47,11 +51,19 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
           fullscreenControl: false,
           streetViewControl: false,
           gestureHandling: "cooperative",
+          styles: [
+            {
+              featureType: "poi",
+              elementType: "labels",
+              stylers: [{ visibility: "off" }],
+            },
+          ],
         });
 
         new google.maps.Marker({
           map,
           position: results[0].geometry.location,
+          animation: google.maps.Animation.DROP,
         });
 
         setIsLoading(false);
