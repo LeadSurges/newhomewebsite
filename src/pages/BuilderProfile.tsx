@@ -13,7 +13,7 @@ type Builder = Database["public"]["Tables"]["builders"]["Row"];
 type BuilderReview = Database["public"]["Tables"]["builder_reviews"]["Row"];
 
 interface ReviewWithProfile extends BuilderReview {
-  profiles: Profile | null;
+  profile: Profile | null;
 }
 
 const BuilderProfile = () => {
@@ -68,24 +68,20 @@ const BuilderProfile = () => {
       
       console.log("Fetching builder reviews for builder:", id);
       
-      const { data, error } = await supabase
+      const { data: reviewsData, error: reviewsError } = await supabase
         .from("builder_reviews")
         .select(`
           *,
-          profiles (username, avatar_url)
+          profile:profiles(*)
         `)
         .eq("builder_id", id);
 
-      if (error) {
-        console.error("Error fetching reviews:", error);
-        throw error;
+      if (reviewsError) {
+        console.error("Error fetching reviews:", reviewsError);
+        throw reviewsError;
       }
 
-      // Transform the data to match our expected type
-      return (data || []).map(review => ({
-        ...review,
-        profiles: review.profiles ? review.profiles[0] || null : null
-      })) as ReviewWithProfile[];
+      return reviewsData as ReviewWithProfile[];
     },
     enabled: !!id,
   });
@@ -114,7 +110,10 @@ const BuilderProfile = () => {
         />
         <BuilderReviews 
           builderId={builder.id} 
-          reviews={reviews} 
+          reviews={reviews?.map(review => ({
+            ...review,
+            profiles: review.profile
+          }))} 
         />
       </div>
     </div>
