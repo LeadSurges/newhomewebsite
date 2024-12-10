@@ -56,8 +56,9 @@ const Properties = () => {
 
       // Apply location filter with case-insensitive partial match
       if (filters.location && filters.location.trim()) {
-        query = query.ilike('location', `%${filters.location.trim()}%`);
-        console.log("Applying location filter:", filters.location.trim());
+        const locationSearch = filters.location.trim();
+        console.log("Applying location filter:", locationSearch);
+        query = query.ilike('location', `%${locationSearch}%`);
       }
 
       // Apply other filters

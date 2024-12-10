@@ -1,5 +1,6 @@
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
+import { useState } from "react"
 
 interface LocationSearchInputProps {
   value: string
@@ -7,14 +8,19 @@ interface LocationSearchInputProps {
 }
 
 export function LocationSearchInput({ value, onChange }: LocationSearchInputProps) {
+  const [inputValue, setInputValue] = useState(value)
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Trigger the search by calling onChange with current value
-    onChange(value)
+    onChange(inputValue)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(e.target.value)
+    setInputValue(e.target.value)
+  }
+
+  const handleBlur = () => {
+    onChange(inputValue)
   }
 
   return (
@@ -22,8 +28,9 @@ export function LocationSearchInput({ value, onChange }: LocationSearchInputProp
       <Input
         type="text"
         placeholder="Search by location..."
-        value={value}
+        value={inputValue}
         onChange={handleChange}
+        onBlur={handleBlur}
         className="pl-10 h-10"
       />
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
