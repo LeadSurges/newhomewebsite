@@ -42,14 +42,6 @@ export interface BuilderReview {
   updated_at: string;
 }
 
-export interface DepositStructure {
-  [key: string]: string | number;
-}
-
-export interface Incentives {
-  [key: string]: string | number;
-}
-
 export interface PropertyMainInfoProps {
   title: string;
   location: string;
@@ -68,6 +60,6 @@ export interface PropertyMainInfoProps {
   maintenance_fee_per_sqft?: number;
   parking_cost?: number;
   storage_cost?: number;
-  deposit_structure?: DepositStructure;
-  incentives?: Incentives;
+  deposit_structure?: string;
+  incentives?: string;
 }
