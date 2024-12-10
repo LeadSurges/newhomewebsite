@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface PriceFilterProps {
   value: number[]
@@ -32,9 +33,20 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
     }).format(price)
   }
 
+  const handlePriceSelect = (price: number) => {
+    setMin(price.toString())
+    onChange([price, 5000000]) // Set max to 5M when selecting a minimum price
+  }
+
+  const handleCustomRange = () => {
+    const minValue = parseInt(min) || 0
+    const maxValue = parseInt(max) || 5000000
+    onChange([minValue, maxValue])
+  }
+
   return (
-    <div className="p-4 space-y-4">
-      <div className="grid grid-cols-2 gap-4">
+    <div className="p-4">
+      <div className="grid grid-cols-2 gap-4 mb-4">
         <div>
           <Label>Min</Label>
           <Input
@@ -57,32 +69,39 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
         </div>
       </div>
 
-      <div className="space-y-2">
-        {priceOptions.map((price) => (
+      <Button 
+        variant="outline" 
+        className="w-full mb-4"
+        onClick={handleCustomRange}
+      >
+        Apply Custom Range
+      </Button>
+
+      <ScrollArea className="h-[300px] pr-4">
+        <div className="space-y-2">
           <Button
-            key={price}
             variant="ghost"
-            className="w-full justify-start"
+            className="w-full justify-start font-normal"
             onClick={() => {
-              setMin(price.toString())
-              onChange([price, parseInt(max) || 5000000])
+              setMin("0")
+              setMax("5000000")
+              onChange([0, 5000000])
             }}
           >
-            {price === 0 ? "$0" : formatPrice(price)}
+            Any price
           </Button>
-        ))}
-        <Button
-          variant="ghost"
-          className="w-full justify-start"
-          onClick={() => {
-            setMin("0")
-            setMax("5000000")
-            onChange([0, 5000000])
-          }}
-        >
-          Any price
-        </Button>
-      </div>
+          {priceOptions.map((price) => (
+            <Button
+              key={price}
+              variant="ghost"
+              className="w-full justify-start font-normal"
+              onClick={() => handlePriceSelect(price)}
+            >
+              {formatPrice(price)}+
+            </Button>
+          ))}
+        </div>
+      </ScrollArea>
     </div>
   )
 }
