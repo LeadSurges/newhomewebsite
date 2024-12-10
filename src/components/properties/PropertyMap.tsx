@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader } from "lucide-react";
-import { getMapLoader } from "@/utils/mapLoader";
+import { supabase } from "@/integrations/supabase/client";
+import { Loader as GoogleMapsLoader } from "@googlemaps/js-api-loader";
 
 interface PropertyMapProps {
   location: string;
@@ -12,29 +13,41 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const markerRef = useRef<google.maps.Marker | null>(null);
-  const mapInstanceRef = useRef<google.maps.Map | null>(null);
 
   useEffect(() => {
-    const initMap = async () => {
-      if (!mapRef.current) {
-        console.error("Map reference not available");
-        return;
-      }
+    let map: google.maps.Map | null = null;
+    let marker: google.maps.Marker | null = null;
 
-      if (!location) {
-        console.error("Location not provided");
-        setError("Location information is missing");
+    const initMap = async () => {
+      if (!mapRef.current || !location) {
+        console.error("Map reference or location not available");
+        setError("Unable to load map");
         setIsLoading(false);
         return;
       }
-      
+
       try {
+        console.log("Initializing map for location:", location);
         setIsLoading(true);
         setError(null);
-        console.log("Initializing map for location:", location);
+
+        // Get API key from Supabase function
+        const { data: { secret }, error: secretError } = await supabase.functions.invoke('get-maps-key');
         
-        const google = await getMapLoader();
+        if (secretError || !secret) {
+          console.error("Failed to get Maps API key:", secretError);
+          setError("Failed to load map configuration");
+          setIsLoading(false);
+          return;
+        }
+
+        // Initialize Google Maps
+        const loader = new GoogleMapsLoader({
+          apiKey: secret,
+          version: "weekly",
+        });
+
+        const google = await loader.load();
         const geocoder = new google.maps.Geocoder();
         
         // Add ", Ontario, Canada" to the location if it's not already specified
@@ -49,43 +62,33 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
             if (status === "OK" && results && results.length > 0) {
               resolve(results);
             } else {
-              reject(new Error(`Failed to geocode location: ${status}`));
+              reject(new Error(`Geocoding failed: ${status}`));
             }
           });
         });
 
         const coordinates = geocodeResult[0].geometry.location;
-        console.log("Location geocoded successfully:", coordinates.toString());
+        console.log("Successfully geocoded location:", coordinates.toString());
 
-        // Create map instance if it doesn't exist
-        if (!mapInstanceRef.current) {
-          mapInstanceRef.current = new google.maps.Map(mapRef.current, {
-            zoom: 15,
-            mapTypeControl: false,
-            fullscreenControl: false,
-            streetViewControl: false,
-            gestureHandling: "cooperative",
-            styles: [
-              {
-                featureType: "poi",
-                elementType: "labels",
-                stylers: [{ visibility: "off" }],
-              },
-            ],
-          });
-        }
+        // Create map
+        map = new google.maps.Map(mapRef.current, {
+          center: coordinates,
+          zoom: 15,
+          mapTypeControl: false,
+          fullscreenControl: false,
+          streetViewControl: false,
+          styles: [
+            {
+              featureType: "poi",
+              elementType: "labels",
+              stylers: [{ visibility: "off" }],
+            },
+          ],
+        });
 
-        // Update map center
-        mapInstanceRef.current.setCenter(coordinates);
-
-        // Clear existing marker if any
-        if (markerRef.current) {
-          markerRef.current.setMap(null);
-        }
-
-        // Create new marker
-        markerRef.current = new google.maps.Marker({
-          map: mapInstanceRef.current,
+        // Add marker
+        marker = new google.maps.Marker({
+          map,
           position: coordinates,
           animation: google.maps.Animation.DROP,
         });
@@ -93,7 +96,7 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
         setIsLoading(false);
       } catch (err) {
         console.error("Error initializing map:", err);
-        setError('Failed to load the map. Please try again later.');
+        setError("Failed to load the map. Please try again later.");
         setIsLoading(false);
       }
     };
@@ -102,8 +105,12 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
 
     // Cleanup function
     return () => {
-      if (markerRef.current) {
-        markerRef.current.setMap(null);
+      if (marker) {
+        marker.setMap(null);
+      }
+      if (map) {
+        // @ts-ignore - type definition issue with Google Maps
+        map = null;
       }
     };
   }, [location]);
@@ -118,7 +125,7 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
 
   if (isLoading) {
     return (
-      <div className={`flex items-center justify-center bg-secondary/50 rounded-lg ${className}`} style={{ height: "300px" }}>
+      <div className={`flex items-center justify-center bg-secondary/50 rounded-lg ${className}`}>
         <Loader className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
