@@ -50,9 +50,15 @@ export const usePropertySubmit = (initialData?: Property) => {
         description: formData.description,
         price: Number(formData.price),
         location: formData.location,
-        bedrooms: Number(formData.bedrooms_min),
-        bathrooms: Number(formData.bathrooms_min),
-        square_feet: Number(formData.square_feet_min),
+        bedrooms: formData.bedrooms_min ? Number(formData.bedrooms_min) : null,
+        bedrooms_min: formData.bedrooms_min ? Number(formData.bedrooms_min) : null,
+        bedrooms_max: formData.bedrooms_max ? Number(formData.bedrooms_max) : null,
+        bathrooms: formData.bathrooms_min ? Number(formData.bathrooms_min) : null,
+        bathrooms_min: formData.bathrooms_min ? Number(formData.bathrooms_min) : null,
+        bathrooms_max: formData.bathrooms_max ? Number(formData.bathrooms_max) : null,
+        square_feet: formData.square_feet_min ? Number(formData.square_feet_min) : null,
+        square_feet_min: formData.square_feet_min ? Number(formData.square_feet_min) : null,
+        square_feet_max: formData.square_feet_max ? Number(formData.square_feet_max) : null,
         image_url,
         featured: formData.featured,
         floorplan_url,
@@ -70,6 +76,8 @@ export const usePropertySubmit = (initialData?: Property) => {
         amenities: formData.amenities,
         features_and_finishes: formData.features_and_finishes,
       };
+
+      console.log("Submitting property data:", propertyData);
 
       if (initialData) {
         const { error: updateError } = await supabase
