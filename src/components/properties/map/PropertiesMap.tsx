@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
-import { Loader } from "@googlemaps/js-api-loader";
-import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useRef, useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader } from "lucide-react";
+import { getMapLoader } from "@/utils/mapLoader";
 import type { Database } from "@/integrations/supabase/types";
 
 type Property = Database["public"]["Tables"]["properties"]["Row"];
@@ -13,34 +13,55 @@ interface PropertiesMapProps {
 
 export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const markersRef = useRef<google.maps.Marker[]>([]);
 
   useEffect(() => {
     const initMap = async () => {
       try {
-        console.log("Initializing properties map");
-        const { data: { secret } } = await supabase.functions.invoke('get-maps-key');
-        
-        if (!secret) {
-          console.error("No Google Maps API key found");
-          return;
-        }
+        setIsLoading(true);
+        setError(null);
+        console.log("Initializing map with properties:", properties);
 
-        const loader = new Loader({
-          apiKey: secret,
-          version: "weekly",
-        });
-
-        const google = await loader.load();
+        const google = await getMapLoader();
         
         if (!mapRef.current) return;
 
         // Default to Toronto coordinates
-        const defaultCenter = { lat: 43.6532, lng: -79.3832 };
-        
+        let mapCenter = { lat: 43.6532, lng: -79.3832 };
+        let zoomLevel = 11;
+
+        // If we have properties, try to center the map on their general location
+        if (properties.length > 0) {
+          const geocoder = new google.maps.Geocoder();
+          try {
+            // Use the first property's location to center the map
+            const results = await new Promise<google.maps.GeocoderResult[]>((resolve, reject) => {
+              geocoder.geocode({ address: properties[0].location }, (results, status) => {
+                if (status === "OK" && results) {
+                  resolve(results);
+                } else {
+                  reject(new Error(`Failed to geocode location: ${status}`));
+                }
+              });
+            });
+            
+            if (results[0]?.geometry?.location) {
+              mapCenter = {
+                lat: results[0].geometry.location.lat(),
+                lng: results[0].geometry.location.lng()
+              };
+            }
+          } catch (error) {
+            console.error("Error geocoding center location:", error);
+          }
+        }
+
         const mapInstance = new google.maps.Map(mapRef.current, {
-          center: defaultCenter,
-          zoom: 11,
+          center: mapCenter,
+          zoom: zoomLevel,
           styles: [
             {
               featureType: "poi",
@@ -49,6 +70,8 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
             },
           ],
         });
+
+        setMap(mapInstance);
 
         // Clear existing markers
         markersRef.current.forEach(marker => marker.setMap(null));
@@ -124,19 +147,27 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
           }
         }
 
-        // Fit map to show all markers
+        // Fit map to show all markers if we have any
         if (markersRef.current.length > 0) {
           mapInstance.fitBounds(bounds);
+          // Don't zoom in too far
+          const listener = google.maps.event.addListener(mapInstance, 'idle', function() {
+            if (mapInstance.getZoom()! > 15) {
+              mapInstance.setZoom(15);
+            }
+            google.maps.event.removeListener(listener);
+          });
         }
 
-      } catch (error) {
-        console.error("Error initializing map:", error);
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error initializing map:", err);
+        setError('Failed to load the map. Please try again later.');
+        setIsLoading(false);
       }
     };
 
-    if (mapRef.current) {
-      initMap();
-    }
+    initMap();
 
     // Cleanup markers on unmount
     return () => {
@@ -145,15 +176,26 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
     };
   }, [properties, onPropertyClick]);
 
-  if (!properties.length) {
+  if (error) {
     return (
-      <Alert>
-        <AlertDescription>No properties to display on the map.</AlertDescription>
+      <Alert variant="destructive">
+        <AlertDescription>{error}</AlertDescription>
       </Alert>
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center bg-secondary/50 rounded-lg h-full min-h-[300px]">
+        <Loader className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
-    <div ref={mapRef} className="w-full h-full min-h-[calc(100vh-64px)] rounded-lg" />
+    <div
+      ref={mapRef}
+      className="w-full h-full min-h-[calc(100vh-64px)] rounded-lg"
+    />
   );
 };
