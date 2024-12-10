@@ -1,15 +1,15 @@
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
 import { Filter } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { MainFilters } from "./filters/MainFilters"
 import { MoreFiltersContent } from "./filters/MoreFiltersContent"
+import { FilterButton } from "./filters/common/FilterButton"
 
 interface SearchFiltersProps {
   onFilterChange: (filters: any) => void
 }
 
-export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
+export function SearchFilters({ onFilterChange }: SearchFiltersProps) {
   const [location, setLocation] = useState("")
   const [priceRange, setPriceRange] = useState([0, 5000000])
   const [bedroomRange, setBedroomRange] = useState([1, 7])
@@ -26,8 +26,8 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Submitting filters:", {
-      location: location.trim(), // Ensure we trim whitespace
+    const filters = {
+      location: location.trim(),
       priceRange,
       bedroomRange,
       bathroomRange,
@@ -40,22 +40,9 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
       garage,
       completionYear,
       keywords,
-    })
-    onFilterChange({
-      location: location.trim(), // Ensure we trim whitespace
-      priceRange,
-      bedroomRange,
-      bathroomRange,
-      homeType,
-      constructionStatus,
-      quickMoveIn,
-      masterPlanned,
-      ownershipType,
-      squareFeet,
-      garage,
-      completionYear,
-      keywords,
-    })
+    }
+    console.log("Submitting filters:", filters)
+    onFilterChange(filters)
   }
 
   const handleMoreFiltersApply = () => {
@@ -81,16 +68,9 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
             onConstructionStatusChange={setConstructionStatus}
           />
 
-          {/* More Filters Button */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button
-                variant="outline"
-                className="min-w-[100px] flex items-center gap-2 bg-white border-gray-300 hover:bg-gray-50"
-              >
-                <Filter className="h-4 w-4" />
-                More
-              </Button>
+              <FilterButton icon={Filter} label="More" />
             </SheetTrigger>
             <SheetContent className="w-[400px] sm:w-[540px] overflow-y-auto">
               <SheetHeader>
@@ -116,13 +96,12 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
             </SheetContent>
           </Sheet>
 
-          {/* Apply Filters Button */}
-          <Button 
-            type="submit"
-            className="min-w-[100px] bg-primary hover:bg-primary/90"
-          >
-            Apply Filters
-          </Button>
+          <FilterButton 
+            label="Apply Filters"
+            variant="default"
+            className="bg-primary hover:bg-primary/90"
+            onClick={() => handleSubmit({ preventDefault: () => {} } as React.FormEvent)}
+          />
         </div>
       </form>
     </div>

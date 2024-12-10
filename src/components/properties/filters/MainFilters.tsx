@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Search, DollarSign, Home, Bed, Bath, Construction } from "lucide-react"
+import { DollarSign, Home, Bed, Bath, Construction } from "lucide-react"
 import { FilterDropdown } from "./FilterDropdown"
-import { PriceFilter } from "./PriceFilter"
+import { PriceFilter } from "./price/PriceFilter"
+import { LocationSearchInput } from "./common/LocationSearchInput"
+import { FilterButton } from "./common/FilterButton"
 
 interface MainFiltersProps {
   location: string
@@ -33,9 +33,7 @@ export function MainFilters({
   onBathroomRangeChange,
   onConstructionStatusChange,
 }: MainFiltersProps) {
-  const formatRangeDisplay = (range: number[]) => {
-    return `${range[0]}+`
-  }
+  const formatRangeDisplay = (range: number[]) => `${range[0]}+`
 
   const formatPriceDisplay = (range: number[]) => {
     if (range[0] === 0) return "Any price"
@@ -48,19 +46,8 @@ export function MainFilters({
 
   return (
     <>
-      {/* Search Input */}
-      <div className="relative flex-grow max-w-md">
-        <Input
-          type="text"
-          placeholder="Search by location..."
-          value={location}
-          onChange={(e) => onLocationChange(e.target.value)}
-          className="pl-10 h-10 bg-white border-gray-300"
-        />
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-      </div>
+      <LocationSearchInput value={location} onChange={onLocationChange} />
 
-      {/* Price Range Dropdown */}
       <FilterDropdown
         label={formatPriceDisplay(priceRange)}
         icon={DollarSign}
@@ -72,7 +59,6 @@ export function MainFilters({
         />
       </FilterDropdown>
 
-      {/* Home Type Dropdown */}
       <FilterDropdown
         label={homeType || "Home type"}
         icon={Home}
@@ -82,7 +68,6 @@ export function MainFilters({
         className="min-w-[140px] bg-white border-gray-300 hover:bg-gray-50"
       />
 
-      {/* Bedrooms Dropdown */}
       <FilterDropdown
         label={`${formatRangeDisplay(bedroomRange)} beds`}
         icon={Bed}
@@ -95,7 +80,6 @@ export function MainFilters({
         className="min-w-[120px] bg-white border-gray-300 hover:bg-gray-50"
       />
 
-      {/* Bathrooms Dropdown */}
       <FilterDropdown
         label={`${formatRangeDisplay(bathroomRange)} baths`}
         icon={Bath}
@@ -108,7 +92,6 @@ export function MainFilters({
         className="min-w-[120px] bg-white border-gray-300 hover:bg-gray-50"
       />
 
-      {/* Construction Status */}
       <FilterDropdown
         label={constructionStatus || "Construction"}
         icon={Construction}
