@@ -49,7 +49,7 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
       <div className="space-y-2">
         <Button
           variant="ghost"
-          className="w-full justify-start font-normal text-lg hover:bg-gray-100"
+          className="w-full justify-start font-normal text-lg hover:bg-gray-100 border-0"
           onClick={() => {
             setMin("0")
             setMax("")
@@ -62,7 +62,7 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
           <Button
             key={price}
             variant="ghost"
-            className="w-full justify-start font-normal text-lg hover:bg-gray-100"
+            className="w-full justify-start font-normal text-lg hover:bg-gray-100 border-0"
             onClick={() => handlePriceSelect(price)}
           >
             {formatPrice(price)}+
