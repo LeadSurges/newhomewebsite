@@ -6,11 +6,12 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const BuildersSection = () => {
   const { data: builders } = useQuery({
-    queryKey: ["builders"],
+    queryKey: ["builders-home"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("builders")
         .select("*")
+        .eq("type", "builder")
         .limit(4);
 
       if (error) throw error;
