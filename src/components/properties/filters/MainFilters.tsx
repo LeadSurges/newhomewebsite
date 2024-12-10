@@ -32,6 +32,11 @@ export function MainFilters({
   onBathroomRangeChange,
   onConstructionStatusChange,
 }: MainFiltersProps) {
+  const handleLocationChange = (value: string) => {
+    console.log("MainFilters: Location changed to:", value)
+    onLocationChange(value)
+  }
+
   const formatRangeDisplay = (range: number[]) => `${range[0]}+`
 
   const formatPriceDisplay = (range: number[]) => {
@@ -45,7 +50,10 @@ export function MainFilters({
 
   return (
     <>
-      <LocationSearchInput value={location} onChange={onLocationChange} />
+      <LocationSearchInput 
+        value={location} 
+        onChange={handleLocationChange} 
+      />
 
       <FilterDropdown
         label={formatPriceDisplay(priceRange)}

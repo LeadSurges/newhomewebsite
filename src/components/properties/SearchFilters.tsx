@@ -42,20 +42,20 @@ export function SearchFilters({ onFilterChange, initialFilters }: SearchFiltersP
   // Update filters when initialFilters change
   useEffect(() => {
     if (initialFilters) {
-      console.log("Updating SearchFilters with new initialFilters:", initialFilters);
-      setLocation(initialFilters.location)
-      setPriceRange(initialFilters.priceRange)
-      setBedroomRange(initialFilters.bedroomRange)
-      setBathroomRange(initialFilters.bathroomRange)
-      setHomeType(initialFilters.homeType)
-      setConstructionStatus(initialFilters.constructionStatus)
-      setQuickMoveIn(initialFilters.quickMoveIn)
-      setMasterPlanned(initialFilters.masterPlanned)
-      setOwnershipType(initialFilters.ownershipType)
-      setSquareFeet(initialFilters.squareFeet)
-      setGarage(initialFilters.garage)
-      setCompletionYear(initialFilters.completionYear)
-      setKeywords(initialFilters.keywords)
+      console.log("Updating SearchFilters with new initialFilters:", initialFilters)
+      setLocation(initialFilters.location || "")
+      setPriceRange(initialFilters.priceRange || [0, 5000000])
+      setBedroomRange(initialFilters.bedroomRange || [1, 7])
+      setBathroomRange(initialFilters.bathroomRange || [1, 5])
+      setHomeType(initialFilters.homeType || null)
+      setConstructionStatus(initialFilters.constructionStatus || null)
+      setQuickMoveIn(initialFilters.quickMoveIn || false)
+      setMasterPlanned(initialFilters.masterPlanned || false)
+      setOwnershipType(initialFilters.ownershipType || [])
+      setSquareFeet(initialFilters.squareFeet || { min: "", max: "" })
+      setGarage(initialFilters.garage || null)
+      setCompletionYear(initialFilters.completionYear || null)
+      setKeywords(initialFilters.keywords || "")
     }
   }, [initialFilters])
 
@@ -80,8 +80,26 @@ export function SearchFilters({ onFilterChange, initialFilters }: SearchFiltersP
     onFilterChange(filters)
   }
 
-  const handleMoreFiltersApply = () => {
-    handleSubmit({ preventDefault: () => {} } as React.FormEvent)
+  const handleLocationChange = (value: string) => {
+    console.log("SearchFilters: Location changed to:", value)
+    setLocation(value)
+    // Immediately submit the form when location changes
+    const filters = {
+      location: value.trim(),
+      priceRange,
+      bedroomRange,
+      bathroomRange,
+      homeType,
+      constructionStatus,
+      quickMoveIn,
+      masterPlanned,
+      ownershipType,
+      squareFeet,
+      garage,
+      completionYear,
+      keywords,
+    }
+    onFilterChange(filters)
   }
 
   return (
@@ -95,11 +113,7 @@ export function SearchFilters({ onFilterChange, initialFilters }: SearchFiltersP
             bedroomRange={bedroomRange}
             bathroomRange={bathroomRange}
             constructionStatus={constructionStatus}
-            onLocationChange={(value) => {
-              console.log("Location changed in MainFilters:", value);
-              setLocation(value);
-              handleSubmit({ preventDefault: () => {} } as React.FormEvent);
-            }}
+            onLocationChange={handleLocationChange}
             onPriceRangeChange={setPriceRange}
             onHomeTypeChange={setHomeType}
             onBedroomRangeChange={setBedroomRange}
@@ -130,7 +144,7 @@ export function SearchFilters({ onFilterChange, initialFilters }: SearchFiltersP
                 onGarageChange={setGarage}
                 onCompletionYearChange={setCompletionYear}
                 onKeywordsChange={setKeywords}
-                onApply={handleMoreFiltersApply}
+                onApply={handleSubmit}
               />
             </SheetContent>
           </Sheet>

@@ -31,12 +31,10 @@ export function LocationSearchInput({ value, onChange }: LocationSearchInputProp
     }
   }
 
-  const handleClear = (e: React.MouseEvent) => {
-    e.preventDefault() // Prevent form submission
-    e.stopPropagation() // Prevent event bubbling
+  const handleClear = () => {
     console.log("Clearing location input")
     setInputValue("")
-    onChange("")
+    onChange("")  // This is crucial - we need to propagate the empty value up
   }
 
   return (
