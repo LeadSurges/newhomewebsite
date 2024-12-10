@@ -46,11 +46,11 @@ export const BuildersSection = () => {
               to={`/builders/${builder.id}`}
               className="group p-6 bg-card rounded-lg hover:shadow-lg transition-shadow"
             >
-              <div className="aspect-square mb-4 overflow-hidden rounded-lg">
+              <div className="aspect-square mb-4 overflow-hidden rounded-lg flex items-center justify-center bg-secondary">
                 <img
                   src={builder.logo_url || "/placeholder.svg"}
                   alt={builder.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain p-4"
                 />
               </div>
               <h3 className="text-lg font-semibold group-hover:text-accent">
