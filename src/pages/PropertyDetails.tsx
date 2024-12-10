@@ -41,10 +41,12 @@ const PropertyDetails = () => {
 
   if (!property) return null;
 
-  // Pass the property data directly without type casting
+  // Convert JSON fields to strings and pass the property data
   const propertyMainInfo = {
     ...property,
-    builder: property.builders
+    builder: property.builders,
+    deposit_structure: property.deposit_structure ? JSON.stringify(property.deposit_structure) : undefined,
+    incentives: property.incentives ? JSON.stringify(property.incentives) : undefined
   };
 
   return (
