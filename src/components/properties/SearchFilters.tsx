@@ -10,7 +10,6 @@ interface SearchFiltersProps {
 
 export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
   const [location, setLocation] = useState("")
-  const [city, setCity] = useState("")
   const [priceRange, setPriceRange] = useState([0, 5000000])
   const [bedroomRange, setBedroomRange] = useState([1, 7])
   const [bathroomRange, setBathroomRange] = useState([1, 5])
@@ -24,7 +23,6 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
     e.preventDefault()
     console.log("Submitting filters:", {
       location,
-      city,
       priceRange,
       bedroomRange,
       bathroomRange,
@@ -36,7 +34,6 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
     })
     onFilterChange({
       location,
-      city,
       priceRange,
       bedroomRange,
       bathroomRange,
@@ -49,16 +46,14 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
   }
 
   return (
-    <div className="w-full border-b bg-white sticky top-16 z-10"> {/* Changed top-0 to top-16 to account for header height */}
+    <div className="w-full border-b bg-white sticky top-16 z-10">
       <form onSubmit={handleSubmit} className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex flex-col md:flex-row gap-3 items-center">
           {/* Search Section */}
           <div className="w-full md:w-1/4">
             <SearchSection
               location={location}
-              city={city}
               onLocationChange={setLocation}
-              onCityChange={setCity}
             />
           </div>
 

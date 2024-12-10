@@ -1,5 +1,4 @@
 import { Navigation } from "@/components/Navigation";
-import Footer from "@/components/Footer";
 import { SearchFilters } from "@/components/properties/SearchFilters";
 import { PropertyCard } from "@/components/properties/PropertyCard";
 import { PropertiesMap } from "@/components/properties/PropertiesMap";
@@ -13,7 +12,6 @@ import { Map, List } from "lucide-react";
 const Properties = () => {
   const [filters, setFilters] = useState({
     location: "",
-    city: "",
     priceRange: [0, 5000000],
     bedroomRange: [1, 7],
     bathroomRange: [1, 5],
@@ -41,13 +39,7 @@ const Properties = () => {
         query = query.ilike('location', `%${filters.location}%`);
       }
 
-      // Apply city filter
-      if (filters.city) {
-        console.log("Applying city filter:", filters.city);
-        query = query.or(`location.ilike.%${filters.city}%,location.ilike.%${filters.city},%`);
-      }
-
-      // Apply range filters - now using gte/lte instead of gt/lt
+      // Apply range filters
       if (filters.priceRange[0] > 0) {
         query = query.gte("price", filters.priceRange[0]);
       }
@@ -120,7 +112,6 @@ const Properties = () => {
       />
       <Navigation />
       
-      {/* Add pt-16 to create space for the fixed header */}
       <div className="pt-16">
         <SearchFilters onFilterChange={handleFilterChange} />
         
@@ -162,7 +153,7 @@ const Properties = () => {
             </div>
 
             {showMap && properties && (
-              <div className="lg:w-1/2 h-[calc(100vh-200px)] lg:sticky lg:top-40"> {/* Updated top value to account for header + filters */}
+              <div className="lg:w-1/2 h-[calc(100vh-200px)] lg:sticky lg:top-40">
                 <div className="glass-card h-full">
                   <PropertiesMap 
                     properties={properties} 
@@ -174,8 +165,6 @@ const Properties = () => {
           </div>
         </main>
       </div>
-      
-      <Footer />
     </div>
   );
 };
