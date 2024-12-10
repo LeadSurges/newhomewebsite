@@ -27,14 +27,25 @@ export const PropertyStats = ({
   square_feet_max,
 }: PropertyStatsProps) => {
   const formatRange = (value?: number | string, min?: string, max?: string) => {
-    if (value) return `${value}`;
+    if (value) return value.toString();
     if (min && max) return `${min} - ${max}`;
+    if (min) return `${min}+`;
+    if (max) return `Up to ${max}`;
     return undefined;
+  };
+
+  const formatSquareFeet = (value?: string) => {
+    if (!value) return undefined;
+    return parseInt(value).toLocaleString();
   };
 
   const bedroomsDisplay = formatRange(bedrooms, bedrooms_min, bedrooms_max);
   const bathroomsDisplay = formatRange(bathrooms, bathrooms_min, bathrooms_max);
-  const squareFeetDisplay = formatRange(square_feet, square_feet_min, square_feet_max);
+  const squareFeetDisplay = formatRange(
+    square_feet?.toString(),
+    square_feet_min ? formatSquareFeet(square_feet_min) : undefined,
+    square_feet_max ? formatSquareFeet(square_feet_max) : undefined
+  );
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
