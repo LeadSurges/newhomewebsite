@@ -88,7 +88,7 @@ export const handleMinSquareFeetChange = (value: string, formData: FormData, set
     return;
   }
   
-  const minSqFt = Math.max(500, parseInt(value));
+  const minSqFt = parseInt(value);
   const maxSqFt = formData.square_feet_max ? parseInt(formData.square_feet_max) : null;
   
   setFormData({ 

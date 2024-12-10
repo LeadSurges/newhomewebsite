@@ -16,9 +16,7 @@ export const SquareFootageFields = ({ formData, setFormData }: SquareFootageFiel
         <Input
           id="square_feet_min"
           type="number"
-          min="500"
-          max="20000"
-          step="100"
+          min="0"
           value={formData.square_feet_min}
           onChange={(e) => handleMinSquareFeetChange(e.target.value, formData, setFormData)}
         />
@@ -28,9 +26,7 @@ export const SquareFootageFields = ({ formData, setFormData }: SquareFootageFiel
         <Input
           id="square_feet_max"
           type="number"
-          min={formData.square_feet_min || "500"}
-          max="20000"
-          step="100"
+          min={formData.square_feet_min || "0"}
           value={formData.square_feet_max}
           onChange={(e) => handleMaxSquareFeetChange(e.target.value, formData, setFormData)}
         />
