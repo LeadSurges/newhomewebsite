@@ -147,6 +147,7 @@ export type Database = {
           completion_year: number | null
           construction_status: string | null
           created_at: string
+          deposit_structure: Json | null
           description: string | null
           featured: boolean | null
           floorplan_url: string | null
@@ -154,13 +155,19 @@ export type Database = {
           home_type: string | null
           id: string
           image_url: string | null
+          incentives: Json | null
           keywords: string[] | null
           location: string
+          maintenance_fee_per_sqft: number | null
           master_planned: boolean | null
           ownership_type: string | null
+          parking_cost: number | null
           price: number
+          price_range_max: number | null
+          price_range_min: number | null
           quick_move_in: boolean | null
           square_feet: number | null
+          storage_cost: number | null
           title: string
           updated_at: string
           user_id: string | null
@@ -172,6 +179,7 @@ export type Database = {
           completion_year?: number | null
           construction_status?: string | null
           created_at?: string
+          deposit_structure?: Json | null
           description?: string | null
           featured?: boolean | null
           floorplan_url?: string | null
@@ -179,13 +187,19 @@ export type Database = {
           home_type?: string | null
           id?: string
           image_url?: string | null
+          incentives?: Json | null
           keywords?: string[] | null
           location: string
+          maintenance_fee_per_sqft?: number | null
           master_planned?: boolean | null
           ownership_type?: string | null
+          parking_cost?: number | null
           price: number
+          price_range_max?: number | null
+          price_range_min?: number | null
           quick_move_in?: boolean | null
           square_feet?: number | null
+          storage_cost?: number | null
           title: string
           updated_at?: string
           user_id?: string | null
@@ -197,6 +211,7 @@ export type Database = {
           completion_year?: number | null
           construction_status?: string | null
           created_at?: string
+          deposit_structure?: Json | null
           description?: string | null
           featured?: boolean | null
           floorplan_url?: string | null
@@ -204,13 +219,19 @@ export type Database = {
           home_type?: string | null
           id?: string
           image_url?: string | null
+          incentives?: Json | null
           keywords?: string[] | null
           location?: string
+          maintenance_fee_per_sqft?: number | null
           master_planned?: boolean | null
           ownership_type?: string | null
+          parking_cost?: number | null
           price?: number
+          price_range_max?: number | null
+          price_range_min?: number | null
           quick_move_in?: boolean | null
           square_feet?: number | null
+          storage_cost?: number | null
           title?: string
           updated_at?: string
           user_id?: string | null
