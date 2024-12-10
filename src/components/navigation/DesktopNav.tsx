@@ -9,9 +9,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 export const DesktopNav = () => {
   const { user, signOut } = useAuth();
+
+  const { data: isAdmin } = useQuery({
+    queryKey: ["is-admin", user?.id],
+    queryFn: async () => {
+      if (!user) return false;
+      const { data, error } = await supabase.rpc("is_admin", {
+        user_id: user.id,
+      });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user,
+  });
 
   return (
     <div className="hidden md:flex items-center space-x-8">
@@ -67,9 +82,16 @@ export const DesktopNav = () => {
 
       {user ? (
         <>
-          <Link to="/admin/properties" className="nav-link">
-            Admin
-          </Link>
+          {isAdmin && (
+            <>
+              <Link to="/admin/properties" className="nav-link">
+                Properties
+              </Link>
+              <Link to="/admin/builders" className="nav-link">
+                Builders
+              </Link>
+            </>
+          )}
           <Button onClick={() => signOut()}>Sign Out</Button>
         </>
       ) : (

@@ -3,6 +3,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
+import { BuilderSelect } from "@/components/builders/BuilderSelect";
 import { FormData } from "./types";
 
 interface PropertyFormFieldsProps {
@@ -54,6 +55,11 @@ export const PropertyFormFields = ({ formData, setFormData }: PropertyFormFields
             required
           />
         </div>
+
+        <BuilderSelect
+          value={formData.builder_id || ""}
+          onChange={(value) => setFormData({ ...formData, builder_id: value })}
+        />
       </div>
 
       <div className="space-y-6">

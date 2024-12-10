@@ -9,6 +9,71 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      builder_reviews: {
+        Row: {
+          builder_id: string
+          comment: string | null
+          created_at: string
+          id: string
+          rating: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          builder_id: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          builder_id?: string
+          comment?: string | null
+          created_at?: string
+          id?: string
+          rating?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "builder_reviews_builder_id_fkey"
+            columns: ["builder_id"]
+            isOneToOne: false
+            referencedRelation: "builders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      builders: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          logo_url: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          logo_url?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       favorites: {
         Row: {
           created_at: string
@@ -66,6 +131,7 @@ export type Database = {
         Row: {
           bathrooms: number | null
           bedrooms: number | null
+          builder_id: string | null
           completion_year: number | null
           construction_status: string | null
           created_at: string
@@ -90,6 +156,7 @@ export type Database = {
         Insert: {
           bathrooms?: number | null
           bedrooms?: number | null
+          builder_id?: string | null
           completion_year?: number | null
           construction_status?: string | null
           created_at?: string
@@ -114,6 +181,7 @@ export type Database = {
         Update: {
           bathrooms?: number | null
           bedrooms?: number | null
+          builder_id?: string | null
           completion_year?: number | null
           construction_status?: string | null
           created_at?: string
@@ -135,7 +203,15 @@ export type Database = {
           updated_at?: string
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "properties_builder_id_fkey"
+            columns: ["builder_id"]
+            isOneToOne: false
+            referencedRelation: "builders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reviews: {
         Row: {

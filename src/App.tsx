@@ -12,6 +12,7 @@ import BuilderProfile from "./pages/BuilderProfile";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import AdminProperties from "./pages/AdminProperties";
+import AdminBuilders from "./pages/AdminBuilders";
 import UploadProperty from "./pages/UploadProperty";
 import Contact from "./pages/Contact";
 
@@ -35,6 +36,7 @@ const App = () => (
               <Route path="/signup" element={<SignUp />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/admin/properties" element={<AdminProperties />} />
+              <Route path="/admin/builders" element={<AdminBuilders />} />
               <Route path="/admin/properties/new" element={<UploadProperty />} />
             </Routes>
           </BrowserRouter>
