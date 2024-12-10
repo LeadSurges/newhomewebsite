@@ -14,6 +14,10 @@ const Properties = () => {
     bedroomRange: [1, 7],
     bathroomRange: [1, 5],
     squareFeetRange: [500, 10000],
+    homeType: null,
+    constructionStatus: null,
+    ownershipType: null,
+    quickMoveIn: false,
   });
 
   const { data: properties, isLoading } = useQuery({
@@ -33,24 +37,26 @@ const Properties = () => {
       // Apply range filters
       query = query
         .gte("price", filters.priceRange[0])
-        .lte("price", filters.priceRange[1]);
+        .lte("price", filters.priceRange[1])
+        .gte("bedrooms", filters.bedroomRange[0])
+        .lte("bedrooms", filters.bedroomRange[1])
+        .gte("bathrooms", filters.bathroomRange[0])
+        .lte("bathrooms", filters.bathroomRange[1])
+        .gte("square_feet", filters.squareFeetRange[0])
+        .lte("square_feet", filters.squareFeetRange[1]);
 
-      if (filters.bedroomRange) {
-        query = query
-          .gte("bedrooms", filters.bedroomRange[0])
-          .lte("bedrooms", filters.bedroomRange[1]);
+      // Apply additional filters
+      if (filters.homeType) {
+        query = query.eq("home_type", filters.homeType);
       }
-
-      if (filters.bathroomRange) {
-        query = query
-          .gte("bathrooms", filters.bathroomRange[0])
-          .lte("bathrooms", filters.bathroomRange[1]);
+      if (filters.constructionStatus) {
+        query = query.eq("construction_status", filters.constructionStatus);
       }
-
-      if (filters.squareFeetRange) {
-        query = query
-          .gte("square_feet", filters.squareFeetRange[0])
-          .lte("square_feet", filters.squareFeetRange[1]);
+      if (filters.ownershipType) {
+        query = query.eq("ownership_type", filters.ownershipType);
+      }
+      if (filters.quickMoveIn) {
+        query = query.eq("quick_move_in", true);
       }
 
       const { data, error } = await query;

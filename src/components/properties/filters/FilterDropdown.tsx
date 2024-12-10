@@ -10,13 +10,14 @@ import { ChevronDown } from "lucide-react"
 interface FilterDropdownProps {
   label: string
   children: React.ReactNode
+  className?: string
 }
 
-export function FilterDropdown({ label, children }: FilterDropdownProps) {
+export function FilterDropdown({ label, children, className }: FilterDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="h-11 px-4 w-full md:w-[200px]">
+        <Button variant="outline" className={`h-11 px-4 w-full md:w-[200px] ${className}`}>
           {label}
           <ChevronDown className="ml-2 h-4 w-4" />
         </Button>
