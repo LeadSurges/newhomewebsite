@@ -1,4 +1,4 @@
-import { MapPin, DollarSign, Building2, Home } from "lucide-react";
+import { MapPin, DollarSign, Building2, Home, Check } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { PropertyStats } from "./PropertyStats";
@@ -29,6 +29,8 @@ export const PropertyMainInfo = ({
   square_feet_min,
   square_feet_max,
   home_type,
+  amenities,
+  features_and_finishes,
 }: PropertyMainInfoProps) => {
   const formatPrice = (value?: number) => {
     return value ? `$${value.toLocaleString()}` : 'N/A';
@@ -99,6 +101,35 @@ export const PropertyMainInfo = ({
         />
 
         <Separator className="my-6" />
+
+        {amenities && amenities.length > 0 && (
+          <>
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-4">Amenities</h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {amenities.map((amenity) => (
+                  <div key={amenity} className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-primary" />
+                    <span>{amenity}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <Separator className="my-6" />
+          </>
+        )}
+
+        {features_and_finishes && (
+          <>
+            <div className="mb-6">
+              <h2 className="text-xl font-semibold mb-4">Features & Finishes</h2>
+              <div className="p-4 rounded-lg border bg-card">
+                <p className="whitespace-pre-wrap">{features_and_finishes}</p>
+              </div>
+            </div>
+            <Separator className="my-6" />
+          </>
+        )}
 
         {(maintenance_fee_per_sqft || parking_cost || storage_cost || price_range_min || price_range_max) && (
           <>

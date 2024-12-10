@@ -36,6 +36,8 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     keywords: initialData?.keywords || [],
     deposit_structure: initialData?.deposit_structure?.toString() || "",
     incentives: initialData?.incentives?.toString() || "",
+    amenities: initialData?.amenities || [],
+    features_and_finishes: initialData?.features_and_finishes || "",
   });
 
   const {

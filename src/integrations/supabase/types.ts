@@ -141,6 +141,7 @@ export type Database = {
       }
       properties: {
         Row: {
+          amenities: string[] | null
           bathrooms: number | null
           bedrooms: number | null
           builder_id: string | null
@@ -150,6 +151,7 @@ export type Database = {
           deposit_structure: Json | null
           description: string | null
           featured: boolean | null
+          features_and_finishes: string | null
           floorplan_url: string | null
           garage_spaces: number | null
           home_type: string | null
@@ -173,6 +175,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          amenities?: string[] | null
           bathrooms?: number | null
           bedrooms?: number | null
           builder_id?: string | null
@@ -182,6 +185,7 @@ export type Database = {
           deposit_structure?: Json | null
           description?: string | null
           featured?: boolean | null
+          features_and_finishes?: string | null
           floorplan_url?: string | null
           garage_spaces?: number | null
           home_type?: string | null
@@ -205,6 +209,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          amenities?: string[] | null
           bathrooms?: number | null
           bedrooms?: number | null
           builder_id?: string | null
@@ -214,6 +219,7 @@ export type Database = {
           deposit_structure?: Json | null
           description?: string | null
           featured?: boolean | null
+          features_and_finishes?: string | null
           floorplan_url?: string | null
           garage_spaces?: number | null
           home_type?: string | null

@@ -25,25 +25,6 @@ export interface FormData {
   incentives: string;
 }
 
-export interface Builder {
-  id: string;
-  name: string;
-  description: string | null;
-  logo_url: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface BuilderReview {
-  id: string;
-  builder_id: string;
-  user_id: string;
-  rating: number;
-  comment: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
 export interface PropertyMainInfoProps {
   title: string;
   location: string;
@@ -71,4 +52,25 @@ export interface PropertyMainInfoProps {
   square_feet_min?: string;
   square_feet_max?: string;
   home_type?: string | null;
+  amenities?: string[];
+  features_and_finishes?: string;
+}
+
+export interface Builder {
+  id: string;
+  name: string;
+  description: string | null;
+  logo_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BuilderReview {
+  id: string;
+  builder_id: string;
+  user_id: string;
+  rating: number;
+  comment: string | null;
+  created_at: string;
+  updated_at: string;
 }

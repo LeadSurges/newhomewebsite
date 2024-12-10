@@ -1,6 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
 import { FormData } from "../types";
 
 interface PropertyFeaturesFieldsProps {
@@ -8,14 +9,40 @@ interface PropertyFeaturesFieldsProps {
   setFormData: (data: FormData) => void;
 }
 
+const AMENITIES_OPTIONS = [
+  "Pool",
+  "Gym",
+  "Concierge",
+  "Party Room",
+  "Guest Suite",
+  "Rooftop Terrace",
+  "BBQ Area",
+  "Pet Spa",
+  "Bike Storage",
+  "Electric Vehicle Charging",
+  "Security System",
+  "Theater Room",
+  "Business Center",
+  "Yoga Studio",
+  "Steam Room",
+  "Sauna",
+];
+
 export const PropertyFeaturesFields = ({ formData, setFormData }: PropertyFeaturesFieldsProps) => {
   const handleKeywordsChange = (value: string) => {
     const keywords = value.split(',').map(k => k.trim()).filter(k => k !== '');
     setFormData({ ...formData, keywords });
   };
 
+  const toggleAmenity = (amenity: string) => {
+    const updatedAmenities = formData.amenities.includes(amenity)
+      ? formData.amenities.filter(a => a !== amenity)
+      : [...formData.amenities, amenity];
+    setFormData({ ...formData, amenities: updatedAmenities });
+  };
+
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div>
         <Label htmlFor="keywords">Keywords (comma-separated)</Label>
         <Input
@@ -23,6 +50,33 @@ export const PropertyFeaturesFields = ({ formData, setFormData }: PropertyFeatur
           value={formData.keywords.join(', ')}
           onChange={(e) => handleKeywordsChange(e.target.value)}
           placeholder="e.g. pool, garage, view"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Amenities</Label>
+        <div className="grid grid-cols-2 gap-4">
+          {AMENITIES_OPTIONS.map((amenity) => (
+            <div key={amenity} className="flex items-center space-x-2">
+              <Checkbox
+                id={`amenity-${amenity}`}
+                checked={formData.amenities.includes(amenity)}
+                onCheckedChange={() => toggleAmenity(amenity)}
+              />
+              <Label htmlFor={`amenity-${amenity}`}>{amenity}</Label>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <Label htmlFor="features_and_finishes">Features & Finishes</Label>
+        <Textarea
+          id="features_and_finishes"
+          value={formData.features_and_finishes}
+          onChange={(e) => setFormData({ ...formData, features_and_finishes: e.target.value })}
+          placeholder="Enter features and finishes details"
+          rows={6}
         />
       </div>
 
