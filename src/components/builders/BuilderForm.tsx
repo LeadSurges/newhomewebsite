@@ -31,7 +31,7 @@ export const BuilderForm = () => {
   const [phone, setPhone] = useState("");
   const [website, setWebsite] = useState("");
   const [selectedLogo, setSelectedLogo] = useState<File | null>(null);
-  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string[]>([]);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -82,7 +82,7 @@ export const BuilderForm = () => {
       setPhone("");
       setWebsite("");
       setSelectedLogo(null);
-      setLogoPreview(null);
+      setLogoPreview([]);
 
       // Invalidate builders query
       queryClient.invalidateQueries({ queryKey: ["builders"] });
@@ -172,9 +172,11 @@ export const BuilderForm = () => {
             label="Company Logo"
             icon={ImagePlus}
             preview={logoPreview}
-            onChange={(file) => {
-              setSelectedLogo(file);
-              setLogoPreview(URL.createObjectURL(file));
+            onChange={(files) => {
+              if (files && files.length > 0) {
+                setSelectedLogo(files[0]);
+                setLogoPreview([URL.createObjectURL(files[0])]);
+              }
             }}
           />
 

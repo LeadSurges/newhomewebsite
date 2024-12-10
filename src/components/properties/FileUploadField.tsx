@@ -6,7 +6,7 @@ interface FileUploadFieldProps {
   id: string;
   label: string;
   icon: LucideIcon;
-  preview: string[] | null;
+  preview: string[];
   onChange: (files: FileList) => void;
   multiple?: boolean;
 }
