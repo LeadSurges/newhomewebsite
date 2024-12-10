@@ -3,11 +3,22 @@ export interface FormData {
   description: string;
   price: string;
   location: string;
-  bedrooms: string;
-  bathrooms: string;
-  square_feet: string;
+  bedrooms_min: string;
+  bedrooms_max: string;
+  bathrooms_min: string;
+  bathrooms_max: string;
+  square_feet_min: string;
+  square_feet_max: string;
   featured: boolean;
   builder_id?: string;
+  home_type: string | null;
+  construction_status: string | null;
+  ownership_type: string | null;
+  quick_move_in: boolean;
+  master_planned: boolean;
+  garage_spaces: string | null;
+  completion_year: string | null;
+  keywords: string[];
 }
 
 export interface Builder {
