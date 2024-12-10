@@ -54,11 +54,13 @@ const Properties = () => {
         .from("properties")
         .select("*");
 
-      // Apply filters
-      if (filters.location) {
-        query = query.ilike('location', `%${filters.location}%`);
+      // Apply location filter with case-insensitive partial match
+      if (filters.location && filters.location.trim()) {
+        query = query.ilike('location', `%${filters.location.trim()}%`);
+        console.log("Applying location filter:", filters.location.trim());
       }
 
+      // Apply other filters
       if (filters.priceRange[0] > 0) {
         query = query.gte("price", filters.priceRange[0]);
       }
@@ -74,7 +76,6 @@ const Properties = () => {
         query = query.gte("bathrooms", filters.bathroomRange[0]);
       }
 
-      // Apply square feet filter
       if (filters.squareFeet.min) {
         query = query.gte("square_feet", filters.squareFeet.min);
       }
@@ -82,7 +83,6 @@ const Properties = () => {
         query = query.lte("square_feet", filters.squareFeet.max);
       }
 
-      // Apply additional filters
       if (filters.homeType) {
         query = query.eq("home_type", filters.homeType);
       }
