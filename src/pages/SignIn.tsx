@@ -1,17 +1,15 @@
 import { Navigation } from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
 const SignIn = () => {
-  const { signIn, signInWithGoogle } = useAuth();
+  const { signIn } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,19 +44,6 @@ const SignIn = () => {
             <p className="text-muted-foreground mt-2">
               Sign in to continue exploring new homes
             </p>
-          </div>
-
-          <GoogleSignInButton onClick={signInWithGoogle} />
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-muted-foreground">
-                Or continue with
-              </span>
-            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">

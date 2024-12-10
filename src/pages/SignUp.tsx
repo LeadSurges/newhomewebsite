@@ -1,14 +1,12 @@
 import { Navigation } from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { EmailSignUpForm } from "@/components/auth/EmailSignUpForm";
-import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Separator } from "@/components/ui/separator";
 
 const SignUp = () => {
-  const { signUp, signInWithGoogle } = useAuth();
+  const { signUp } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -34,19 +32,6 @@ const SignUp = () => {
             <p className="text-muted-foreground mt-2">
               Sign up to start exploring new homes
             </p>
-          </div>
-
-          <GoogleSignInButton onClick={signInWithGoogle} />
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-white px-2 text-muted-foreground">
-                Or continue with
-              </span>
-            </div>
           </div>
 
           <EmailSignUpForm onSubmit={handleSignUp} isLoading={isLoading} />

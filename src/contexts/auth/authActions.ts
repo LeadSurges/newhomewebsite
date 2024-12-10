@@ -69,33 +69,6 @@ export const useAuthActions = () => {
     }
   };
 
-  const signInWithGoogle = async () => {
-    try {
-      console.log("AuthActions: Starting Google sign in process...");
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: "google",
-        options: {
-          redirectTo: `${window.location.origin}/properties`,
-        },
-      });
-      
-      if (error) {
-        console.error("AuthActions: Google sign in error:", error);
-        throw error;
-      }
-
-      console.log("AuthActions: Google sign in initiated successfully");
-    } catch (error: any) {
-      console.error("AuthActions: Google sign in error:", error);
-      toast({
-        variant: "destructive",
-        title: "Error signing in with Google",
-        description: error.message,
-      });
-      throw error;
-    }
-  };
-
   const signOut = async () => {
     try {
       console.log("AuthActions: Starting sign out process...");
@@ -118,5 +91,5 @@ export const useAuthActions = () => {
     }
   };
 
-  return { signIn, signUp, signOut, signInWithGoogle };
+  return { signIn, signUp, signOut };
 };

@@ -9,7 +9,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { user, loading, setUser } = useAuthState();
-  const { signIn, signUp, signOut, signInWithGoogle } = useAuthActions();
+  const { signIn, signUp, signOut } = useAuthActions();
   const navigate = useNavigate();
   const location = useLocation();
   const [isInitialized, setIsInitialized] = useState(false);
@@ -81,7 +81,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signIn,
         signUp,
         signOut,
-        signInWithGoogle,
       }}
     >
       {children}
