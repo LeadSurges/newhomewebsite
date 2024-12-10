@@ -2,7 +2,6 @@ import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface PriceFilterProps {
   value: number[]
@@ -47,7 +46,7 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
 
   return (
     <div className="p-4 bg-white">
-      <div className="space-y-2 mb-6">
+      <div className="space-y-2">
         <Button
           variant="ghost"
           className="w-full justify-start font-normal text-lg hover:bg-gray-100"
@@ -71,7 +70,7 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
         ))}
       </div>
 
-      <div className="pt-4">
+      <div className="mt-6">
         <Label className="mb-2 block text-base font-medium">Custom price range</Label>
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
