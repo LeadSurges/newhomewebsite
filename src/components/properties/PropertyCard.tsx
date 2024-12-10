@@ -1,11 +1,12 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatPrice } from "@/utils/formatters";
-import { Heart, Building2, Bed, Bath, Ruler } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
+import { PropertyStats } from "./card/PropertyStats";
+import { BuilderInfo } from "./card/BuilderInfo";
+import { FavoriteButton } from "./card/FavoriteButton";
 
 interface PropertyCardProps {
   property: {
@@ -87,19 +88,10 @@ export const PropertyCard = ({ property, size = "default" }: PropertyCardProps) 
             className="object-cover w-full h-full"
           />
           {user && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+            <FavoriteButton
+              isFavorite={favorite}
               onClick={handleFavoriteClick}
-            >
-              <Heart
-                className={cn(
-                  "h-5 w-5",
-                  favorite ? "fill-red-500 text-red-500" : "text-gray-500"
-                )}
-              />
-            </Button>
+            />
           )}
         </div>
         <CardContent className={cn(
@@ -118,36 +110,12 @@ export const PropertyCard = ({ property, size = "default" }: PropertyCardProps) 
               {formatPrice(property.price)}
             </p>
             <p className="text-muted-foreground text-sm">{property.location}</p>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              {bedroomsDisplay && (
-                <div className="flex items-center gap-1">
-                  <Bed className="h-4 w-4" />
-                  <span>{bedroomsDisplay} {parseInt(bedroomsDisplay) === 1 ? 'bed' : 'beds'}</span>
-                </div>
-              )}
-              {bathroomsDisplay && (
-                <div className="flex items-center gap-1">
-                  <Bath className="h-4 w-4" />
-                  <span>{bathroomsDisplay} {parseInt(bathroomsDisplay) === 1 ? 'bath' : 'baths'}</span>
-                </div>
-              )}
-              {squareFeetDisplay && (
-                <div className="flex items-center gap-1">
-                  <Ruler className="h-4 w-4" />
-                  <span>{squareFeetDisplay} sq ft</span>
-                </div>
-              )}
-            </div>
-            {property.builders && (
-              <Link 
-                to={`/builders/${property.builders.id}`}
-                className="flex items-center gap-2 text-sm text-primary hover:underline mt-2"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Building2 className="h-4 w-4" />
-                <span>Built by {property.builders.name}</span>
-              </Link>
-            )}
+            <PropertyStats
+              bedroomsDisplay={bedroomsDisplay}
+              bathroomsDisplay={bathroomsDisplay}
+              squareFeetDisplay={squareFeetDisplay}
+            />
+            <BuilderInfo builder={property.builders} />
           </div>
         </CardContent>
       </Card>
