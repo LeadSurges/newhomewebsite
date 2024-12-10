@@ -33,6 +33,17 @@ export const PropertyMainInfo = ({
     return value ? `$${value.toLocaleString()}` : 'N/A';
   };
 
+  // Convert JSON values to string for display
+  const formatJsonValue = (value: any): string => {
+    if (typeof value === 'string' || typeof value === 'number') {
+      return String(value);
+    }
+    if (typeof value === 'object' && value !== null) {
+      return JSON.stringify(value, null, 2);
+    }
+    return '';
+  };
+
   return (
     <Card>
       <CardContent className="p-6">
@@ -123,7 +134,7 @@ export const PropertyMainInfo = ({
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-4">Deposit Structure</h2>
               <div className="p-4 rounded-lg border bg-card">
-                <p className="whitespace-pre-wrap">{deposit_structure}</p>
+                <p className="whitespace-pre-wrap">{formatJsonValue(deposit_structure)}</p>
               </div>
             </div>
             <Separator className="my-6" />
@@ -135,7 +146,7 @@ export const PropertyMainInfo = ({
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-4">Incentives</h2>
               <div className="p-4 rounded-lg border bg-card">
-                <p className="whitespace-pre-wrap">{incentives}</p>
+                <p className="whitespace-pre-wrap">{formatJsonValue(incentives)}</p>
               </div>
             </div>
             <Separator className="my-6" />
