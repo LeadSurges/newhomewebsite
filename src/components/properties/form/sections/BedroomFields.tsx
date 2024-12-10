@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormData } from "../../types";
-import { handleMinBedroomsChange, handleMaxBedroomsChange } from "../utils/propertyFieldHandlers";
+import { handleMinBedroomsChange, handleMaxBedroomsChange } from "../utils/bedroomHandlers";
 
 interface BedroomFieldsProps {
   formData: FormData;

@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormData } from "../../types";
-import { handleMinSquareFeetChange, handleMaxSquareFeetChange } from "../utils/propertyFieldHandlers";
+import { handleMinSquareFeetChange, handleMaxSquareFeetChange } from "../utils/squareFootageHandlers";
 
 interface SquareFootageFieldsProps {
   formData: FormData;

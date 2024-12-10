@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { FormData } from "../../types";
-import { handleMinBathroomsChange, handleMaxBathroomsChange } from "../utils/propertyFieldHandlers";
+import { handleMinBathroomsChange, handleMaxBathroomsChange } from "../utils/bathroomHandlers";
 
 interface BathroomFieldsProps {
   formData: FormData;
@@ -17,7 +17,6 @@ export const BathroomFields = ({ formData, setFormData }: BathroomFieldsProps) =
           id="bathrooms_min"
           type="number"
           min="1"
-          max="7"
           step="0.5"
           value={formData.bathrooms_min}
           onChange={(e) => handleMinBathroomsChange(e.target.value, formData, setFormData)}
@@ -29,7 +28,6 @@ export const BathroomFields = ({ formData, setFormData }: BathroomFieldsProps) =
           id="bathrooms_max"
           type="number"
           min={formData.bathrooms_min || "1"}
-          max="7"
           step="0.5"
           value={formData.bathrooms_max}
           onChange={(e) => handleMaxBathroomsChange(e.target.value, formData, setFormData)}
