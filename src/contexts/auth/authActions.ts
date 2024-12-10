@@ -52,26 +52,42 @@ export const useAuthActions = () => {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
+          redirectTo: `${window.location.origin}/properties`,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
           },
-          redirectTo: `${window.location.origin}/properties`,
         },
       });
       
       if (error) {
         console.error("AuthActions: Google sign in error:", error);
+        toast({
+          variant: "destructive",
+          title: "Error signing in with Google",
+          description: error.message,
+        });
         throw error;
       }
       
-      console.log("AuthActions: Google sign in successful:", data);
+      if (!data.url) {
+        console.error("AuthActions: No redirect URL received from Supabase");
+        toast({
+          variant: "destructive",
+          title: "Error signing in with Google",
+          description: "Failed to initiate Google sign in. Please try again.",
+        });
+        return;
+      }
+      
+      console.log("AuthActions: Redirecting to Google sign in...");
+      window.location.href = data.url;
     } catch (error: any) {
       console.error("AuthActions: Google sign in error:", error);
       toast({
         variant: "destructive",
         title: "Error signing in with Google",
-        description: error.message,
+        description: error.message || "An unexpected error occurred",
       });
       throw error;
     }
