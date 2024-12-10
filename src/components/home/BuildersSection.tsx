@@ -90,9 +90,6 @@ export const BuildersSection = () => {
                     }`}
                   />
                 ))}
-                <span className="text-xs text-muted-foreground ml-1">
-                  ({builder.reviewCount})
-                </span>
               </div>
             </Link>
           ))}
