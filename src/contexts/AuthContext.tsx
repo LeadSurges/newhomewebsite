@@ -7,11 +7,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuthState();
-  const { signIn, signUp, signOut, signInWithGithub } = useAuthActions();
+  const { signIn, signUp, signOut, signInWithGithub, signInWithGoogle } = useAuthActions();
 
   return (
     <AuthContext.Provider
-      value={{ user, loading, signIn, signUp, signOut, signInWithGithub }}
+      value={{ user, loading, signIn, signUp, signOut, signInWithGithub, signInWithGoogle }}
     >
       {children}
     </AuthContext.Provider>

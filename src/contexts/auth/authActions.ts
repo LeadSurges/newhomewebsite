@@ -65,6 +65,25 @@ export const useAuthActions = () => {
     }
   };
 
+  const signInWithGoogle = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/admin/properties`,
+        },
+      });
+      if (error) throw error;
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error signing in with Google",
+        description: error.message,
+      });
+      throw error;
+    }
+  };
+
   const signOut = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -82,5 +101,5 @@ export const useAuthActions = () => {
     }
   };
 
-  return { signIn, signUp, signOut, signInWithGithub };
+  return { signIn, signUp, signOut, signInWithGithub, signInWithGoogle };
 };
