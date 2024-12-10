@@ -68,12 +68,12 @@ const BuilderProfile = () => {
       
       console.log("Fetching builder reviews for builder:", id);
       
-      // Updated query to join with profiles table correctly
+      // Join builder_reviews with profiles through user_id
       const { data: reviewsData, error: reviewsError } = await supabase
         .from("builder_reviews")
         .select(`
           *,
-          profiles (*)
+          profiles:user_id(*)
         `)
         .eq("builder_id", id);
 
