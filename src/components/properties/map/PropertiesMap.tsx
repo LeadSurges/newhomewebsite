@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
+import { Loader } from "@googlemaps/js-api-loader";
 import { supabase } from "@/integrations/supabase/client";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader } from "lucide-react";
 import type { Database } from "@/integrations/supabase/types";
 
 type Property = Database["public"]["Tables"]["properties"]["Row"];
@@ -13,42 +13,42 @@ interface PropertiesMapProps {
 
 export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<google.maps.Map | null>(null);
   const markersRef = useRef<google.maps.Marker[]>([]);
 
   useEffect(() => {
     const initMap = async () => {
       try {
-        // Get Maps API key
-        const { data: { secret }, error: secretError } = await supabase.functions.invoke('get-maps-key');
+        console.log("Initializing properties map");
+        const { data: { secret } } = await supabase.functions.invoke('get-maps-key');
         
-        if (secretError || !secret) {
-          console.error("Failed to get Maps API key:", secretError);
+        if (!secret) {
+          console.error("No Google Maps API key found");
           return;
         }
 
-        // Load Google Maps
-        const loader = new google.maps.Loader({
+        const loader = new Loader({
           apiKey: secret,
           version: "weekly",
         });
 
-        await loader.load();
-        console.log("Google Maps loaded successfully");
-
+        const google = await loader.load();
+        
         if (!mapRef.current) return;
 
-        // Initialize map
-        const mapOptions: google.maps.MapOptions = {
-          center: { lat: 43.6532, lng: -79.3832 }, // Toronto
+        // Default to Toronto coordinates
+        const defaultCenter = { lat: 43.6532, lng: -79.3832 };
+        
+        const mapInstance = new google.maps.Map(mapRef.current, {
+          center: defaultCenter,
           zoom: 11,
-          mapTypeControl: false,
-          fullscreenControl: false,
-          streetViewControl: false,
-        };
-
-        const map = new google.maps.Map(mapRef.current, mapOptions);
-        mapInstanceRef.current = map;
+          styles: [
+            {
+              featureType: "poi",
+              elementType: "labels",
+              stylers: [{ visibility: "off" }],
+            },
+          ],
+        });
 
         // Clear existing markers
         markersRef.current.forEach(marker => marker.setMap(null));
@@ -57,7 +57,7 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
         // Create bounds to fit all markers
         const bounds = new google.maps.LatLngBounds();
 
-        // Add markers for properties
+        // Create markers for all properties
         for (const [index, property] of properties.entries()) {
           const geocoder = new google.maps.Geocoder();
           
@@ -73,9 +73,10 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
             });
 
             const position = results[0].geometry.location;
-            
+            bounds.extend(position);
+
             const marker = new google.maps.Marker({
-              map,
+              map: mapInstance,
               position,
               title: property.title,
               icon: {
@@ -110,7 +111,7 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
             });
 
             marker.addListener("mouseover", () => {
-              infoWindow.open(map, marker);
+              infoWindow.open(mapInstance, marker);
             });
 
             marker.addListener("mouseout", () => {
@@ -118,7 +119,6 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
             });
 
             markersRef.current.push(marker);
-            bounds.extend(position);
           } catch (error) {
             console.error(`Error creating marker for property ${property.title}:`, error);
           }
@@ -126,7 +126,7 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
 
         // Fit map to show all markers
         if (markersRef.current.length > 0) {
-          map.fitBounds(bounds);
+          mapInstance.fitBounds(bounds);
         }
 
       } catch (error) {
@@ -134,14 +134,14 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
       }
     };
 
-    initMap();
+    if (mapRef.current) {
+      initMap();
+    }
 
-    // Cleanup
+    // Cleanup markers on unmount
     return () => {
-      if (markersRef.current) {
-        markersRef.current.forEach(marker => marker.setMap(null));
-        markersRef.current = [];
-      }
+      markersRef.current.forEach(marker => marker.setMap(null));
+      markersRef.current = [];
     };
   }, [properties, onPropertyClick]);
 
@@ -154,8 +154,6 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
   }
 
   return (
-    <div className="relative w-full h-full min-h-[400px]">
-      <div ref={mapRef} className="w-full h-full rounded-lg" />
-    </div>
+    <div ref={mapRef} className="w-full h-full min-h-[calc(100vh-64px)] rounded-lg" />
   );
 };

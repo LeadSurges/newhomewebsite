@@ -72,7 +72,7 @@ const BuilderProfile = () => {
         .from("builder_reviews")
         .select(`
           *,
-          profiles:user_id(username, avatar_url)
+          profiles(username, avatar_url)
         `)
         .eq("builder_id", id);
 
@@ -81,8 +81,7 @@ const BuilderProfile = () => {
         throw error;
       }
 
-      console.log("Raw review data:", data);
-      return data;
+      return (data || []) as ReviewWithProfile[];
     },
     enabled: !!id,
   });
