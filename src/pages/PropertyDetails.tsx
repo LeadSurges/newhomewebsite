@@ -9,7 +9,6 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
-import { Building2, MapPin, Calendar, Home } from "lucide-react";
 
 const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -41,12 +40,11 @@ const PropertyDetails = () => {
 
   if (!property) return null;
 
-  // Convert JSON fields to strings and pass the property data
   const propertyMainInfo = {
     ...property,
     builder: property.builders,
-    deposit_structure: property.deposit_structure ? JSON.stringify(property.deposit_structure) : undefined,
-    incentives: property.incentives ? JSON.stringify(property.incentives) : undefined
+    deposit_structure: property.deposit_structure,
+    incentives: property.incentives
   };
 
   return (
