@@ -17,10 +17,7 @@ interface ReviewWithProfile extends BuilderReview {
 }
 
 interface UserWithProfile {
-  profile: {
-    username: string | null;
-    avatar_url: string | null;
-  } | null;
+  profile: Profile | null;
 }
 
 const BuilderProfile = () => {
@@ -73,6 +70,8 @@ const BuilderProfile = () => {
     queryFn: async () => {
       if (!id) throw new Error("No builder ID provided");
       
+      console.log("Fetching builder reviews for builder:", id);
+      
       const { data, error } = await supabase
         .from("builder_reviews")
         .select(`
@@ -90,11 +89,17 @@ const BuilderProfile = () => {
         console.error("Error fetching reviews:", error);
         throw error;
       }
+
+      console.log("Raw review data:", data);
       
-      return data.map(review => ({
-        ...review,
-        profiles: (review.user as UserWithProfile | null)?.profile || null
-      }));
+      return data.map(review => {
+        const userProfile = (review.user as unknown as UserWithProfile)?.profile;
+        console.log("Processed user profile:", userProfile);
+        return {
+          ...review,
+          profiles: userProfile
+        };
+      });
     },
     enabled: !!id,
   });
