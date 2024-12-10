@@ -1,51 +1,34 @@
 import { Link } from "react-router-dom";
 
-export const OntarioLocations = () => {
-  const ontarioCities = [
-    "Toronto",
-    "Ottawa",
-    "Mississauga",
-    "Brampton",
-    "Hamilton",
-    "London",
-    "Markham",
-    "Vaughan",
-    "Kitchener",
-    "Windsor",
-    "Burlington",
-    "Oshawa",
-    "Barrie",
-    "St. Catharines",
-    "Cambridge",
-    "Kingston",
-    "Guelph",
-    "Thunder Bay",
-    "Waterloo",
-    "Brantford",
-    "Milton",
-    "Niagara Falls",
-    "Richmond Hill",
-    "Oakville",
-    "Burlington",
-    "Sudbury",
-    "Peterborough",
-    "Newmarket",
-    "Sarnia",
-    "Sault Ste. Marie"
-  ];
+const locations = [
+  { id: 1, name: "Toronto", count: 150 },
+  { id: 2, name: "Mississauga", count: 85 },
+  { id: 3, name: "Brampton", count: 65 },
+  { id: 4, name: "Hamilton", count: 45 },
+  { id: 5, name: "Burlington", count: 35 },
+  { id: 6, name: "Oakville", count: 40 },
+  { id: 7, name: "Milton", count: 30 },
+  { id: 8, name: "Richmond Hill", count: 25 },
+];
 
+export const OntarioLocations = () => {
   return (
-    <section className="py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <h2 className="text-2xl font-bold mb-6">Top new home locations in Ontario</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {ontarioCities.map((city) => (
+    <section className="py-16 bg-background">
+      <div className="container">
+        <h2 className="text-3xl font-bold text-center mb-8">
+          Explore New Homes Across Ontario
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {locations.map((location) => (
             <Link
-              key={city}
-              to={`/properties?location=${encodeURIComponent(city)}`}
-              className="text-muted-foreground hover:text-primary transition-colors text-sm"
+              key={location.id}
+              to={`/properties?location=${location.name}`}
+              className="p-4 text-center hover:bg-accent rounded-lg transition-colors"
             >
-              {city} new homes
+              <div className="font-medium">{location.name}</div>
+              <div className="text-sm text-muted-foreground">
+                {location.count} new homes
+              </div>
             </Link>
           ))}
         </div>
