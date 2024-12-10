@@ -7,6 +7,7 @@ import { ImagePlus, FileText } from "lucide-react";
 import { PropertyFormFields } from "./PropertyFormFields";
 import { FileUploadField } from "./FileUploadField";
 import type { FormData } from "./types";
+import type { Property } from "@/types/property";
 
 interface PropertyUploadFormProps {
   initialData?: Property;
