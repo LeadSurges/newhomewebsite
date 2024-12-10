@@ -32,7 +32,7 @@ export const PropertyContactForm = ({ propertyTitle }: PropertyContactFormProps)
           message,
           type: "property",
           propertyTitle,
-          to: "officialleadsurge@gmail.com",
+          to: "Jasonmcgrath@live.ca",
         }),
       });
 

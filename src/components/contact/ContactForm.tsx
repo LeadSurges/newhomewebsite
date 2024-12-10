@@ -26,7 +26,7 @@ export const ContactForm = ({ type }: { type: "builder" | "agent" }) => {
           phone,
           message,
           type,
-          to: "officialleadsurge@gmail.com"
+          to: "Jasonmcgrath@live.ca"
         }),
       });
 
