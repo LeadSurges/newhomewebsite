@@ -9,6 +9,8 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Map, List } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
+import { PropertiesList } from "@/components/properties/PropertiesList";
+import { PropertiesHeader } from "@/components/properties/PropertiesHeader";
 
 const Properties = () => {
   const [searchParams] = useSearchParams();
@@ -55,12 +57,11 @@ const Properties = () => {
         .from("properties")
         .select("*");
 
-      // Apply location filter
+      // Apply filters
       if (filters.location) {
         query = query.ilike('location', `%${filters.location}%`);
       }
 
-      // Apply range filters
       if (filters.priceRange[0] > 0) {
         query = query.gte("price", filters.priceRange[0]);
       }
@@ -144,47 +145,18 @@ const Properties = () => {
         <SearchFilters onFilterChange={handleFilterChange} initialFilters={filters} />
         
         <main className="max-w-[1920px] mx-auto px-4 py-8">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-semibold">
-              Properties in {filters.location || "All Locations"}
-            </h1>
-            <div className="flex gap-2">
-              <Button
-                variant={showMap ? "outline" : "default"}
-                size="sm"
-                onClick={() => setShowMap(false)}
-                className="w-24"
-              >
-                <List className="h-4 w-4 mr-2" />
-                List
-              </Button>
-              <Button
-                variant={showMap ? "default" : "outline"}
-                size="sm"
-                onClick={() => setShowMap(true)}
-                className="w-24"
-              >
-                <Map className="h-4 w-4 mr-2" />
-                Map
-              </Button>
-            </div>
-          </div>
+          <PropertiesHeader 
+            location={filters.location}
+            showMap={showMap}
+            onViewChange={setShowMap}
+          />
 
           <div className="flex flex-col lg:flex-row gap-6">
             <div className={`${showMap ? 'lg:w-1/2' : 'w-full'}`}>
-              {isLoading ? (
-                <div className="text-center py-8">Loading properties...</div>
-              ) : properties && properties.length > 0 ? (
-                <div className="grid grid-cols-1 gap-6">
-                  {properties.map((property) => (
-                    <PropertyCard key={property.id} property={property} />
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 text-muted-foreground">
-                  No properties found matching your criteria
-                </div>
-              )}
+              <PropertiesList 
+                properties={properties}
+                isLoading={isLoading}
+              />
             </div>
 
             {showMap && properties && (
@@ -193,6 +165,7 @@ const Properties = () => {
                   <PropertiesMap 
                     properties={properties} 
                     onPropertyClick={handlePropertyClick}
+                    location={filters.location}
                   />
                 </div>
               </div>
