@@ -26,7 +26,7 @@ export const GoogleSignInButton = ({ onClick }: GoogleSignInButtonProps) => {
   return (
     <Button 
       onClick={handleClick} 
-      className="w-full" 
+      className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-300" 
       variant="outline" 
       type="button"
     >

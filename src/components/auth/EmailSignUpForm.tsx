@@ -39,7 +39,11 @@ export const EmailSignUpForm = ({ onSubmit, isLoading }: EmailSignUpFormProps) =
         </div>
       </div>
 
-      <Button type="submit" className="w-full" disabled={isLoading}>
+      <Button 
+        type="submit" 
+        className="w-full bg-accent hover:bg-accent/90 text-white" 
+        disabled={isLoading}
+      >
         {isLoading ? "Creating account..." : "Sign up with email"}
       </Button>
     </form>

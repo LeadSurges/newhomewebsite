@@ -70,7 +70,11 @@ export const HeroSection = () => {
                 </button>
               )}
             </div>
-            <Button type="submit" size="lg" className="shrink-0 text-lg px-8">
+            <Button 
+              type="submit" 
+              size="lg" 
+              className="shrink-0 text-lg px-8 bg-accent hover:bg-accent/90 text-white"
+            >
               Search Properties
             </Button>
           </form>
