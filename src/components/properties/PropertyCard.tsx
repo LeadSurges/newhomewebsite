@@ -18,7 +18,7 @@ interface PropertyCardProps {
     square_feet: number | null;
     featured: boolean;
     image_url: string | null;
-    builders: { name: string } | null;
+    builders?: { name: string } | null;
   };
 }
 
