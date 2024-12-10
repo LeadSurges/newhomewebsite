@@ -7,6 +7,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { Star } from "lucide-react";
 import { useEffect } from "react";
 
+interface ReviewWithProfile extends Database['public']['Tables']['builder_reviews']['Row'] {
+  profiles: {
+    username: string | null;
+    avatar_url: string | null;
+  } | null;
+}
+
 const BuilderProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -52,7 +59,7 @@ const BuilderProfile = () => {
     enabled: !!id,
   });
 
-  const { data: reviews } = useQuery({
+  const { data: reviews } = useQuery<ReviewWithProfile[]>({
     queryKey: ["builder-reviews", id],
     queryFn: async () => {
       if (!id) throw new Error("No builder ID provided");
