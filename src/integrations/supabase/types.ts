@@ -143,7 +143,11 @@ export type Database = {
         Row: {
           amenities: string[] | null
           bathrooms: number | null
+          bathrooms_max: string | null
+          bathrooms_min: string | null
           bedrooms: number | null
+          bedrooms_max: string | null
+          bedrooms_min: string | null
           builder_id: string | null
           completion_year: number | null
           construction_status: string | null
@@ -170,6 +174,8 @@ export type Database = {
           price_range_min: number | null
           quick_move_in: boolean | null
           square_feet: number | null
+          square_feet_max: string | null
+          square_feet_min: string | null
           storage_cost: number | null
           title: string
           updated_at: string
@@ -178,7 +184,11 @@ export type Database = {
         Insert: {
           amenities?: string[] | null
           bathrooms?: number | null
+          bathrooms_max?: string | null
+          bathrooms_min?: string | null
           bedrooms?: number | null
+          bedrooms_max?: string | null
+          bedrooms_min?: string | null
           builder_id?: string | null
           completion_year?: number | null
           construction_status?: string | null
@@ -205,6 +215,8 @@ export type Database = {
           price_range_min?: number | null
           quick_move_in?: boolean | null
           square_feet?: number | null
+          square_feet_max?: string | null
+          square_feet_min?: string | null
           storage_cost?: number | null
           title: string
           updated_at?: string
@@ -213,7 +225,11 @@ export type Database = {
         Update: {
           amenities?: string[] | null
           bathrooms?: number | null
+          bathrooms_max?: string | null
+          bathrooms_min?: string | null
           bedrooms?: number | null
+          bedrooms_max?: string | null
+          bedrooms_min?: string | null
           builder_id?: string | null
           completion_year?: number | null
           construction_status?: string | null
@@ -240,6 +256,8 @@ export type Database = {
           price_range_min?: number | null
           quick_move_in?: boolean | null
           square_feet?: number | null
+          square_feet_max?: string | null
+          square_feet_min?: string | null
           storage_cost?: number | null
           title?: string
           updated_at?: string

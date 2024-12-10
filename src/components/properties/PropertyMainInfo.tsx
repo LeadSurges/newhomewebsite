@@ -40,7 +40,8 @@ export const PropertyMainInfo = ({
     bathrooms_min,
     bathrooms_max,
     square_feet_min,
-    square_feet_max
+    square_feet_max,
+    amenities
   });
 
   const formatJsonValue = (value: any): string => {
