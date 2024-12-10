@@ -27,19 +27,6 @@ export const PropertyMainInfo = ({
     return value ? `$${value.toLocaleString()}` : 'N/A';
   };
 
-  // Parse JSON strings if they exist
-  const depositStructureContent = deposit_structure ? 
-    typeof deposit_structure === 'string' ? 
-      deposit_structure.replace(/['"{}]/g, '') : 
-      JSON.stringify(deposit_structure) : 
-    undefined;
-
-  const incentivesContent = incentives ? 
-    typeof incentives === 'string' ? 
-      incentives.replace(/['"{}]/g, '') : 
-      JSON.stringify(incentives) : 
-    undefined;
-
   return (
     <Card>
       <CardContent className="p-6">
@@ -119,24 +106,24 @@ export const PropertyMainInfo = ({
           </>
         )}
 
-        {depositStructureContent && (
+        {deposit_structure && (
           <>
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-4">Deposit Structure</h2>
               <div className="p-4 rounded-lg border bg-card">
-                <p className="whitespace-pre-wrap">{depositStructureContent}</p>
+                <p className="whitespace-pre-wrap">{deposit_structure}</p>
               </div>
             </div>
             <Separator className="my-6" />
           </>
         )}
 
-        {incentivesContent && (
+        {incentives && (
           <>
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-4">Incentives</h2>
               <div className="p-4 rounded-lg border bg-card">
-                <p className="whitespace-pre-wrap">{incentivesContent}</p>
+                <p className="whitespace-pre-wrap">{incentives}</p>
               </div>
             </div>
             <Separator className="my-6" />
