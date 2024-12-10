@@ -32,11 +32,13 @@ const Properties = () => {
 
       // Apply location filter
       if (filters.location) {
+        console.log("Applying location filter:", filters.location);
         query = query.ilike('location', `%${filters.location}%`);
       }
 
       // Apply city filter
       if (filters.city) {
+        console.log("Applying city filter:", filters.city);
         query = query.or(`location.ilike.%${filters.city}%,location.ilike.%${filters.city},%`);
       }
 
