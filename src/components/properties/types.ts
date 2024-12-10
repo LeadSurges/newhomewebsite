@@ -60,6 +60,6 @@ export interface PropertyMainInfoProps {
   maintenance_fee_per_sqft?: number;
   parking_cost?: number;
   storage_cost?: number;
-  deposit_structure?: string;
-  incentives?: string;
+  deposit_structure?: string | Record<string, any>;
+  incentives?: string | Record<string, any>;
 }
