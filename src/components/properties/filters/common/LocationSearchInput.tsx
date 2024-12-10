@@ -7,8 +7,12 @@ interface LocationSearchInputProps {
 }
 
 export function LocationSearchInput({ value, onChange }: LocationSearchInputProps) {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+  }
+
   return (
-    <div className="relative flex-grow max-w-md">
+    <form onSubmit={handleSubmit} className="relative flex-grow max-w-md">
       <Input
         type="text"
         placeholder="Search by location..."
@@ -17,6 +21,6 @@ export function LocationSearchInput({ value, onChange }: LocationSearchInputProp
         className="pl-10 h-10"
       />
       <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-    </div>
+    </form>
   )
 }
