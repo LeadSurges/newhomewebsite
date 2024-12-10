@@ -46,12 +46,12 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-white">
       <ScrollArea className="h-[300px] mb-4">
         <div className="space-y-2">
           <Button
             variant="ghost"
-            className="w-full justify-start font-normal"
+            className="w-full justify-start font-normal text-lg hover:bg-gray-100"
             onClick={() => {
               setMin("0")
               setMax("")
@@ -64,7 +64,7 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
             <Button
               key={price}
               variant="ghost"
-              className="w-full justify-start font-normal hover:bg-gray-100"
+              className="w-full justify-start font-normal text-lg hover:bg-gray-100"
               onClick={() => handlePriceSelect(price)}
             >
               {formatPrice(price)}+
@@ -74,7 +74,7 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
       </ScrollArea>
 
       <div className="border-t pt-4 mt-4">
-        <Label className="mb-2 block">Custom price range</Label>
+        <Label className="mb-2 block text-base font-medium">Custom price range</Label>
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
             <Input
@@ -82,7 +82,7 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
               value={min}
               onChange={(e) => setMin(e.target.value)}
               placeholder="Min price"
-              className="w-full"
+              className="w-full bg-white border-gray-300"
             />
           </div>
           <div>
@@ -91,14 +91,14 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
               value={max}
               onChange={(e) => setMax(e.target.value)}
               placeholder="Max price"
-              className="w-full"
+              className="w-full bg-white border-gray-300"
             />
           </div>
         </div>
 
         <Button 
           variant="outline" 
-          className="w-full"
+          className="w-full bg-white hover:bg-gray-50"
           onClick={handleCustomRange}
         >
           Apply Custom Range

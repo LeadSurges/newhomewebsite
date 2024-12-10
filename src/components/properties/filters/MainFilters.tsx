@@ -37,6 +37,15 @@ export function MainFilters({
     return `${range[0]}+`
   }
 
+  const formatPriceDisplay = (range: number[]) => {
+    if (range[0] === 0) return "Any price"
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 0,
+    }).format(range[0]) + "+"
+  }
+
   return (
     <>
       {/* Search Input */}
@@ -53,7 +62,7 @@ export function MainFilters({
 
       {/* Price Range Dropdown */}
       <FilterDropdown
-        label={priceRange[0] === 0 && priceRange[1] === 5000000 ? "Any price" : `$${priceRange[0].toLocaleString()} - $${priceRange[1].toLocaleString()}`}
+        label={formatPriceDisplay(priceRange)}
         icon={DollarSign}
         className="min-w-[140px] bg-white border-gray-300 hover:bg-gray-50"
       >
