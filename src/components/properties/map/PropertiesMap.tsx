@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
-import { Property } from "@/components/properties/types";
+import type { Database } from "@/integrations/supabase/types";
 import { geocodeProperty } from "./mapUtils";
+
+type Property = Database["public"]["Tables"]["properties"]["Row"];
 
 interface PropertiesMapProps {
   properties: Property[];

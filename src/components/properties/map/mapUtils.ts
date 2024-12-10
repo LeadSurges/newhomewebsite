@@ -1,4 +1,6 @@
-import { Property } from "@/components/properties/types";
+import type { Database } from "@/integrations/supabase/types";
+
+type Property = Database["public"]["Tables"]["properties"]["Row"];
 
 export const createCustomMarker = (number: string) => {
   return {
