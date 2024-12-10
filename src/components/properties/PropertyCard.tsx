@@ -152,7 +152,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             Built by{" "}
             <Link 
               to={`/builders/${property.builders.id}`}
-              className="hover:text-primary hover:underline"
+              className="text-blue-600 hover:text-blue-800 underline"
               onClick={(e) => e.stopPropagation()}
             >
               {property.builders.name}
