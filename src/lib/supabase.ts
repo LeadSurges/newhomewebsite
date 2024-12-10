@@ -1,8 +1,10 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Add console logs to help debug environment variables
-console.log('Supabase URL:', import.meta.env.VITE_SUPABASE_URL);
-console.log('Supabase Anon Key:', import.meta.env.VITE_SUPABASE_ANON_KEY ? '[PRESENT]' : '[MISSING]');
+console.log('Initializing Supabase client with:', {
+  url: import.meta.env.VITE_SUPABASE_URL,
+  hasAnonKey: !!import.meta.env.VITE_SUPABASE_ANON_KEY
+});
 
 if (!import.meta.env.VITE_SUPABASE_URL) {
   throw new Error(
