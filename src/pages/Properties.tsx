@@ -1,7 +1,7 @@
 import { Navigation } from "@/components/Navigation";
 import { SearchFilters } from "@/components/properties/SearchFilters";
 import { PropertyCard } from "@/components/properties/PropertyCard";
-import { PropertiesMap } from "@/components/properties/map/PropertiesMap";
+import { PropertiesMap } from "@/components/properties/PropertiesMap";
 import { SEO } from "@/components/SEO";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -32,13 +32,15 @@ const Properties = () => {
 
   // Handle URL parameters
   useEffect(() => {
+    const city = searchParams.get("city");
     const homeType = searchParams.get("homeType");
     const quickMoveIn = searchParams.get("quickMoveIn") === "true";
 
-    if (homeType || quickMoveIn) {
+    if (city || homeType || quickMoveIn) {
       setFilters(prev => ({
         ...prev,
-        homeType: homeType,
+        location: city || prev.location,
+        homeType: homeType || prev.homeType,
         quickMoveIn: quickMoveIn
       }));
     }
@@ -132,9 +134,9 @@ const Properties = () => {
   return (
     <div className="min-h-screen bg-secondary">
       <SEO 
-        title="Properties | LuxuryHomes"
-        description="Browse our collection of luxury properties and new construction homes. Find your perfect home today."
-        keywords="luxury properties, new homes, real estate listings, premium real estate"
+        title={`${filters.location || 'All'} Properties | LuxuryHomes`}
+        description={`Browse our collection of luxury properties and new construction homes in ${filters.location || 'all locations'}. Find your perfect home today.`}
+        keywords={`luxury properties, new homes, real estate listings, premium real estate, ${filters.location}`}
       />
       <Navigation />
       
