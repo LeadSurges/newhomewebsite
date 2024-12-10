@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { name, email, phone, message, type, to } = await req.json()
+    const { name, email, phone, message, type, to, propertyTitle } = await req.json()
 
     // Validate required fields
     if (!name || !email || !phone || !message || !type || !to) {
@@ -31,7 +31,8 @@ serve(async (req) => {
       password: Deno.env.get("GMAIL_APP_PASSWORD") || "",
     })
 
-    const emailBody = `
+    let subject = `New ${type} Inquiry from ${name}`
+    let emailBody = `
       New ${type} Inquiry
       
       Name: ${name}
@@ -41,10 +42,15 @@ serve(async (req) => {
       Type: ${type}
     `
 
+    if (propertyTitle) {
+      subject = `Property Inquiry: ${propertyTitle}`
+      emailBody += `\nProperty: ${propertyTitle}`
+    }
+
     await client.send({
       from: "officialleadsurge@gmail.com",
       to: to,
-      subject: `New ${type} Inquiry from ${name}`,
+      subject: subject,
       content: emailBody,
     })
 

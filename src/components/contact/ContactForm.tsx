@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 export const ContactForm = ({ type }: { type: "builder" | "agent" }) => {
   const [name, setName] = useState("");
@@ -17,20 +18,18 @@ export const ContactForm = ({ type }: { type: "builder" | "agent" }) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const { error } = await supabase.functions.invoke('contact', {
+        body: {
           name,
           email,
           phone,
           message,
           type,
           to: "officialleadsurge@gmail.com"
-        }),
+        },
       });
 
-      if (!response.ok) throw new Error("Failed to send message");
+      if (error) throw error;
 
       toast({
         title: "Message sent successfully",
@@ -43,6 +42,7 @@ export const ContactForm = ({ type }: { type: "builder" | "agent" }) => {
       setPhone("");
       setMessage("");
     } catch (error) {
+      console.error('Error sending message:', error);
       toast({
         variant: "destructive",
         title: "Error sending message",

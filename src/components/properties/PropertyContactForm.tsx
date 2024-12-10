@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PropertyContactFormProps {
   propertyTitle: string;
@@ -22,10 +23,8 @@ export const PropertyContactForm = ({ propertyTitle }: PropertyContactFormProps)
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const { error } = await supabase.functions.invoke('contact', {
+        body: {
           name,
           email,
           phone,
@@ -33,10 +32,10 @@ export const PropertyContactForm = ({ propertyTitle }: PropertyContactFormProps)
           type: "property",
           propertyTitle,
           to: "officialleadsurge@gmail.com",
-        }),
+        },
       });
 
-      if (!response.ok) throw new Error("Failed to send message");
+      if (error) throw error;
 
       toast({
         title: "Request sent successfully",
@@ -49,6 +48,7 @@ export const PropertyContactForm = ({ propertyTitle }: PropertyContactFormProps)
       setPhone("");
       setMessage("");
     } catch (error) {
+      console.error('Error sending request:', error);
       toast({
         variant: "destructive",
         title: "Error sending request",
