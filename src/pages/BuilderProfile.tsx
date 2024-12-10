@@ -1,17 +1,29 @@
 import { Navigation } from "@/components/Navigation";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { PropertyCard } from "@/components/properties/PropertyCard";
 import { BuilderReview } from "@/components/builders/BuilderReview";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Star } from "lucide-react";
+import { useEffect } from "react";
 
 const BuilderProfile = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
+  // Validate UUID format
+  useEffect(() => {
+    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+    if (id && !UUID_REGEX.test(id)) {
+      navigate("/");
+    }
+  }, [id, navigate]);
 
   const { data: builder } = useQuery({
     queryKey: ["builder", id],
     queryFn: async () => {
+      if (!id) throw new Error("No builder ID provided");
+      
       const { data, error } = await supabase
         .from("builders")
         .select("*")
@@ -27,6 +39,8 @@ const BuilderProfile = () => {
   const { data: properties } = useQuery({
     queryKey: ["builder-properties", id],
     queryFn: async () => {
+      if (!id) throw new Error("No builder ID provided");
+      
       const { data, error } = await supabase
         .from("properties")
         .select("*")
@@ -41,11 +55,13 @@ const BuilderProfile = () => {
   const { data: reviews } = useQuery({
     queryKey: ["builder-reviews", id],
     queryFn: async () => {
+      if (!id) throw new Error("No builder ID provided");
+      
       const { data, error } = await supabase
         .from("builder_reviews")
         .select(`
           *,
-          profiles:user_id (
+          profiles (
             username,
             avatar_url
           )
