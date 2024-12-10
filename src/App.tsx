@@ -12,6 +12,7 @@ import BuilderProfile from "./pages/BuilderProfile";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import AdminProperties from "./pages/AdminProperties";
+import UploadProperty from "./pages/UploadProperty";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/properties" element={<Properties />} />
               <Route path="/properties/:id" element={<PropertyDetails />} />
+              <Route path="/properties/upload" element={<UploadProperty />} />
               <Route path="/builders/:id" element={<BuilderProfile />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
