@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Building2, MapPin, Calendar, Home } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { DepositStructure, Incentives } from "@/components/properties/types";
 
 const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -64,6 +64,14 @@ const PropertyDetails = () => {
     },
   ];
 
+  // Type cast the deposit_structure and incentives to their respective types
+  const propertyMainInfo = {
+    ...property,
+    builder: property.builders,
+    deposit_structure: property.deposit_structure as DepositStructure | undefined,
+    incentives: property.incentives as Incentives | undefined
+  };
+
   return (
     <div className="min-h-screen bg-secondary">
       <Navigation />
@@ -77,10 +85,7 @@ const PropertyDetails = () => {
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            <PropertyMainInfo 
-              {...property}
-              builder={property.builders}
-            />
+            <PropertyMainInfo {...propertyMainInfo} />
 
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-4">Location</h2>
