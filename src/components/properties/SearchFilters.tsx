@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Filter } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { MainFilters } from "./filters/MainFilters"
@@ -7,22 +7,56 @@ import { FilterButton } from "./filters/common/FilterButton"
 
 interface SearchFiltersProps {
   onFilterChange: (filters: any) => void
+  initialFilters?: {
+    location: string
+    priceRange: number[]
+    bedroomRange: number[]
+    bathroomRange: number[]
+    homeType: string | null
+    constructionStatus: string | null
+    quickMoveIn: boolean
+    masterPlanned: boolean
+    ownershipType: string[]
+    squareFeet: { min: string; max: string }
+    garage: string | null
+    completionYear: string | null
+    keywords: string
+  }
 }
 
-export function SearchFilters({ onFilterChange }: SearchFiltersProps) {
-  const [location, setLocation] = useState("")
-  const [priceRange, setPriceRange] = useState([0, 5000000])
-  const [bedroomRange, setBedroomRange] = useState([1, 7])
-  const [bathroomRange, setBathroomRange] = useState([1, 5])
-  const [homeType, setHomeType] = useState<string | null>(null)
-  const [constructionStatus, setConstructionStatus] = useState<string | null>(null)
-  const [quickMoveIn, setQuickMoveIn] = useState(false)
-  const [masterPlanned, setMasterPlanned] = useState(false)
-  const [ownershipType, setOwnershipType] = useState<string[]>([])
-  const [squareFeet, setSquareFeet] = useState({ min: "", max: "" })
-  const [garage, setGarage] = useState<string | null>(null)
-  const [completionYear, setCompletionYear] = useState<string | null>(null)
-  const [keywords, setKeywords] = useState("")
+export function SearchFilters({ onFilterChange, initialFilters }: SearchFiltersProps) {
+  const [location, setLocation] = useState(initialFilters?.location || "")
+  const [priceRange, setPriceRange] = useState(initialFilters?.priceRange || [0, 5000000])
+  const [bedroomRange, setBedroomRange] = useState(initialFilters?.bedroomRange || [1, 7])
+  const [bathroomRange, setBathroomRange] = useState(initialFilters?.bathroomRange || [1, 5])
+  const [homeType, setHomeType] = useState<string | null>(initialFilters?.homeType || null)
+  const [constructionStatus, setConstructionStatus] = useState<string | null>(initialFilters?.constructionStatus || null)
+  const [quickMoveIn, setQuickMoveIn] = useState(initialFilters?.quickMoveIn || false)
+  const [masterPlanned, setMasterPlanned] = useState(initialFilters?.masterPlanned || false)
+  const [ownershipType, setOwnershipType] = useState<string[]>(initialFilters?.ownershipType || [])
+  const [squareFeet, setSquareFeet] = useState(initialFilters?.squareFeet || { min: "", max: "" })
+  const [garage, setGarage] = useState<string | null>(initialFilters?.garage || null)
+  const [completionYear, setCompletionYear] = useState<string | null>(initialFilters?.completionYear || null)
+  const [keywords, setKeywords] = useState(initialFilters?.keywords || "")
+
+  // Update filters when initialFilters change
+  useEffect(() => {
+    if (initialFilters) {
+      setLocation(initialFilters.location)
+      setPriceRange(initialFilters.priceRange)
+      setBedroomRange(initialFilters.bedroomRange)
+      setBathroomRange(initialFilters.bathroomRange)
+      setHomeType(initialFilters.homeType)
+      setConstructionStatus(initialFilters.constructionStatus)
+      setQuickMoveIn(initialFilters.quickMoveIn)
+      setMasterPlanned(initialFilters.masterPlanned)
+      setOwnershipType(initialFilters.ownershipType)
+      setSquareFeet(initialFilters.squareFeet)
+      setGarage(initialFilters.garage)
+      setCompletionYear(initialFilters.completionYear)
+      setKeywords(initialFilters.keywords)
+    }
+  }, [initialFilters])
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
