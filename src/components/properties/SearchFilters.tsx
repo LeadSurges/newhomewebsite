@@ -50,42 +50,45 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
 
   return (
     <div className="w-full border-b bg-white sticky top-0 z-10">
-      <form onSubmit={handleSubmit} className="max-w-7xl mx-auto px-4 py-6">
-        {/* Search Section */}
-        <div className="mb-6">
-          <SearchSection
-            location={location}
-            city={city}
-            onLocationChange={setLocation}
-            onCityChange={setCity}
-          />
-        </div>
+      <form onSubmit={handleSubmit} className="max-w-7xl mx-auto px-4 py-3">
+        <div className="flex flex-col md:flex-row gap-3 items-center">
+          {/* Search Section - Now in a row */}
+          <div className="w-full md:w-1/4">
+            <SearchSection
+              location={location}
+              city={city}
+              onLocationChange={setLocation}
+              onCityChange={setCity}
+            />
+          </div>
 
-        {/* Filters Section */}
-        <div className="space-y-6">
-          <FiltersSection
-            priceRange={priceRange}
-            bedroomRange={bedroomRange}
-            bathroomRange={bathroomRange}
-            squareFeetRange={squareFeetRange}
-            homeType={homeType}
-            constructionStatus={constructionStatus}
-            ownershipType={ownershipType}
-            onPriceRangeChange={setPriceRange}
-            onBedroomRangeChange={setBedroomRange}
-            onBathroomRangeChange={setBathroomRange}
-            onSquareFeetRangeChange={setSquareFeetRange}
-            onHomeTypeChange={setHomeType}
-            onConstructionStatusChange={setConstructionStatus}
-            onOwnershipTypeChange={setOwnershipType}
-          />
+          {/* Filters Section - Now in a row */}
+          <div className="flex-1 flex items-center gap-2 overflow-x-auto pb-2 md:pb-0">
+            <FiltersSection
+              priceRange={priceRange}
+              bedroomRange={bedroomRange}
+              bathroomRange={bathroomRange}
+              squareFeetRange={squareFeetRange}
+              homeType={homeType}
+              constructionStatus={constructionStatus}
+              ownershipType={ownershipType}
+              onPriceRangeChange={setPriceRange}
+              onBedroomRangeChange={setBedroomRange}
+              onBathroomRangeChange={setBathroomRange}
+              onSquareFeetRangeChange={setSquareFeetRange}
+              onHomeTypeChange={setHomeType}
+              onConstructionStatusChange={setConstructionStatus}
+              onOwnershipTypeChange={setOwnershipType}
+            />
+          </div>
 
-          <div className="flex items-center justify-between border-t pt-6">
+          {/* Quick Move-In and Submit Button */}
+          <div className="flex items-center gap-4">
             <QuickMoveInFilter
               checked={quickMoveIn}
               onCheckedChange={setQuickMoveIn}
             />
-            <Button type="submit" size="lg" className="bg-primary text-white">
+            <Button type="submit" size="sm" className="bg-primary text-white whitespace-nowrap">
               Apply Filters
             </Button>
           </div>

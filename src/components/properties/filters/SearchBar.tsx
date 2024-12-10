@@ -11,11 +11,11 @@ interface SearchBarProps {
 export function SearchBar({ type, value, onChange, placeholder }: SearchBarProps) {
   return (
     <div className="relative w-full">
-      <div className="absolute left-3 top-1/2 -translate-y-1/2">
+      <div className="absolute left-2 top-1/2 -translate-y-1/2">
         {type === "location" ? (
-          <Search className="h-5 w-5 text-muted-foreground" />
+          <Search className="h-4 w-4 text-muted-foreground" />
         ) : (
-          <MapPin className="h-5 w-5 text-muted-foreground" />
+          <MapPin className="h-4 w-4 text-muted-foreground" />
         )}
       </div>
       <Input
@@ -23,7 +23,7 @@ export function SearchBar({ type, value, onChange, placeholder }: SearchBarProps
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="pl-10 h-12 w-full bg-secondary border-muted"
+        className="pl-8 h-9 w-full bg-secondary border-muted text-sm"
       />
     </div>
   )

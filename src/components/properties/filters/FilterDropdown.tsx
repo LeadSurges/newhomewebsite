@@ -17,9 +17,13 @@ export function FilterDropdown({ label, children, className }: FilterDropdownPro
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className={`h-11 px-4 w-full md:w-[200px] ${className}`}>
+        <Button 
+          variant="outline" 
+          size="sm"
+          className={`h-9 px-3 text-sm w-[140px] ${className}`}
+        >
           {label}
-          <ChevronDown className="ml-2 h-4 w-4" />
+          <ChevronDown className="ml-1 h-3 w-3" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 

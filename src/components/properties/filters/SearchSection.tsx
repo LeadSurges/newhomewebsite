@@ -14,7 +14,7 @@ export function SearchSection({
   onCityChange,
 }: SearchSectionProps) {
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <SearchBar
         type="location"
         value={location}
