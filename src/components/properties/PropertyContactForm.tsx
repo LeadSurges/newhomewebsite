@@ -62,7 +62,7 @@ export const PropertyContactForm = ({ propertyTitle }: PropertyContactFormProps)
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Request Information</CardTitle>
+        <CardTitle>Request More Information</CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">

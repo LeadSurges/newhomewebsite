@@ -15,7 +15,7 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
 
   useEffect(() => {
     const initMap = async () => {
-      if (!mapRef.current) return;
+      if (!mapRef.current || !location) return;
       
       try {
         setIsLoading(true);
@@ -24,9 +24,14 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
         
         const google = await getMapLoader();
         const geocoder = new google.maps.Geocoder();
+        
+        // Add ", Ontario, Canada" to the location if it's not already specified
+        const fullLocation = location.toLowerCase().includes('ontario') 
+          ? location 
+          : `${location}, Ontario, Canada`;
 
         const results = await new Promise<google.maps.GeocoderResult[]>((resolve, reject) => {
-          geocoder.geocode({ address: location }, (results, status) => {
+          geocoder.geocode({ address: fullLocation }, (results, status) => {
             if (status === "OK" && results) {
               resolve(results);
             } else {
