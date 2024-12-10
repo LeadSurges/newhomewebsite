@@ -79,6 +79,8 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
         keywords: [],
         deposit_structure: "",
         incentives: "",
+        amenities: [],
+        features_and_finishes: "",
       });
       setSelectedFile(null);
       setSelectedFloorplan(null);

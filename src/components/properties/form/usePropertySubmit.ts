@@ -67,6 +67,8 @@ export const usePropertySubmit = (initialData?: Property) => {
         builder_id: formData.builder_id,
         deposit_structure: formData.deposit_structure,
         incentives: formData.incentives,
+        amenities: formData.amenities,
+        features_and_finishes: formData.features_and_finishes,
       };
 
       if (initialData) {

@@ -23,6 +23,8 @@ export interface FormData {
   keywords: string[];
   deposit_structure: string;
   incentives: string;
+  amenities: string[];
+  features_and_finishes: string;
 }
 
 export interface PropertyMainInfoProps {
