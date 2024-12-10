@@ -12,6 +12,7 @@ export function LocationSearchInput({ value, onChange }: LocationSearchInputProp
 
   // Update local state when prop value changes
   useEffect(() => {
+    console.log("LocationSearchInput received new value:", value)
     setInputValue(value)
   }, [value])
 
@@ -22,7 +23,9 @@ export function LocationSearchInput({ value, onChange }: LocationSearchInputProp
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value)
+    const newValue = e.target.value
+    console.log("Location input changed:", newValue)
+    setInputValue(newValue)
   }
 
   const handleBlur = () => {
