@@ -15,11 +15,15 @@ const Properties = () => {
     priceRange: [0, 5000000],
     bedroomRange: [1, 7],
     bathroomRange: [1, 5],
-    squareFeetRange: [500, 10000],
     homeType: null,
     constructionStatus: null,
-    ownershipType: null,
     quickMoveIn: false,
+    masterPlanned: false,
+    ownershipType: [],
+    squareFeet: { min: "", max: "" },
+    garage: null,
+    completionYear: null,
+    keywords: "",
   });
 
   const [showMap, setShowMap] = useState(true);
@@ -35,7 +39,6 @@ const Properties = () => {
 
       // Apply location filter
       if (filters.location) {
-        console.log("Applying location filter:", filters.location);
         query = query.ilike('location', `%${filters.location}%`);
       }
 
@@ -50,22 +53,17 @@ const Properties = () => {
       if (filters.bedroomRange[0] > 1) {
         query = query.gte("bedrooms", filters.bedroomRange[0]);
       }
-      if (filters.bedroomRange[1] < 7) {
-        query = query.lte("bedrooms", filters.bedroomRange[1]);
-      }
 
       if (filters.bathroomRange[0] > 1) {
         query = query.gte("bathrooms", filters.bathroomRange[0]);
       }
-      if (filters.bathroomRange[1] < 5) {
-        query = query.lte("bathrooms", filters.bathroomRange[1]);
-      }
 
-      if (filters.squareFeetRange[0] > 500) {
-        query = query.gte("square_feet", filters.squareFeetRange[0]);
+      // Apply square feet filter
+      if (filters.squareFeet.min) {
+        query = query.gte("square_feet", filters.squareFeet.min);
       }
-      if (filters.squareFeetRange[1] < 10000) {
-        query = query.lte("square_feet", filters.squareFeetRange[1]);
+      if (filters.squareFeet.max) {
+        query = query.lte("square_feet", filters.squareFeet.max);
       }
 
       // Apply additional filters
@@ -75,11 +73,23 @@ const Properties = () => {
       if (filters.constructionStatus) {
         query = query.eq("construction_status", filters.constructionStatus);
       }
-      if (filters.ownershipType) {
-        query = query.eq("ownership_type", filters.ownershipType);
+      if (filters.ownershipType.length > 0 && filters.ownershipType[0] !== "All") {
+        query = query.eq("ownership_type", filters.ownershipType[0]);
       }
       if (filters.quickMoveIn) {
         query = query.eq("quick_move_in", true);
+      }
+      if (filters.masterPlanned) {
+        query = query.eq("master_planned", true);
+      }
+      if (filters.garage) {
+        query = query.eq("garage_spaces", filters.garage === "4+" ? 4 : parseInt(filters.garage));
+      }
+      if (filters.completionYear) {
+        query = query.eq("completion_year", parseInt(filters.completionYear));
+      }
+      if (filters.keywords) {
+        query = query.contains('keywords', [filters.keywords]);
       }
 
       const { data, error } = await query;

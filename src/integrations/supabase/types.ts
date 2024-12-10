@@ -66,15 +66,19 @@ export type Database = {
         Row: {
           bathrooms: number | null
           bedrooms: number | null
+          completion_year: number | null
           construction_status: string | null
           created_at: string
           description: string | null
           featured: boolean | null
           floorplan_url: string | null
+          garage_spaces: number | null
           home_type: string | null
           id: string
           image_url: string | null
+          keywords: string[] | null
           location: string
+          master_planned: boolean | null
           ownership_type: string | null
           price: number
           quick_move_in: boolean | null
@@ -86,15 +90,19 @@ export type Database = {
         Insert: {
           bathrooms?: number | null
           bedrooms?: number | null
+          completion_year?: number | null
           construction_status?: string | null
           created_at?: string
           description?: string | null
           featured?: boolean | null
           floorplan_url?: string | null
+          garage_spaces?: number | null
           home_type?: string | null
           id?: string
           image_url?: string | null
+          keywords?: string[] | null
           location: string
+          master_planned?: boolean | null
           ownership_type?: string | null
           price: number
           quick_move_in?: boolean | null
@@ -106,15 +114,19 @@ export type Database = {
         Update: {
           bathrooms?: number | null
           bedrooms?: number | null
+          completion_year?: number | null
           construction_status?: string | null
           created_at?: string
           description?: string | null
           featured?: boolean | null
           floorplan_url?: string | null
+          garage_spaces?: number | null
           home_type?: string | null
           id?: string
           image_url?: string | null
+          keywords?: string[] | null
           location?: string
+          master_planned?: boolean | null
           ownership_type?: string | null
           price?: number
           quick_move_in?: boolean | null
