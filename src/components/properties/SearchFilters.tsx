@@ -13,7 +13,6 @@ interface SearchFiltersProps {
 }
 
 export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
-  const [searchQuery, setSearchQuery] = useState("")
   const [location, setLocation] = useState("")
   const [priceRange, setPriceRange] = useState([0, 5000000])
   const [bedroomRange, setBedroomRange] = useState([1, 7])
@@ -27,7 +26,6 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log("Submitting filters:", {
-      searchQuery,
       location,
       priceRange,
       bedroomRange,
@@ -39,7 +37,6 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
       quickMoveIn,
     })
     onFilterChange({
-      searchQuery,
       location,
       priceRange,
       bedroomRange,
