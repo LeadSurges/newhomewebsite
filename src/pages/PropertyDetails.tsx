@@ -10,7 +10,6 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { Building2, MapPin, Calendar, Home } from "lucide-react";
-import { DepositStructure, Incentives } from "@/components/properties/types";
 
 const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -42,12 +41,10 @@ const PropertyDetails = () => {
 
   if (!property) return null;
 
-  // Type cast the deposit_structure and incentives to their respective types
+  // Pass the property data directly without type casting
   const propertyMainInfo = {
     ...property,
-    builder: property.builders,
-    deposit_structure: property.deposit_structure as DepositStructure,
-    incentives: property.incentives as Incentives
+    builder: property.builders
   };
 
   return (
