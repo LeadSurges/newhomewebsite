@@ -27,7 +27,7 @@ export default {
         primary: {
           DEFAULT: "#1A1F2C",
           foreground: "#FFFFFF",
-          accent: "#9b87f5",
+          accent: "#0EA5E9",
         },
         secondary: {
           DEFAULT: "#F6F6F7",
@@ -35,9 +35,9 @@ export default {
           accent: "#e2d1c3",
         },
         accent: {
-          DEFAULT: "#9b87f5",
+          DEFAULT: "#0EA5E9",
           foreground: "#FFFFFF",
-          muted: "#F1F0FB",
+          muted: "#D3E4FD",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
