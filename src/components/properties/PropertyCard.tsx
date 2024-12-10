@@ -18,7 +18,7 @@ interface PropertyCardProps {
     square_feet: number | null;
     featured: boolean;
     image_url: string | null;
-    builders?: { name: string } | null;
+    builders?: { name: string; id: string } | null;
   };
 }
 
@@ -149,7 +149,14 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
         </h3>
         {property.builders?.name && (
           <p className="text-sm text-muted-foreground mb-2">
-            Built by {property.builders.name}
+            Built by{" "}
+            <Link 
+              to={`/builders/${property.builders.id}`}
+              className="hover:text-primary hover:underline"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {property.builders.name}
+            </Link>
           </p>
         )}
         <p className="text-lg font-bold text-primary mb-4">

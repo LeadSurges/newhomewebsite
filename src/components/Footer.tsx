@@ -18,8 +18,6 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
             <div className="space-y-2 text-muted-foreground">
               <p>Email: info@luxuryhomes.com</p>
-              <p>Phone: (555) 123-4567</p>
-              <p>Address: 123 Luxury Lane, Toronto, ON</p>
             </div>
           </div>
           
