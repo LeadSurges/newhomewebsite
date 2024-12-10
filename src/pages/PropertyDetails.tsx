@@ -2,7 +2,6 @@ import { Navigation } from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { PropertyHero } from "@/components/properties/PropertyHero";
 import { PropertyMainInfo } from "@/components/properties/PropertyMainInfo";
-import { PropertyMap } from "@/components/properties/PropertyMap";
 import { PropertyContactForm } from "@/components/properties/PropertyContactForm";
 import { FloorplanCard } from "@/components/properties/FloorplanCard";
 import { useParams } from "react-router-dom";
@@ -75,11 +74,6 @@ const PropertyDetails = () => {
                 </div>
               </Card>
             )}
-
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-4">Location</h2>
-              <PropertyMap location={property.location} className="w-full h-[300px]" />
-            </Card>
           </div>
 
           <div className="lg:col-span-1">
