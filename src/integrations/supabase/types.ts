@@ -152,6 +152,7 @@ export type Database = {
           description: string | null
           featured: boolean | null
           features_and_finishes: string | null
+          floorplan_status: string | null
           floorplan_url: string | null
           garage_spaces: number | null
           home_type: string | null
@@ -186,6 +187,7 @@ export type Database = {
           description?: string | null
           featured?: boolean | null
           features_and_finishes?: string | null
+          floorplan_status?: string | null
           floorplan_url?: string | null
           garage_spaces?: number | null
           home_type?: string | null
@@ -220,6 +222,7 @@ export type Database = {
           description?: string | null
           featured?: boolean | null
           features_and_finishes?: string | null
+          floorplan_status?: string | null
           floorplan_url?: string | null
           garage_spaces?: number | null
           home_type?: string | null

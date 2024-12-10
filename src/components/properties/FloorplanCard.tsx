@@ -6,6 +6,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 
 interface FloorplanCardProps {
   name: string;
@@ -14,6 +15,7 @@ interface FloorplanCardProps {
   bathrooms?: number;
   squareFeet?: number;
   imageUrl: string;
+  status?: string;
 }
 
 export const FloorplanCard = ({
@@ -23,14 +25,17 @@ export const FloorplanCard = ({
   bathrooms,
   squareFeet,
   imageUrl,
+  status = "For Sale",
 }: FloorplanCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const statusColor = status === "For Sale" ? "bg-green-600" : "bg-red-600";
 
   return (
     <Card className="overflow-hidden">
       <div className="relative">
-        <span className="absolute top-2 left-2 bg-green-600 text-white px-2 py-0.5 rounded-full text-xs font-medium">
-          FOR SALE
+        <span className={`absolute top-2 left-2 ${statusColor} text-white px-2 py-0.5 rounded-full text-xs font-medium`}>
+          {status}
         </span>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>

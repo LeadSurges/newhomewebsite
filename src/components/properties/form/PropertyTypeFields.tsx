@@ -1,15 +1,11 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FormData } from "../types";
 
 interface PropertyTypeFieldsProps {
   formData: FormData;
   setFormData: (data: FormData) => void;
 }
-
-const HOME_TYPES = ["Condo", "Townhouse", "Single family home"];
-const CONSTRUCTION_STATUSES = ["Preconstruction", "Construction", "Complete"];
-const OWNERSHIP_TYPES = ["Freehold", "Condo", "Co-op", "Condop"];
 
 export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFieldsProps) => {
   return (
@@ -24,11 +20,10 @@ export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFields
             <SelectValue placeholder="Select home type" />
           </SelectTrigger>
           <SelectContent>
-            {HOME_TYPES.map((type) => (
-              <SelectItem key={type} value={type}>
-                {type}
-              </SelectItem>
-            ))}
+            <SelectItem value="Detached">Detached</SelectItem>
+            <SelectItem value="Semi-Detached">Semi-Detached</SelectItem>
+            <SelectItem value="Townhouse">Townhouse</SelectItem>
+            <SelectItem value="Condo">Condo</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -43,11 +38,9 @@ export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFields
             <SelectValue placeholder="Select construction status" />
           </SelectTrigger>
           <SelectContent>
-            {CONSTRUCTION_STATUSES.map((status) => (
-              <SelectItem key={status} value={status}>
-                {status}
-              </SelectItem>
-            ))}
+            <SelectItem value="Pre-Construction">Pre-Construction</SelectItem>
+            <SelectItem value="Under Construction">Under Construction</SelectItem>
+            <SelectItem value="Move-in Ready">Move-in Ready</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -62,11 +55,25 @@ export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFields
             <SelectValue placeholder="Select ownership type" />
           </SelectTrigger>
           <SelectContent>
-            {OWNERSHIP_TYPES.map((type) => (
-              <SelectItem key={type} value={type}>
-                {type}
-              </SelectItem>
-            ))}
+            <SelectItem value="Freehold">Freehold</SelectItem>
+            <SelectItem value="Condominium">Condominium</SelectItem>
+            <SelectItem value="Leasehold">Leasehold</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div>
+        <Label>Floorplan Status</Label>
+        <Select
+          value={formData.floorplan_status || "For Sale"}
+          onValueChange={(value) => setFormData({ ...formData, floorplan_status: value })}
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Select floorplan status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="For Sale">For Sale</SelectItem>
+            <SelectItem value="Sold">Sold</SelectItem>
           </SelectContent>
         </Select>
       </div>

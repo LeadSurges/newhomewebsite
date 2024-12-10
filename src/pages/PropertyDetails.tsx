@@ -70,6 +70,7 @@ const PropertyDetails = () => {
                     bathrooms={property.bathrooms}
                     squareFeet={property.square_feet}
                     imageUrl={property.floorplan_url}
+                    status={property.floorplan_status}
                   />
                 </div>
               </Card>

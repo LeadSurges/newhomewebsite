@@ -18,12 +18,12 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     description: initialData?.description || "",
     price: initialData?.price?.toString() || "",
     location: initialData?.location || "",
-    bedrooms_min: initialData?.bedrooms?.toString() || "",
-    bedrooms_max: "", 
-    bathrooms_min: initialData?.bathrooms?.toString() || "",
-    bathrooms_max: "", 
-    square_feet_min: initialData?.square_feet?.toString() || "",
-    square_feet_max: "", 
+    bedrooms_min: initialData?.bedrooms_min?.toString() || "",
+    bedrooms_max: initialData?.bedrooms_max?.toString() || "", 
+    bathrooms_min: initialData?.bathrooms_min?.toString() || "",
+    bathrooms_max: initialData?.bathrooms_max?.toString() || "", 
+    square_feet_min: initialData?.square_feet_min?.toString() || "",
+    square_feet_max: initialData?.square_feet_max?.toString() || "", 
     featured: initialData?.featured || false,
     builder_id: initialData?.builder_id || undefined,
     home_type: initialData?.home_type || null,
@@ -38,6 +38,7 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     incentives: initialData?.incentives?.toString() || "",
     amenities: initialData?.amenities || [],
     features_and_finishes: initialData?.features_and_finishes || "",
+    floorplan_status: initialData?.floorplan_status || "For Sale",
   });
 
   const {

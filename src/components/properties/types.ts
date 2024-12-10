@@ -25,6 +25,7 @@ export interface FormData {
   incentives: string;
   amenities: string[];
   features_and_finishes: string;
+  floorplan_status?: string;
 }
 
 export interface PropertyMainInfoProps {
