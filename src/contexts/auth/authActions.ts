@@ -1,8 +1,10 @@
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import { useNavigate } from "react-router-dom";
 
 export const useAuthActions = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const signIn = async (email: string, password: string) => {
     try {
@@ -15,6 +17,7 @@ export const useAuthActions = () => {
         title: "Welcome back!",
         description: "You have successfully signed in.",
       });
+      navigate("/properties");
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -52,7 +55,7 @@ export const useAuthActions = () => {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: window.location.origin,
+          redirectTo: `${window.location.origin}/properties`,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
@@ -103,6 +106,7 @@ export const useAuthActions = () => {
         title: "Signed out",
         description: "You have been successfully signed out.",
       });
+      navigate("/signin");
     } catch (error: any) {
       console.error("AuthActions: Sign out error:", error);
       toast({
