@@ -6,7 +6,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useState } from "react";
-import { Badge } from "@/components/ui/badge";
 
 interface FloorplanCardProps {
   name: string;
@@ -32,9 +31,12 @@ export const FloorplanCard = ({
   const statusColor = status === "For Sale" ? "bg-green-600" : "bg-red-600";
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 animate-fade-in">
       <div className="relative">
-        <span className={`absolute top-2 left-2 ${statusColor} text-white px-2 py-0.5 rounded-full text-xs font-medium`}>
+        <span 
+          className={`absolute top-2 left-2 ${statusColor} text-white px-3 py-1 
+                     rounded-full text-xs font-medium z-10`}
+        >
           {status}
         </span>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -42,7 +44,8 @@ export const FloorplanCard = ({
             <img
               src={imageUrl}
               alt={`${name} Floorplan`}
-              className="w-full h-[200px] object-contain bg-white cursor-pointer hover:opacity-90 transition-opacity"
+              className="w-full h-[200px] object-contain bg-white cursor-pointer 
+                       hover:opacity-90 transition-opacity"
             />
           </DialogTrigger>
           <DialogContent className="max-w-4xl w-full">
@@ -54,30 +57,30 @@ export const FloorplanCard = ({
           </DialogContent>
         </Dialog>
       </div>
-      <CardContent className="p-4">
-        <h3 className="text-lg font-bold mb-1">{name}</h3>
+      <CardContent className="p-6">
+        <h3 className="text-lg font-bold mb-2">{name}</h3>
         {price && (
-          <p className="text-base font-bold text-primary mb-2">
+          <p className="text-lg font-bold text-primary mb-4">
             From ${price.toLocaleString()} CAD
           </p>
         )}
-        <div className="flex gap-4 text-muted-foreground text-sm">
+        <div className="grid grid-cols-3 gap-4 text-muted-foreground text-sm">
           {bedrooms && (
-            <div className="flex items-center gap-1">
-              <Bed className="h-4 w-4" />
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-secondary/50">
+              <Bed className="h-4 w-4 text-accent" />
               <span>{bedrooms} bd</span>
             </div>
           )}
           {bathrooms && (
-            <div className="flex items-center gap-1">
-              <Bath className="h-4 w-4" />
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-secondary/50">
+              <Bath className="h-4 w-4 text-accent" />
               <span>{bathrooms} ba</span>
             </div>
           )}
           {squareFeet && (
-            <div className="flex items-center gap-1">
-              <Ruler className="h-4 w-4" />
-              <span>From {squareFeet.toLocaleString()} SqFt</span>
+            <div className="flex items-center gap-2 p-2 rounded-lg bg-secondary/50">
+              <Ruler className="h-4 w-4 text-accent" />
+              <span>{squareFeet.toLocaleString()} ft²</span>
             </div>
           )}
         </div>

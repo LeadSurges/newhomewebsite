@@ -34,16 +34,6 @@ export const PropertyMainInfo = ({
   price_range_min,
   price_range_max,
 }: PropertyMainInfoProps) => {
-  console.log("PropertyMainInfo - Range values:", {
-    bedrooms_min,
-    bedrooms_max,
-    bathrooms_min,
-    bathrooms_max,
-    square_feet_min,
-    square_feet_max,
-    amenities
-  });
-
   const formatJsonValue = (value: any): string => {
     if (typeof value === 'string' || typeof value === 'number') {
       return String(value);
@@ -55,17 +45,17 @@ export const PropertyMainInfo = ({
   };
 
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex flex-col gap-4">
-          <h1 className="text-3xl font-bold">{title}</h1>
+    <Card className="overflow-hidden animate-fade-in">
+      <CardContent className="p-8">
+        <div className="space-y-6">
+          <h1 className="text-4xl font-bold">{title}</h1>
           
           {builder && (
             <div className="flex items-center text-primary">
               <Building2 className="h-5 w-5 mr-2" />
               <Link 
                 to={`/builders/${builder.id}`}
-                className="hover:underline font-medium"
+                className="hover:underline font-medium hover:text-accent transition-colors"
               >
                 {builder.name}
               </Link>
@@ -84,15 +74,15 @@ export const PropertyMainInfo = ({
             </div>
           )}
           
-          <div className="text-2xl font-bold text-primary">
+          <div className="text-3xl font-bold text-primary">
             <div className="flex items-center">
-              <DollarSign className="h-6 w-6 mr-1" />
+              <DollarSign className="h-7 w-7 mr-1" />
               From ${price?.toLocaleString()}
             </div>
           </div>
         </div>
 
-        <Separator className="my-6" />
+        <Separator className="my-8" />
 
         <PropertyStats
           bedrooms={bedrooms}
@@ -107,24 +97,24 @@ export const PropertyMainInfo = ({
           square_feet_max={square_feet_max}
         />
 
-        <Separator className="my-6" />
+        <Separator className="my-8" />
 
         {amenities && amenities.length > 0 && (
           <>
             <PropertyAmenities amenities={amenities} />
-            <Separator className="my-6" />
+            <Separator className="my-8" />
           </>
         )}
 
         {features_and_finishes && (
           <>
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-4">Features & Finishes</h2>
-              <div className="p-4 rounded-lg border bg-card">
-                <p className="whitespace-pre-wrap">{features_and_finishes}</p>
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold mb-4">Features & Finishes</h2>
+              <div className="p-6 rounded-lg border bg-secondary/50">
+                <p className="whitespace-pre-wrap text-muted-foreground">{features_and_finishes}</p>
               </div>
             </div>
-            <Separator className="my-6" />
+            <Separator className="my-8" />
           </>
         )}
 
@@ -138,31 +128,31 @@ export const PropertyMainInfo = ({
 
         {deposit_structure && (
           <>
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-4">Deposit Structure</h2>
-              <div className="p-4 rounded-lg border bg-card">
-                <p className="whitespace-pre-wrap">{formatJsonValue(deposit_structure)}</p>
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold mb-4">Deposit Structure</h2>
+              <div className="p-6 rounded-lg border bg-secondary/50">
+                <p className="whitespace-pre-wrap text-muted-foreground">{formatJsonValue(deposit_structure)}</p>
               </div>
             </div>
-            <Separator className="my-6" />
+            <Separator className="my-8" />
           </>
         )}
 
         {incentives && (
           <>
-            <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-4">Incentives</h2>
-              <div className="p-4 rounded-lg border bg-card">
-                <p className="whitespace-pre-wrap">{formatJsonValue(incentives)}</p>
+            <div className="mb-8">
+              <h2 className="text-2xl font-semibold mb-4">Incentives</h2>
+              <div className="p-6 rounded-lg border bg-secondary/50">
+                <p className="whitespace-pre-wrap text-muted-foreground">{formatJsonValue(incentives)}</p>
               </div>
             </div>
-            <Separator className="my-6" />
+            <Separator className="my-8" />
           </>
         )}
 
         <div>
-          <h2 className="text-xl font-semibold mb-4">Description</h2>
-          <p className="text-muted-foreground whitespace-pre-wrap">
+          <h2 className="text-2xl font-semibold mb-4">Description</h2>
+          <p className="text-muted-foreground whitespace-pre-wrap leading-relaxed">
             {description}
           </p>
         </div>
