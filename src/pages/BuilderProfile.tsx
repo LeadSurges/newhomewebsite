@@ -16,10 +16,6 @@ interface ReviewWithProfile extends BuilderReview {
   profiles: Profile | null;
 }
 
-interface UserWithProfile {
-  profile: Profile | null;
-}
-
 const BuilderProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -76,12 +72,7 @@ const BuilderProfile = () => {
         .from("builder_reviews")
         .select(`
           *,
-          user:user_id (
-            profile:profiles (
-              username,
-              avatar_url
-            )
-          )
+          profiles:user_id(username, avatar_url)
         `)
         .eq("builder_id", id);
 
@@ -91,15 +82,7 @@ const BuilderProfile = () => {
       }
 
       console.log("Raw review data:", data);
-      
-      return data.map(review => {
-        const userProfile = (review.user as unknown as UserWithProfile)?.profile;
-        console.log("Processed user profile:", userProfile);
-        return {
-          ...review,
-          profiles: userProfile
-        };
-      });
+      return data;
     },
     enabled: !!id,
   });
