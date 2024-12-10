@@ -68,7 +68,6 @@ const BuilderProfile = () => {
       
       console.log("Fetching builder reviews for builder:", id);
       
-      // Join builder_reviews with profiles through user_id
       const { data: reviewsData, error: reviewsError } = await supabase
         .from("builder_reviews")
         .select(`
@@ -83,10 +82,13 @@ const BuilderProfile = () => {
       }
 
       // Transform the data to match our expected type
-      return reviewsData?.map(review => ({
+      const transformedReviews = reviewsData?.map(review => ({
         ...review,
-        profiles: review.profiles || null
+        profiles: review.profiles ? review.profiles[0] || null : null
       })) as ReviewWithProfile[];
+
+      console.log("Transformed reviews:", transformedReviews);
+      return transformedReviews;
     },
     enabled: !!id,
   });
