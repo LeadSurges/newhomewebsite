@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import type { Database } from "@/integrations/supabase/types";
-import { geocodeProperty } from "./mapUtils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader as LoadingSpinner } from "lucide-react";
-import { getMapLoader } from "@/utils/mapLoader";
+import { Loader } from "@googlemaps/js-api-loader";
+import { supabase } from "@/integrations/supabase/client";
 
 type Property = Database["public"]["Tables"]["properties"]["Row"];
 
@@ -14,34 +14,39 @@ interface PropertiesMapProps {
 
 export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const markersRef = useRef<(google.maps.Marker | null)[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const markersRef = useRef<google.maps.Marker[]>([]);
 
-  // Initialize map
   useEffect(() => {
-    const loadMap = async () => {
+    const initMap = async () => {
       if (!mapRef.current) return;
       
       try {
         setIsLoading(true);
         setError(null);
-        console.log("Initializing map...");
+        console.log("Initializing map with properties:", properties);
 
-        const google = await getMapLoader();
+        const { data: { secret } } = await supabase.functions.invoke('get-maps-key');
+        
+        if (!secret) {
+          throw new Error("No Google Maps API key found");
+        }
+
+        const loader = new Loader({
+          apiKey: secret,
+          version: "weekly",
+        });
+
+        const google = await loader.load();
         console.log("Google Maps API loaded successfully");
 
         // Default to Toronto coordinates
         const defaultCenter = { lat: 43.6532, lng: -79.3832 };
-
+        
         const mapInstance = new google.maps.Map(mapRef.current, {
           center: defaultCenter,
-          zoom: 12,
-          mapTypeControl: false,
-          fullscreenControl: false,
-          streetViewControl: false,
-          gestureHandling: "cooperative",
+          zoom: 11,
           styles: [
             {
               featureType: "poi",
@@ -51,64 +56,97 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
           ],
         });
 
-        setMap(mapInstance);
-        setIsLoading(false);
-        console.log("Map initialized successfully");
-      } catch (err) {
-        console.error("Error loading Google Maps:", err);
-        setError('Failed to load Google Maps. Please try again later.');
-        setIsLoading(false);
-      }
-    };
+        // Clear existing markers
+        markersRef.current.forEach(marker => marker.setMap(null));
+        markersRef.current = [];
 
-    loadMap();
+        // Create markers for all properties
+        const bounds = new google.maps.LatLngBounds();
 
-    return () => {
-      // Cleanup markers on unmount
-      markersRef.current.forEach(marker => marker?.setMap(null));
-      markersRef.current = [];
-    };
-  }, []);
+        for (const [index, property] of properties.entries()) {
+          const geocoder = new google.maps.Geocoder();
+          
+          try {
+            const results = await new Promise<google.maps.GeocoderResult[]>((resolve, reject) => {
+              geocoder.geocode({ address: property.location }, (results, status) => {
+                if (status === "OK" && results) {
+                  resolve(results);
+                } else {
+                  reject(new Error(`Geocoding failed for ${property.location}: ${status}`));
+                }
+              });
+            });
 
-  // Handle properties updates
-  useEffect(() => {
-    const createMarkers = async () => {
-      if (!map || !properties.length) return;
+            const marker = new google.maps.Marker({
+              map: mapInstance,
+              position: results[0].geometry.location,
+              title: property.title,
+              icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                fillColor: '#4A89F3',
+                fillOpacity: 1,
+                strokeWeight: 0,
+                scale: 20,
+              },
+              label: {
+                text: (index + 1).toString(),
+                color: 'white',
+                fontSize: '14px',
+                fontWeight: 'bold'
+              }
+            });
 
-      console.log("Creating markers for properties:", properties);
+            const infoWindow = new google.maps.InfoWindow({
+              content: `
+                <div class="p-2">
+                  <h3 class="font-semibold">${property.title}</h3>
+                  <p class="text-sm">$${property.price.toLocaleString()}</p>
+                  <p class="text-xs text-gray-600">${property.location}</p>
+                </div>
+              `,
+            });
 
-      // Clear existing markers
-      markersRef.current.forEach(marker => marker?.setMap(null));
-      markersRef.current = [];
+            marker.addListener("click", () => {
+              onPropertyClick(property.id);
+            });
 
-      try {
-        // Create new markers
-        const markers = await Promise.all(
-          properties.map((property, index) => 
-            geocodeProperty(property, index, map, onPropertyClick)
-          )
-        );
+            marker.addListener("mouseover", () => {
+              infoWindow.open(mapInstance, marker);
+            });
 
-        markersRef.current = markers;
+            marker.addListener("mouseout", () => {
+              infoWindow.close();
+            });
 
-        // Adjust map bounds to fit all markers
-        if (markers.length > 0) {
-          const bounds = new google.maps.LatLngBounds();
-          markers.forEach(marker => {
-            if (marker) bounds.extend(marker.getPosition()!);
-          });
-          map.fitBounds(bounds);
+            markersRef.current.push(marker);
+            bounds.extend(results[0].geometry.location);
+          } catch (error) {
+            console.error(`Error creating marker for property ${property.title}:`, error);
+          }
         }
 
-        console.log("Markers created successfully");
-      } catch (err) {
-        console.error("Error creating markers:", err);
-        setError('Failed to display property locations on the map.');
+        // Adjust map to fit all markers
+        if (markersRef.current.length > 0) {
+          mapInstance.fitBounds(bounds);
+        }
+
+        setIsLoading(false);
+        console.log("Map initialized successfully with", markersRef.current.length, "markers");
+      } catch (error) {
+        console.error("Error initializing map:", error);
+        setError('Failed to load the map. Please try again later.');
+        setIsLoading(false);
       }
     };
 
-    createMarkers();
-  }, [map, properties, onPropertyClick]);
+    initMap();
+
+    // Cleanup markers on unmount
+    return () => {
+      markersRef.current.forEach(marker => marker.setMap(null));
+      markersRef.current = [];
+    };
+  }, [properties, onPropertyClick]);
 
   if (error) {
     return (
