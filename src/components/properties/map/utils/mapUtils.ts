@@ -1,4 +1,4 @@
-import type { Property } from "@/integrations/supabase/types";
+import type { Property } from "@/types/property";
 
 export const geocodeLocation = async (
   geocoder: google.maps.Geocoder,
