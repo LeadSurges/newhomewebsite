@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { formatPrice } from "@/utils/formatters";
-import { Heart } from "lucide-react";
+import { Heart, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -17,6 +17,10 @@ interface PropertyCardProps {
     bathrooms?: number;
     square_feet?: number;
     image_url?: string;
+    builders?: {
+      id: string;
+      name: string;
+    } | null;
   };
 }
 
@@ -77,6 +81,16 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
                 <span>{property.square_feet} sq ft</span>
               )}
             </div>
+            {property.builders && (
+              <Link 
+                to={`/builders/${property.builders.id}`}
+                className="flex items-center gap-2 text-sm text-primary hover:underline mt-2"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Building2 className="h-4 w-4" />
+                <span>Built by {property.builders.name}</span>
+              </Link>
+            )}
           </div>
         </CardContent>
       </Card>

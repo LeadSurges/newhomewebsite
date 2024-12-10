@@ -2,13 +2,21 @@ import { Link } from "react-router-dom";
 
 const locations = [
   { id: 1, name: "Toronto", count: 150 },
-  { id: 2, name: "Mississauga", count: 85 },
-  { id: 3, name: "Brampton", count: 65 },
-  { id: 4, name: "Hamilton", count: 45 },
-  { id: 5, name: "Burlington", count: 35 },
-  { id: 6, name: "Oakville", count: 40 },
-  { id: 7, name: "Milton", count: 30 },
-  { id: 8, name: "Richmond Hill", count: 25 },
+  { id: 2, name: "Ottawa", count: 95 },
+  { id: 3, name: "Mississauga", count: 85 },
+  { id: 4, name: "Brampton", count: 65 },
+  { id: 5, name: "Hamilton", count: 45 },
+  { id: 6, name: "London", count: 42 },
+  { id: 7, name: "Markham", count: 38 },
+  { id: 8, name: "Vaughan", count: 35 },
+  { id: 9, name: "Kitchener", count: 32 },
+  { id: 10, name: "Windsor", count: 30 },
+  { id: 11, name: "Richmond Hill", count: 28 },
+  { id: 12, name: "Oakville", count: 25 },
+  { id: 13, name: "Burlington", count: 22 },
+  { id: 14, name: "Barrie", count: 20 },
+  { id: 15, name: "Oshawa", count: 18 },
+  { id: 16, name: "Milton", count: 15 },
 ];
 
 export const OntarioLocations = () => {
@@ -22,7 +30,7 @@ export const OntarioLocations = () => {
           {locations.map((location) => (
             <Link
               key={location.id}
-              to={`/properties?location=${location.name}`}
+              to={`/properties?location=${encodeURIComponent(location.name)}`}
               className="p-4 text-center hover:bg-accent rounded-lg transition-colors"
             >
               <div className="font-medium">{location.name}</div>
