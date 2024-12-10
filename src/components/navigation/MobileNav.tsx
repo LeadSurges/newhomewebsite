@@ -11,7 +11,7 @@ export const MobileNav = ({ isOpen }: { isOpen: boolean }) => {
 
   return (
     <div className="md:hidden">
-      <div className="fixed inset-0 z-50 bg-white">
+      <div className="fixed inset-0 z-50 bg-background">
         <div className="pt-2 pb-3 space-y-1 px-4">
           <div className="space-y-2">
             <p className="text-sm font-medium text-muted-foreground px-3">New Homes for Sale</p>

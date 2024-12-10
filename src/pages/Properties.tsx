@@ -5,11 +5,13 @@ import { PropertiesMap } from "@/components/properties/PropertiesMap";
 import { SEO } from "@/components/SEO";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Map, List } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 
 const Properties = () => {
+  const [searchParams] = useSearchParams();
   const [filters, setFilters] = useState({
     location: "",
     priceRange: [0, 5000000],
@@ -27,6 +29,20 @@ const Properties = () => {
   });
 
   const [showMap, setShowMap] = useState(true);
+
+  // Handle URL parameters
+  useEffect(() => {
+    const homeType = searchParams.get("homeType");
+    const quickMoveIn = searchParams.get("quickMoveIn") === "true";
+
+    if (homeType || quickMoveIn) {
+      setFilters(prev => ({
+        ...prev,
+        homeType: homeType,
+        quickMoveIn: quickMoveIn
+      }));
+    }
+  }, [searchParams]);
 
   const { data: properties, isLoading } = useQuery({
     queryKey: ["properties", filters],
@@ -123,7 +139,7 @@ const Properties = () => {
       <Navigation />
       
       <div className="pt-16">
-        <SearchFilters onFilterChange={handleFilterChange} />
+        <SearchFilters onFilterChange={handleFilterChange} initialFilters={filters} />
         
         <main className="max-w-[1920px] mx-auto px-4 py-8">
           <div className="flex justify-between items-center mb-6">
