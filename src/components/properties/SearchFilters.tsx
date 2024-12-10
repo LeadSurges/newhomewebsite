@@ -41,7 +41,7 @@ export const SearchFilters = ({ onSearch, initialLocation = "" }: SearchFiltersP
               placeholder="Search by location, development name..."
               value={filters.location}
               onChange={(e) => handleFilterChange("location", e.target.value)}
-              className="w-full"
+              className="w-full focus:ring-accent focus:ring-offset-0"
             />
           </div>
           <Button onClick={() => onSearch(filters)}>
@@ -55,7 +55,7 @@ export const SearchFilters = ({ onSearch, initialLocation = "" }: SearchFiltersP
             value={filters.propertyType}
             onValueChange={(value) => handleFilterChange("propertyType", value)}
           >
-            <SelectTrigger className="w-[160px]">
+            <SelectTrigger className="w-[160px] focus:ring-accent focus:ring-offset-0">
               <SelectValue placeholder="Home type" />
             </SelectTrigger>
             <SelectContent>
@@ -70,7 +70,7 @@ export const SearchFilters = ({ onSearch, initialLocation = "" }: SearchFiltersP
             value={filters.priceRange}
             onValueChange={(value) => handleFilterChange("priceRange", value)}
           >
-            <SelectTrigger className="w-[160px]">
+            <SelectTrigger className="w-[160px] focus:ring-accent focus:ring-offset-0">
               <SelectValue placeholder="Price range" />
             </SelectTrigger>
             <SelectContent>
@@ -86,7 +86,7 @@ export const SearchFilters = ({ onSearch, initialLocation = "" }: SearchFiltersP
             value={filters.bedrooms}
             onValueChange={(value) => handleFilterChange("bedrooms", value)}
           >
-            <SelectTrigger className="w-[160px]">
+            <SelectTrigger className="w-[160px] focus:ring-accent focus:ring-offset-0">
               <SelectValue placeholder="Bedrooms" />
             </SelectTrigger>
             <SelectContent>
@@ -102,7 +102,7 @@ export const SearchFilters = ({ onSearch, initialLocation = "" }: SearchFiltersP
             value={filters.bathrooms}
             onValueChange={(value) => handleFilterChange("bathrooms", value)}
           >
-            <SelectTrigger className="w-[160px]">
+            <SelectTrigger className="w-[160px] focus:ring-accent focus:ring-offset-0">
               <SelectValue placeholder="Bathrooms" />
             </SelectTrigger>
             <SelectContent>
