@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 import type { Database } from "@/integrations/supabase/types";
 import { geocodeProperty } from "./mapUtils";
+import { supabase } from "@/integrations/supabase/client";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader as LoadingSpinner } from "lucide-react";
 
 type Property = Database["public"]["Tables"]["properties"]["Row"];
 
@@ -14,22 +17,34 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const markersRef = useRef<(google.maps.Marker | null)[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadMap = async () => {
-      const loader = new Loader({
-        apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-        version: "weekly",
-      });
-
       try {
+        setIsLoading(true);
+        setError(null);
+
+        // Get the API key from Supabase Edge Function
+        const { data: { secret }, error: secretError } = await supabase.functions.invoke('get-maps-key');
+        
+        if (secretError || !secret) {
+          throw new Error('Failed to load Google Maps API key');
+        }
+
+        const loader = new Loader({
+          apiKey: secret,
+          version: "weekly",
+        });
+
         const google = await loader.load();
-        console.log("Google Maps API loaded");
+        console.log("Google Maps API loaded successfully");
 
         if (!mapRef.current) return;
 
         const mapInstance = new google.maps.Map(mapRef.current, {
-          center: { lat: 37.7749, lng: -122.4194 },
+          center: { lat: 43.6532, lng: -79.3832 }, // Toronto coordinates
           zoom: 12,
           styles: [
             {
@@ -41,8 +56,11 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
         });
 
         setMap(mapInstance);
-      } catch (error) {
-        console.error("Error loading Google Maps:", error);
+      } catch (err) {
+        console.error("Error loading Google Maps:", err);
+        setError('Failed to load Google Maps. Please try again later.');
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -63,27 +81,48 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
       markersRef.current.forEach(marker => marker?.setMap(null));
       markersRef.current = [];
 
-      // Create new markers
-      const markers = await Promise.all(
-        properties.map((property, index) => 
-          geocodeProperty(property, index, map, onPropertyClick)
-        )
-      );
+      try {
+        // Create new markers
+        const markers = await Promise.all(
+          properties.map((property, index) => 
+            geocodeProperty(property, index, map, onPropertyClick)
+          )
+        );
 
-      markersRef.current = markers;
+        markersRef.current = markers;
 
-      // Adjust map bounds to fit all markers
-      if (markers.length > 0) {
-        const bounds = new google.maps.LatLngBounds();
-        markers.forEach(marker => {
-          if (marker) bounds.extend(marker.getPosition()!);
-        });
-        map.fitBounds(bounds);
+        // Adjust map bounds to fit all markers
+        if (markers.length > 0) {
+          const bounds = new google.maps.LatLngBounds();
+          markers.forEach(marker => {
+            if (marker) bounds.extend(marker.getPosition()!);
+          });
+          map.fitBounds(bounds);
+        }
+      } catch (err) {
+        console.error("Error creating markers:", err);
+        setError('Failed to display property locations on the map.');
       }
     };
 
     createMarkers();
   }, [map, properties, onPropertyClick]);
+
+  if (error) {
+    return (
+      <Alert variant="destructive" className="my-4">
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="w-full h-full min-h-[400px] flex items-center justify-center bg-secondary/50 rounded-lg">
+        <LoadingSpinner className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div 
