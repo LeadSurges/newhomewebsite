@@ -62,4 +62,10 @@ export interface PropertyMainInfoProps {
   storage_cost?: number;
   deposit_structure?: string;
   incentives?: string;
+  bedrooms_min?: string;
+  bedrooms_max?: string;
+  bathrooms_min?: string;
+  bathrooms_max?: string;
+  square_feet_min?: string;
+  square_feet_max?: string;
 }

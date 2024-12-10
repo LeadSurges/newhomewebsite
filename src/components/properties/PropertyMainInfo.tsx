@@ -22,6 +22,12 @@ export const PropertyMainInfo = ({
   storage_cost,
   deposit_structure,
   incentives,
+  bedrooms_min,
+  bedrooms_max,
+  bathrooms_min,
+  bathrooms_max,
+  square_feet_min,
+  square_feet_max,
 }: PropertyMainInfoProps) => {
   const formatPrice = (value?: number) => {
     return value ? `$${value.toLocaleString()}` : 'N/A';
@@ -65,6 +71,12 @@ export const PropertyMainInfo = ({
           bathrooms={bathrooms}
           square_feet={square_feet}
           created_at={created_at}
+          bedrooms_min={bedrooms_min}
+          bedrooms_max={bedrooms_max}
+          bathrooms_min={bathrooms_min}
+          bathrooms_max={bathrooms_max}
+          square_feet_min={square_feet_min}
+          square_feet_max={square_feet_max}
         />
 
         <Separator className="my-6" />
