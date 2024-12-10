@@ -10,7 +10,7 @@ export const TrendingProperties = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("properties")
-        .select("*, builders(name)")
+        .select("*, builders(id, name)")
         .eq("featured", true)
         .limit(3);
 

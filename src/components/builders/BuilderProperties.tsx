@@ -4,6 +4,7 @@ import type { Database } from "@/integrations/supabase/types";
 type Property = Database["public"]["Tables"]["properties"]["Row"] & {
   builders?: {
     name: string;
+    id: string;
   } | null;
 };
 
