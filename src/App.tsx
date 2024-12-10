@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { Navigation } from "@/components/Navigation";
 import { AppRoutes } from "./AppRoutes";
 
 const queryClient = new QueryClient();
@@ -15,6 +16,7 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <TooltipProvider>
+            <Navigation />
             <Toaster />
             <Sonner />
             <AppRoutes />
