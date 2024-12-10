@@ -1,26 +1,22 @@
-import type { Property } from "@/types/property";
-
 export const geocodeLocation = async (
   geocoder: google.maps.Geocoder,
-  location: string
-): Promise<google.maps.LatLng> => {
-  console.log(`Geocoding location: ${location}`);
-  
+  address: string
+): Promise<google.maps.LatLng | null> => {
   try {
-    const results = await new Promise<google.maps.GeocoderResult[]>((resolve, reject) => {
-      geocoder.geocode({ address: location }, (results, status) => {
-        if (status === "OK" && results && results.length > 0) {
-          resolve(results);
-        } else {
-          reject(new Error(`Geocoding failed for ${location}: ${status}`));
-        }
-      });
-    });
-
-    return results[0].geometry.location;
+    console.log(`Attempting to geocode address: ${address}`);
+    const response = await geocoder.geocode({ address });
+    
+    if (response.results && response.results.length > 0) {
+      const { location } = response.results[0].geometry;
+      console.log(`Successfully geocoded ${address} to:`, location.toString());
+      return location;
+    }
+    
+    console.error(`No results found for address: ${address}`);
+    return null;
   } catch (error) {
-    console.error(`Error geocoding location ${location}:`, error);
-    throw error;
+    console.error(`Error geocoding address ${address}:`, error);
+    return null;
   }
 };
 
@@ -32,15 +28,19 @@ export const fitMapToBounds = (
 
   const bounds = new google.maps.LatLngBounds();
   markers.forEach(marker => {
-    bounds.extend(marker.getPosition()!);
+    const position = marker.getPosition();
+    if (position) {
+      bounds.extend(position);
+    }
   });
 
   map.fitBounds(bounds);
 
-  // Don't zoom in too far
-  google.maps.event.addListenerOnce(map, 'idle', () => {
-    if (map.getZoom()! > 15) {
-      map.setZoom(15);
+  // Add some padding
+  const listener = google.maps.event.addListener(map, 'idle', () => {
+    if (map.getZoom() > 16) {
+      map.setZoom(16);
     }
+    google.maps.event.removeListener(listener);
   });
 };

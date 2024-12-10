@@ -18,10 +18,14 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const markersRef = useRef<google.maps.Marker[]>([]);
   const { googleMaps, error: mapsError, isLoading: isMapsLoading } = useGoogleMaps();
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const initMap = async () => {
-      if (!googleMaps || !mapRef.current) return;
+      if (!googleMaps || !mapRef.current) {
+        console.log("Google Maps or map reference not available");
+        return;
+      }
 
       try {
         console.log("Initializing map with properties:", properties);
@@ -53,11 +57,21 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
         }
 
         const geocoder = new googleMaps.Geocoder();
+        const markers: google.maps.Marker[] = [];
 
         // Create markers for all properties
         for (const [index, property] of properties.entries()) {
           try {
+            console.log(`Geocoding location for property: ${property.title} at ${property.location}`);
             const position = await geocodeLocation(geocoder, property.location);
+            
+            if (!position) {
+              console.error(`Failed to geocode location for property: ${property.title}`);
+              continue;
+            }
+
+            console.log(`Successfully geocoded location for property: ${property.title}`, position.toString());
+            
             const marker = createPropertyMarker(
               mapInstance,
               property,
@@ -65,17 +79,26 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
               position,
               onPropertyClick
             );
-            markersRef.current.push(marker);
+            markers.push(marker);
           } catch (error) {
             console.error(`Error creating marker for property ${property.title}:`, error);
           }
         }
 
-        // Fit map to show all markers
-        fitMapToBounds(mapInstance, markersRef.current);
+        markersRef.current = markers;
+
+        // Only fit bounds if we have markers
+        if (markers.length > 0) {
+          console.log(`Fitting map to ${markers.length} markers`);
+          fitMapToBounds(mapInstance, markers);
+        } else {
+          console.log("No markers to fit bounds to, using default center");
+          mapInstance.setCenter(mapCenter);
+        }
 
       } catch (err) {
         console.error("Error initializing map:", err);
+        setError("Failed to initialize map. Please try again later.");
       }
     };
 
@@ -88,10 +111,10 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
     };
   }, [properties, onPropertyClick, googleMaps]);
 
-  if (mapsError) {
+  if (mapsError || error) {
     return (
       <Alert variant="destructive">
-        <AlertDescription>{mapsError}</AlertDescription>
+        <AlertDescription>{mapsError || error}</AlertDescription>
       </Alert>
     );
   }
