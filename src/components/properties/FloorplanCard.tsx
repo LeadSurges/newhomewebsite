@@ -21,38 +21,38 @@ export const FloorplanCard = ({
   return (
     <Card className="overflow-hidden">
       <div className="relative">
-        <span className="absolute top-4 left-4 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+        <span className="absolute top-2 left-2 bg-green-600 text-white px-2 py-0.5 rounded-full text-xs font-medium">
           FOR SALE
         </span>
         <img
           src={imageUrl}
           alt={`${name} Floorplan`}
-          className="w-full h-[300px] object-contain bg-white"
+          className="w-full h-[200px] object-contain bg-white"
         />
       </div>
-      <CardContent className="p-6">
-        <h3 className="text-2xl font-bold mb-2">{name}</h3>
+      <CardContent className="p-4">
+        <h3 className="text-lg font-bold mb-1">{name}</h3>
         {price && (
-          <p className="text-xl font-bold text-primary mb-4">
+          <p className="text-base font-bold text-primary mb-2">
             From ${price.toLocaleString()} CAD
           </p>
         )}
-        <div className="flex gap-6 text-muted-foreground">
+        <div className="flex gap-4 text-muted-foreground text-sm">
           {bedrooms && (
-            <div className="flex items-center gap-2">
-              <Bed className="h-5 w-5" />
+            <div className="flex items-center gap-1">
+              <Bed className="h-4 w-4" />
               <span>{bedrooms} bd</span>
             </div>
           )}
           {bathrooms && (
-            <div className="flex items-center gap-2">
-              <Bath className="h-5 w-5" />
+            <div className="flex items-center gap-1">
+              <Bath className="h-4 w-4" />
               <span>{bathrooms} ba</span>
             </div>
           )}
           {squareFeet && (
-            <div className="flex items-center gap-2">
-              <Ruler className="h-5 w-5" />
+            <div className="flex items-center gap-1">
+              <Ruler className="h-4 w-4" />
               <span>From {squareFeet.toLocaleString()} SqFt</span>
             </div>
           )}

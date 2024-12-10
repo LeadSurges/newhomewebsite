@@ -68,14 +68,16 @@ const PropertyDetails = () => {
             {property.floorplan_url && (
               <Card className="p-6">
                 <h2 className="text-xl font-semibold mb-6">Floor Plans</h2>
-                <FloorplanCard
-                  name={property.title}
-                  price={property.price}
-                  bedrooms={property.bedrooms}
-                  bathrooms={property.bathrooms}
-                  squareFeet={property.square_feet}
-                  imageUrl={property.floorplan_url}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                  <FloorplanCard
+                    name={property.title}
+                    price={property.price}
+                    bedrooms={property.bedrooms}
+                    bathrooms={property.bathrooms}
+                    squareFeet={property.square_feet}
+                    imageUrl={property.floorplan_url}
+                  />
+                </div>
               </Card>
             )}
 
