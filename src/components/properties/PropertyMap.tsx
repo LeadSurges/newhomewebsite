@@ -15,16 +15,15 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
 
   useEffect(() => {
     const initMap = async () => {
+      if (!mapRef.current) return;
+      
       try {
         setIsLoading(true);
         setError(null);
         console.log("Initializing map for location:", location);
         
-        const loader = await getMapLoader();
-        const google = await loader.load();
+        const google = await getMapLoader();
         const geocoder = new google.maps.Geocoder();
-
-        if (!mapRef.current) return;
 
         const results = await new Promise<google.maps.GeocoderResult[]>((resolve, reject) => {
           geocoder.geocode({ address: location }, (results, status) => {
@@ -39,6 +38,9 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
         const map = new google.maps.Map(mapRef.current, {
           center: results[0].geometry.location,
           zoom: 15,
+          mapTypeControl: false,
+          fullscreenControl: false,
+          streetViewControl: false,
         });
 
         new google.maps.Marker({
@@ -54,9 +56,7 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
       }
     };
 
-    if (mapRef.current) {
-      initMap();
-    }
+    initMap();
   }, [location]);
 
   if (error) {

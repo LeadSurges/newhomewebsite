@@ -2,10 +2,12 @@ import { Loader } from "@googlemaps/js-api-loader";
 import { supabase } from "@/integrations/supabase/client";
 
 let loader: Loader | null = null;
+let loadPromise: Promise<typeof google> | null = null;
 
 export const getMapLoader = async () => {
   try {
-    if (loader) return loader;
+    // If we already have a load promise in progress, return it
+    if (loadPromise) return loadPromise;
 
     console.log("Initializing Google Maps loader");
     const { data: { secret }, error: secretError } = await supabase.functions.invoke('get-maps-key');
@@ -14,12 +16,17 @@ export const getMapLoader = async () => {
       throw new Error("Failed to load Google Maps API key");
     }
 
-    loader = new Loader({
-      apiKey: secret,
-      version: "weekly",
-    });
+    if (!loader) {
+      loader = new Loader({
+        apiKey: secret,
+        version: "weekly",
+        libraries: ["places", "geometry"]
+      });
+    }
 
-    return loader;
+    // Create and store the load promise
+    loadPromise = loader.load();
+    return loadPromise;
   } catch (error) {
     console.error("Error initializing map loader:", error);
     throw error;

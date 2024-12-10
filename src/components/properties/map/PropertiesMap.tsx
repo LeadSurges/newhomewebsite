@@ -21,19 +21,21 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
 
   useEffect(() => {
     const loadMap = async () => {
+      if (!mapRef.current) return;
+      
       try {
         setIsLoading(true);
         setError(null);
 
-        const loader = await getMapLoader();
-        const google = await loader.load();
+        const google = await getMapLoader();
         console.log("Google Maps API loaded successfully");
-
-        if (!mapRef.current) return;
 
         const mapInstance = new google.maps.Map(mapRef.current, {
           center: { lat: 43.6532, lng: -79.3832 }, // Toronto coordinates
           zoom: 12,
+          mapTypeControl: false,
+          fullscreenControl: false,
+          streetViewControl: false,
           styles: [
             {
               featureType: "poi",
