@@ -11,9 +11,10 @@ type Property = Database["public"]["Tables"]["properties"]["Row"] & {
 interface PropertiesListProps {
   properties: Property[] | null;
   isLoading: boolean;
+  size?: "default" | "small";
 }
 
-export const PropertiesList = ({ properties, isLoading }: PropertiesListProps) => {
+export const PropertiesList = ({ properties, isLoading, size = "default" }: PropertiesListProps) => {
   if (isLoading) {
     return (
       <div className="text-center py-8">Loading properties...</div>
@@ -29,9 +30,9 @@ export const PropertiesList = ({ properties, isLoading }: PropertiesListProps) =
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6">
+    <div className={`grid gap-6 ${size === "small" ? "md:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"}`}>
       {properties.map((property) => (
-        <PropertyCard key={property.id} property={property} />
+        <PropertyCard key={property.id} property={property} size={size} />
       ))}
     </div>
   );

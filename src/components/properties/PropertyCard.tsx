@@ -22,9 +22,10 @@ interface PropertyCardProps {
       name: string;
     } | null;
   };
+  size?: "default" | "small";
 }
 
-export const PropertyCard = ({ property }: PropertyCardProps) => {
+export const PropertyCard = ({ property, size = "default" }: PropertyCardProps) => {
   const { isFavorite, addFavorite, removeFavorite } = useFavorites();
   const { user } = useAuth();
   const favorite = isFavorite(property.id);
@@ -41,7 +42,10 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
   return (
     <Link to={`/properties/${property.id}`} className="block">
       <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-        <div className="aspect-[16/9] relative overflow-hidden">
+        <div className={cn(
+          "relative overflow-hidden",
+          size === "small" ? "aspect-[4/3]" : "aspect-[16/9]"
+        )}>
           <img
             src={property.image_url || "/placeholder.svg"}
             alt={property.title}
@@ -63,10 +67,19 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             </Button>
           )}
         </div>
-        <CardContent className="p-4">
+        <CardContent className={cn(
+          "p-4",
+          size === "small" ? "space-y-1" : "space-y-2"
+        )}>
           <div className="space-y-2">
-            <h3 className="font-semibold text-lg line-clamp-1">{property.title}</h3>
-            <p className="text-xl font-bold text-primary">
+            <h3 className={cn(
+              "font-semibold line-clamp-1",
+              size === "small" ? "text-base" : "text-lg"
+            )}>{property.title}</h3>
+            <p className={cn(
+              "font-bold text-primary",
+              size === "small" ? "text-lg" : "text-xl"
+            )}>
               {formatPrice(property.price)}
             </p>
             <p className="text-muted-foreground text-sm">{property.location}</p>

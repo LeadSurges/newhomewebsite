@@ -50,7 +50,8 @@ const Favorites = () => {
         <h1 className="text-3xl font-bold mb-8">My Favorites</h1>
         <PropertiesList 
           properties={favorites} 
-          isLoading={isLoading} 
+          isLoading={isLoading}
+          size="small"
         />
       </main>
     </div>
