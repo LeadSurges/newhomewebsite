@@ -33,6 +33,7 @@ const App = () => (
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/admin/properties" element={<AdminProperties />} />
+              <Route path="/admin/properties/new" element={<UploadProperty />} />
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
