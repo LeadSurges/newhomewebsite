@@ -24,9 +24,11 @@ export const BuildersSection = () => {
             .select("rating")
             .eq("builder_id", builder.id);
 
-          const averageRating =
-            reviews?.reduce((acc, review) => acc + review.rating, 0) /
-              (reviews?.length || 1) || 0;
+          // Default to 5 stars if no reviews
+          const averageRating = reviews?.length
+            ? reviews.reduce((acc, review) => acc + review.rating, 0) /
+              reviews.length
+            : 5;
 
           return {
             ...builder,
