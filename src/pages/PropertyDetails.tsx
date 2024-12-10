@@ -43,8 +43,6 @@ const PropertyDetails = () => {
   const propertyMainInfo = {
     ...property,
     builder: property.builders,
-    deposit_structure: property.deposit_structure,
-    incentives: property.incentives
   };
 
   return (

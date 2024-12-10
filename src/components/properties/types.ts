@@ -1,3 +1,5 @@
+import type { Json } from "@/integrations/supabase/types";
+
 export interface FormData {
   title: string;
   description: string;
@@ -60,8 +62,8 @@ export interface PropertyMainInfoProps {
   maintenance_fee_per_sqft?: number;
   parking_cost?: number;
   storage_cost?: number;
-  deposit_structure?: string;
-  incentives?: string;
+  deposit_structure?: Json;
+  incentives?: Json;
   bedrooms_min?: string;
   bedrooms_max?: string;
   bathrooms_min?: string;
