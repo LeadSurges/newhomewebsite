@@ -125,7 +125,7 @@ export const PropertyCard = ({ property }: PropertyCardProps) => {
             </Button>
           </>
         )}
-        <div className="absolute top-4 left-4 flex gap-2">
+        <div className="absolute top-8 left-4 flex gap-2">
           {property.featured && (
             <span className="bg-[#9b87f5] text-white px-3 py-1 rounded-full text-sm font-medium">
               FEATURED
