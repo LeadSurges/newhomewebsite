@@ -47,33 +47,31 @@ export function PriceFilter({ value, onChange }: PriceFilterProps) {
 
   return (
     <div className="p-4 bg-white">
-      <ScrollArea className="h-[300px] mb-4">
-        <div className="space-y-2">
+      <div className="space-y-2 mb-6">
+        <Button
+          variant="ghost"
+          className="w-full justify-start font-normal text-lg hover:bg-gray-100"
+          onClick={() => {
+            setMin("0")
+            setMax("")
+            onChange([0, 100000000])
+          }}
+        >
+          Any price
+        </Button>
+        {priceOptions.map((price) => (
           <Button
+            key={price}
             variant="ghost"
             className="w-full justify-start font-normal text-lg hover:bg-gray-100"
-            onClick={() => {
-              setMin("0")
-              setMax("")
-              onChange([0, 100000000])
-            }}
+            onClick={() => handlePriceSelect(price)}
           >
-            Any price
+            {formatPrice(price)}+
           </Button>
-          {priceOptions.map((price) => (
-            <Button
-              key={price}
-              variant="ghost"
-              className="w-full justify-start font-normal text-lg hover:bg-gray-100"
-              onClick={() => handlePriceSelect(price)}
-            >
-              {formatPrice(price)}+
-            </Button>
-          ))}
-        </div>
-      </ScrollArea>
+        ))}
+      </div>
 
-      <div className="border-t pt-4 mt-4">
+      <div className="pt-4">
         <Label className="mb-2 block text-base font-medium">Custom price range</Label>
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>

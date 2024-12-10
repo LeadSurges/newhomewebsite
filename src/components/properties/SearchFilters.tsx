@@ -27,7 +27,7 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     console.log("Submitting filters:", {
-      location,
+      location: location.trim(), // Ensure we trim whitespace
       priceRange,
       bedroomRange,
       bathroomRange,
@@ -42,7 +42,7 @@ export const SearchFilters = ({ onFilterChange }: SearchFiltersProps) => {
       keywords,
     })
     onFilterChange({
-      location,
+      location: location.trim(), // Ensure we trim whitespace
       priceRange,
       bedroomRange,
       bathroomRange,
