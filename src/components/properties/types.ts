@@ -19,6 +19,8 @@ export interface FormData {
   garage_spaces: string | null;
   completion_year: string | null;
   keywords: string[];
+  deposit_structure: string;
+  incentives: string;
 }
 
 export interface Builder {
