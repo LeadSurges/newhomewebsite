@@ -27,9 +27,6 @@ export const PropertyMainInfo = ({
     return value ? `$${value.toLocaleString()}` : 'N/A';
   };
 
-  console.log('Deposit Structure:', deposit_structure);
-  console.log('Incentives:', incentives);
-
   return (
     <Card>
       <CardContent className="p-6">
@@ -109,38 +106,24 @@ export const PropertyMainInfo = ({
           </>
         )}
 
-        {deposit_structure && Object.keys(deposit_structure).length > 0 && (
+        {deposit_structure && (
           <>
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-4">Deposit Structure</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {Object.entries(deposit_structure).map(([key, value]) => (
-                  <div key={key} className="p-4 rounded-lg border bg-card">
-                    <p className="text-sm text-muted-foreground">{key}</p>
-                    <p className="font-medium mt-1">
-                      {typeof value === 'number' ? formatPrice(value) : value}
-                    </p>
-                  </div>
-                ))}
+              <div className="p-4 rounded-lg border bg-card">
+                <p className="whitespace-pre-wrap">{deposit_structure}</p>
               </div>
             </div>
             <Separator className="my-6" />
           </>
         )}
 
-        {incentives && Object.keys(incentives).length > 0 && (
+        {incentives && (
           <>
             <div className="mb-6">
               <h2 className="text-xl font-semibold mb-4">Incentives</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {Object.entries(incentives).map(([key, value]) => (
-                  <div key={key} className="p-4 rounded-lg border bg-card">
-                    <p className="text-sm text-muted-foreground">{key}</p>
-                    <p className="font-medium mt-1">
-                      {typeof value === 'number' ? formatPrice(value) : value}
-                    </p>
-                  </div>
-                ))}
+              <div className="p-4 rounded-lg border bg-card">
+                <p className="whitespace-pre-wrap">{incentives}</p>
               </div>
             </div>
             <Separator className="my-6" />

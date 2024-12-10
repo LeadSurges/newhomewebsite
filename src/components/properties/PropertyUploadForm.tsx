@@ -35,8 +35,8 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     garage_spaces: initialData?.garage_spaces?.toString() || null,
     completion_year: initialData?.completion_year?.toString() || null,
     keywords: initialData?.keywords || [],
-    deposit_structure: initialData?.deposit_structure ? JSON.stringify(initialData.deposit_structure, null, 2) : "",
-    incentives: initialData?.incentives ? JSON.stringify(initialData.incentives, null, 2) : "",
+    deposit_structure: initialData?.deposit_structure || "",
+    incentives: initialData?.incentives || "",
   });
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -49,26 +49,6 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     e.preventDefault();
     
     try {
-      // Parse JSON fields
-      let deposit_structure = null;
-      let incentives = null;
-      
-      try {
-        if (formData.deposit_structure) {
-          deposit_structure = JSON.parse(formData.deposit_structure);
-        }
-        if (formData.incentives) {
-          incentives = JSON.parse(formData.incentives);
-        }
-      } catch (error) {
-        toast({
-          variant: "destructive",
-          title: "Invalid JSON",
-          description: "Please check the format of your JSON input fields.",
-        });
-        return;
-      }
-
       // Upload main image if selected
       let image_url = initialData?.image_url || "";
       if (selectedFile) {
@@ -121,8 +101,8 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
         completion_year: formData.completion_year ? Number(formData.completion_year) : null,
         keywords: formData.keywords,
         builder_id: formData.builder_id,
-        deposit_structure,
-        incentives,
+        deposit_structure: formData.deposit_structure,
+        incentives: formData.incentives,
       };
 
       if (initialData) {
