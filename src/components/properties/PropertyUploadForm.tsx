@@ -16,6 +16,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import type { Database } from "@/integrations/supabase/types";
+
+type PropertyInsert = Database["public"]["Tables"]["properties"]["Insert"];
 
 const propertySchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -55,7 +58,7 @@ export const PropertyUploadForm = () => {
       const imageInput = document.querySelector<HTMLInputElement>('#property-image');
       const imageFile = imageInput?.files?.[0];
       
-      let image_url = null;
+      let image_url: string | null = null;
       
       if (imageFile) {
         const formData = new FormData();
@@ -76,12 +79,14 @@ export const PropertyUploadForm = () => {
 
       console.log("Inserting property with data:", { ...values, image_url });
       
+      const propertyData: PropertyInsert = {
+        ...values,
+        image_url,
+      };
+
       const { data: property, error } = await supabase
         .from('properties')
-        .insert({
-          ...values,
-          image_url,
-        })
+        .insert(propertyData)
         .select()
         .single();
 
