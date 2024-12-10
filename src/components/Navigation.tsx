@@ -2,9 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Search, User } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   return (
     <nav className="fixed w-full bg-white/80 backdrop-blur-lg z-50 border-b">
@@ -30,10 +32,21 @@ export const Navigation = () => {
             <Button variant="ghost" size="icon">
               <Search className="h-5 w-5" />
             </Button>
-            <Button>
-              <User className="h-5 w-5 mr-2" />
-              Sign In
-            </Button>
+            {user ? (
+              <>
+                <Link to="/admin/properties" className="nav-link">
+                  Admin
+                </Link>
+                <Button onClick={() => signOut()}>Sign Out</Button>
+              </>
+            ) : (
+              <Link to="/signin">
+                <Button>
+                  <User className="h-5 w-5 mr-2" />
+                  Sign In
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -74,7 +87,23 @@ export const Navigation = () => {
             >
               About
             </Link>
-            <Button className="w-full mt-4">Sign In</Button>
+            {user ? (
+              <>
+                <Link
+                  to="/admin/properties"
+                  className="block px-3 py-2 rounded-md text-base font-medium nav-link"
+                >
+                  Admin
+                </Link>
+                <Button className="w-full mt-4" onClick={() => signOut()}>
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <Link to="/signin">
+                <Button className="w-full mt-4">Sign In</Button>
+              </Link>
+            )}
           </div>
         </div>
       )}
