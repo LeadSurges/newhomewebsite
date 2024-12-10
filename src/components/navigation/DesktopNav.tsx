@@ -19,10 +19,12 @@ export const DesktopNav = () => {
     queryKey: ["is-admin", user?.id],
     queryFn: async () => {
       if (!user) return false;
+      console.log("DesktopNav: Checking if user is admin");
       const { data, error } = await supabase.rpc("is_admin", {
         user_id: user.id,
       });
       if (error) throw error;
+      console.log("DesktopNav: Admin check result:", data);
       return data;
     },
     enabled: !!user,

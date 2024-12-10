@@ -3,9 +3,26 @@ import { Button } from "@/components/ui/button";
 import { UserPlus, Heart } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Separator } from "@/components/ui/separator";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 export const MobileNav = ({ isOpen }: { isOpen: boolean }) => {
   const { user, signOut } = useAuth();
+
+  const { data: isAdmin } = useQuery({
+    queryKey: ["is-admin", user?.id],
+    queryFn: async () => {
+      if (!user) return false;
+      console.log("MobileNav: Checking if user is admin");
+      const { data, error } = await supabase.rpc("is_admin", {
+        user_id: user.id,
+      });
+      if (error) throw error;
+      console.log("MobileNav: Admin check result:", data);
+      return data;
+    },
+    enabled: !!user,
+  });
 
   if (!isOpen) return null;
 
@@ -70,12 +87,22 @@ export const MobileNav = ({ isOpen }: { isOpen: boolean }) => {
                 <Heart className="h-5 w-5 mr-2" />
                 My Favorites
               </Link>
-              <Link
-                to="/admin/properties"
-                className="block px-3 py-2 rounded-md text-base font-medium nav-link"
-              >
-                Admin
-              </Link>
+              {isAdmin && (
+                <>
+                  <Link
+                    to="/admin/properties"
+                    className="block px-3 py-2 rounded-md text-base font-medium nav-link"
+                  >
+                    Properties
+                  </Link>
+                  <Link
+                    to="/admin/builders"
+                    className="block px-3 py-2 rounded-md text-base font-medium nav-link"
+                  >
+                    Builders
+                  </Link>
+                </>
+              )}
               <Button className="w-full mt-4" onClick={() => signOut()}>
                 Sign Out
               </Button>

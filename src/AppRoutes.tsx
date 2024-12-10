@@ -10,6 +10,7 @@ import AdminProperties from "@/pages/admin/AdminProperties";
 import AdminBuilders from "@/pages/admin/AdminBuilders";
 import BuilderProfile from "@/pages/BuilderProfile";
 import UploadProperty from "@/pages/UploadProperty";
+import { AdminRoute } from "@/components/auth/AdminRoute";
 
 export const AppRoutes = () => {
   return (
@@ -21,10 +22,31 @@ export const AppRoutes = () => {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/favorites" element={<Favorites />} />
-      <Route path="/admin/properties" element={<AdminProperties />} />
-      <Route path="/admin/builders" element={<AdminBuilders />} />
+      <Route
+        path="/admin/properties"
+        element={
+          <AdminRoute>
+            <AdminProperties />
+          </AdminRoute>
+        }
+      />
+      <Route
+        path="/admin/builders"
+        element={
+          <AdminRoute>
+            <AdminBuilders />
+          </AdminRoute>
+        }
+      />
       <Route path="/builders/:id" element={<BuilderProfile />} />
-      <Route path="/upload-property" element={<UploadProperty />} />
+      <Route
+        path="/upload-property"
+        element={
+          <AdminRoute>
+            <UploadProperty />
+          </AdminRoute>
+        }
+      />
     </Routes>
   );
 };
