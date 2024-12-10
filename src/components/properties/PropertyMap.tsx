@@ -41,6 +41,7 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
           mapTypeControl: false,
           fullscreenControl: false,
           streetViewControl: false,
+          gestureHandling: "cooperative",
         });
 
         new google.maps.Marker({
@@ -48,10 +49,10 @@ export const PropertyMap = ({ location, className = "" }: PropertyMapProps) => {
           position: results[0].geometry.location,
         });
 
+        setIsLoading(false);
       } catch (err) {
         console.error("Error initializing map:", err);
         setError('Failed to load the map. Please try again later.');
-      } finally {
         setIsLoading(false);
       }
     };

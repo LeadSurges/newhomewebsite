@@ -36,6 +36,7 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
           mapTypeControl: false,
           fullscreenControl: false,
           streetViewControl: false,
+          gestureHandling: "cooperative",
           styles: [
             {
               featureType: "poi",
@@ -46,10 +47,10 @@ export const PropertiesMap = ({ properties, onPropertyClick }: PropertiesMapProp
         });
 
         setMap(mapInstance);
+        setIsLoading(false);
       } catch (err) {
         console.error("Error loading Google Maps:", err);
         setError('Failed to load Google Maps. Please try again later.');
-      } finally {
         setIsLoading(false);
       }
     };
