@@ -10,11 +10,13 @@ import type { Database } from "@/integrations/supabase/types";
 
 type BuilderReview = Database["public"]["Tables"]["builder_reviews"]["Row"];
 
+type Profile = {
+  username: string | null;
+  avatar_url: string | null;
+};
+
 interface ReviewWithProfile extends BuilderReview {
-  profiles: {
-    username: string | null;
-    avatar_url: string | null;
-  } | null;
+  profiles: Profile | null;
 }
 
 const BuilderProfile = () => {
@@ -71,7 +73,7 @@ const BuilderProfile = () => {
         .from("builder_reviews")
         .select(`
           *,
-          profiles (
+          profiles:user_id (
             username,
             avatar_url
           )
@@ -79,7 +81,14 @@ const BuilderProfile = () => {
         .eq("builder_id", id);
 
       if (error) throw error;
-      return data as ReviewWithProfile[];
+      
+      // Transform the data to match our interface
+      const transformedData = data.map(review => ({
+        ...review,
+        profiles: Array.isArray(review.profiles) ? review.profiles[0] : review.profiles
+      }));
+
+      return transformedData as ReviewWithProfile[];
     },
     enabled: !!id,
   });
