@@ -9,10 +9,24 @@ import { FileUploadField } from "@/components/properties/FileUploadField";
 import { ImagePlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const COMPANY_TYPES = [
+  { value: "builder", label: "Builder" },
+  { value: "realty", label: "Realty Company" },
+  { value: "marketing", label: "Marketing Company" },
+];
 
 export const BuilderForm = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [type, setType] = useState("builder");
   const [selectedLogo, setSelectedLogo] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const { toast } = useToast();
@@ -44,18 +58,20 @@ export const BuilderForm = () => {
           name,
           description,
           logo_url,
+          type,
         });
 
       if (error) throw error;
 
       toast({
         title: "Success",
-        description: "Builder has been created successfully.",
+        description: "Company has been created successfully.",
       });
 
       // Reset form
       setName("");
       setDescription("");
+      setType("builder");
       setSelectedLogo(null);
       setLogoPreview(null);
 
@@ -76,7 +92,23 @@ export const BuilderForm = () => {
       <CardContent className="pt-6">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <Label htmlFor="name">Builder Name</Label>
+            <Label htmlFor="type">Company Type</Label>
+            <Select value={type} onValueChange={setType}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select company type" />
+              </SelectTrigger>
+              <SelectContent>
+                {COMPANY_TYPES.map((type) => (
+                  <SelectItem key={type.value} value={type.value}>
+                    {type.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <Label htmlFor="name">Company Name</Label>
             <Input
               id="name"
               value={name}
@@ -97,7 +129,7 @@ export const BuilderForm = () => {
 
           <FileUploadField
             id="logo"
-            label="Builder Logo"
+            label="Company Logo"
             icon={ImagePlus}
             preview={logoPreview}
             onChange={(file) => {
@@ -107,7 +139,7 @@ export const BuilderForm = () => {
           />
 
           <Button type="submit" className="w-full">
-            Create Builder
+            Create Company
           </Button>
         </form>
       </CardContent>

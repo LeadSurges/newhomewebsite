@@ -4,6 +4,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
+import { Badge } from "@/components/ui/badge";
+
+const TYPE_LABELS = {
+  builder: "Builder",
+  realty: "Realty Company",
+  marketing: "Marketing Company",
+};
 
 export const BuilderList = () => {
   const { toast } = useToast();
@@ -32,7 +39,7 @@ export const BuilderList = () => {
 
       toast({
         title: "Success",
-        description: "Builder has been deleted successfully.",
+        description: "Company has been deleted successfully.",
       });
     } catch (error: any) {
       toast({
@@ -44,12 +51,12 @@ export const BuilderList = () => {
   };
 
   if (isLoading) {
-    return <div>Loading builders...</div>;
+    return <div>Loading companies...</div>;
   }
 
   return (
     <div className="space-y-4">
-      <h2 className="text-2xl font-semibold">Existing Builders</h2>
+      <h2 className="text-2xl font-semibold">Existing Companies</h2>
       {builders?.map((builder) => (
         <Card key={builder.id}>
           <CardContent className="flex items-center justify-between p-6">
@@ -62,7 +69,12 @@ export const BuilderList = () => {
                 />
               )}
               <div>
-                <h3 className="text-lg font-semibold">{builder.name}</h3>
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="text-lg font-semibold">{builder.name}</h3>
+                  <Badge variant="secondary">
+                    {TYPE_LABELS[builder.type as keyof typeof TYPE_LABELS]}
+                  </Badge>
+                </div>
                 <p className="text-sm text-muted-foreground">
                   {builder.description}
                 </p>
