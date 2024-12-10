@@ -1,9 +1,9 @@
 import { Navigation } from "@/components/Navigation";
 import Footer from "@/components/Footer";
-import { PropertyHero } from "@/components/properties/PropertyHero";
 import { PropertyMainInfo } from "@/components/properties/PropertyMainInfo";
 import { PropertyContactForm } from "@/components/properties/PropertyContactForm";
 import { FloorplanCard } from "@/components/properties/FloorplanCard";
+import { ImageGallery } from "@/components/properties/ImageGallery";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,6 +39,8 @@ const PropertyDetails = () => {
 
   if (!property) return null;
 
+  const images = property.image_url ? property.image_url.split(',') : ['/placeholder.svg'];
+
   const propertyMainInfo = {
     ...property,
     builder: property.builders,
@@ -49,11 +51,7 @@ const PropertyDetails = () => {
       <Navigation />
       
       <main className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-        <PropertyHero 
-          imageUrl={property.image_url || ''} 
-          title={property.title}
-          featured={property.featured || false}
-        />
+        <ImageGallery images={images} title={property.title} />
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">

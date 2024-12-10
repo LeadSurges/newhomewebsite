@@ -76,9 +76,11 @@ export const DesktopNav = () => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Button variant="ghost" size="icon">
-        <Search className="h-5 w-5" />
-      </Button>
+      <Link to="/properties">
+        <Button variant="ghost" size="icon">
+          <Search className="h-5 w-5" />
+        </Button>
+      </Link>
 
       {user ? (
         <>
