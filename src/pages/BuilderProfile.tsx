@@ -70,18 +70,23 @@ const BuilderProfile = () => {
         .from("builder_reviews")
         .select(`
           *,
-          profiles (
-            username,
-            avatar_url
+          user:user_id (
+            profile:profiles (
+              username,
+              avatar_url
+            )
           )
         `)
         .eq("builder_id", id);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching reviews:", error);
+        throw error;
+      }
       
       return data.map(review => ({
         ...review,
-        profiles: Array.isArray(review.profiles) ? review.profiles[0] : review.profiles
+        profiles: review.user?.profile || null
       }));
     },
     enabled: !!id,
