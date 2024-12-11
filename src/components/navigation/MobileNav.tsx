@@ -28,9 +28,9 @@ export const MobileNav = ({ isOpen }: { isOpen: boolean }) => {
 
   return (
     <div className="md:hidden">
-      <div className="fixed inset-0 z-50 bg-background overflow-y-auto">
-        <div className="py-2 space-y-1 px-3">
-          <div className="space-y-1.5">
+      <div className="fixed inset-0 z-[100] bg-white/95 backdrop-blur-sm overflow-y-auto">
+        <div className="py-4 space-y-2 px-4">
+          <div className="space-y-1">
             <p className="text-xs font-medium text-muted-foreground px-2">New Homes for Sale</p>
             <Link
               to="/properties?homeType=Single family home"
@@ -60,7 +60,7 @@ export const MobileNav = ({ isOpen }: { isOpen: boolean }) => {
 
           <Separator className="my-2" />
 
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             <p className="text-xs font-medium text-muted-foreground px-2">Professionals</p>
             <Link
               to="/contact?type=builder"
