@@ -14,8 +14,12 @@ export const Navigation = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link to="/" className="text-xl font-bold">
-              LuxuryHomes
+            <Link to="/" className="flex items-center">
+              <img 
+                src="/lovable-uploads/6d174b2c-dbd9-4490-ad0a-1b27333022c0.png" 
+                alt="The New Home Source" 
+                className="h-8"
+              />
             </Link>
           </div>
 
