@@ -79,15 +79,15 @@ const PropertyDetails = () => {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink as={Link} to="/">
-                Home
-              </BreadcrumbLink>
+              <Link to="/">
+                <BreadcrumbLink>Home</BreadcrumbLink>
+              </Link>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbLink as={Link} to="/properties">
-                Properties
-              </BreadcrumbLink>
+              <Link to="/properties">
+                <BreadcrumbLink>Properties</BreadcrumbLink>
+              </Link>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
