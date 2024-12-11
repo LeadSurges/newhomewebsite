@@ -21,16 +21,22 @@ const PropertyDetails = () => {
   const { user } = useAuth();
   const { isFavorite, addFavorite, removeFavorite } = useFavorites();
 
-  // Extract the ID from the slug (it's the first part before the first hyphen)
-  const id = slug?.split('-')[0];
+  // Extract the UUID from the slug using a regex pattern
+  const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i;
+  const match = slug?.match(uuidPattern);
+  const id = match ? match[0] : null;
+
+  console.log("Extracted ID from slug:", id); // Debug log
 
   const { data: property, isLoading } = useQuery({
     queryKey: ["property", id],
     queryFn: async () => {
       if (!id) {
-        console.error("No property ID provided");
-        throw new Error("No property ID provided");
+        console.error("No valid property ID found in URL");
+        throw new Error("No valid property ID found in URL");
       }
+      
+      console.log("Fetching property with ID:", id); // Debug log
       
       const { data, error } = await supabase
         .from("properties")
@@ -52,6 +58,7 @@ const PropertyDetails = () => {
       return data;
     },
     retry: false,
+    enabled: !!id && uuidPattern.test(id), // Only run query if we have a valid UUID
   });
 
   if (isLoading) {
@@ -63,7 +70,7 @@ const PropertyDetails = () => {
     );
   }
 
-  if (!property) {
+  if (!id || !property) {
     return (
       <div className="min-h-screen bg-secondary">
         <Navigation />
