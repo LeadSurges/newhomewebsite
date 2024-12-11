@@ -50,7 +50,7 @@ export const Navigation = () => {
               <img 
                 src={logoUrl}
                 alt="The New Home Source"
-                className={`h-8 w-auto transition-opacity duration-200 ${
+                className={`h-12 w-auto transition-opacity duration-200 ${
                   logoError ? 'opacity-50' : 'opacity-100'
                 }`}
                 onLoad={handleImageLoad}
