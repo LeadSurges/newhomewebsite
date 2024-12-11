@@ -43,14 +43,14 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">About Us</h3>
             <p className="text-muted-foreground">
-              LuxuryHomes is your trusted partner in finding the perfect new construction home. We connect homebuyers with top builders across Ontario.
+              The New Home Source is your reliable partner in discovering the perfect new construction home. We specialize in connecting homebuyers with top builders ensuring a seamless journey to finding your dream home.
             </p>
           </div>
         </div>
         
         <div className="border-t px-4 py-6">
           <p className="text-sm text-muted-foreground text-center">
-            © 2024 LuxuryHomes. All rights reserved.
+            © 2024 The New Home Source. All rights reserved.
           </p>
         </div>
       </div>
