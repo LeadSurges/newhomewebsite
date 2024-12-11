@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
-import { formatPrice } from "@/utils/formatters";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { PropertyStats } from "./card/PropertyStats";
 import { BuilderInfo } from "./card/BuilderInfo";
-import { FavoriteButton } from "./card/FavoriteButton";
+import { PropertyImage } from "./card/PropertyImage";
+import { PropertyTitle } from "./card/PropertyTitle";
+import { PriceDisplay } from "./card/PriceDisplay";
 
 interface PropertyCardProps {
   property: {
@@ -47,18 +48,10 @@ export const PropertyCard = ({ property, size = "default" }: PropertyCardProps) 
   };
 
   const formatRange = (value?: number | string, min?: string, max?: string) => {
-    if (min && max) {
-      return `${min} - ${max}`;
-    }
-    if (min) {
-      return `${min}+`;
-    }
-    if (max) {
-      return `Up to ${max}`;
-    }
-    if (value) {
-      return value.toString();
-    }
+    if (min && max) return `${min} - ${max}`;
+    if (min) return `${min}+`;
+    if (max) return `Up to ${max}`;
+    if (value) return value.toString();
     return null;
   };
 
@@ -78,37 +71,18 @@ export const PropertyCard = ({ property, size = "default" }: PropertyCardProps) 
   return (
     <Link to={`/properties/details/${property.id}`} className="block">
       <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-        <div className={cn(
-          "relative overflow-hidden",
-          size === "small" ? "aspect-[4/3]" : "aspect-[16/9]"
-        )}>
-          <img
-            src={property.image_url || "/placeholder.svg"}
-            alt={property.title}
-            className="object-cover w-full h-full"
-          />
-          {user && (
-            <FavoriteButton
-              isFavorite={favorite}
-              onClick={handleFavoriteClick}
-            />
-          )}
-        </div>
-        <CardContent className={cn(
-          "p-4",
-          size === "small" ? "space-y-1" : "space-y-2"
-        )}>
+        <PropertyImage
+          imageUrl={property.image_url}
+          title={property.title}
+          size={size}
+          showFavorite={!!user}
+          isFavorite={favorite}
+          onFavoriteClick={handleFavoriteClick}
+        />
+        <CardContent className={cn("p-4", size === "small" ? "space-y-1" : "space-y-2")}>
           <div className="space-y-2">
-            <h3 className={cn(
-              "font-semibold line-clamp-1",
-              size === "small" ? "text-base" : "text-lg"
-            )}>{property.title}</h3>
-            <p className={cn(
-              "font-bold text-primary",
-              size === "small" ? "text-lg" : "text-xl"
-            )}>
-              {formatPrice(property.price)}
-            </p>
+            <PropertyTitle title={property.title} size={size} />
+            <PriceDisplay price={property.price} size={size} />
             <p className="text-muted-foreground text-sm">{property.location}</p>
             <PropertyStats
               bedroomsDisplay={bedroomsDisplay}
