@@ -6,17 +6,40 @@ import { MobileMenuButton } from "./navigation/MobileMenuButton";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
-  console.log("Navigation: Rendering navigation component");
+  const [logoError, setLogoError] = useState(false);
+  
+  console.log("Navigation: Initializing with BASE_URL:", import.meta.env.BASE_URL);
 
   const handleClose = () => setIsOpen(false);
 
   const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    const img = e.currentTarget;
     console.log("Navigation: Logo loaded successfully", {
-      naturalWidth: e.currentTarget.naturalWidth,
-      naturalHeight: e.currentTarget.naturalHeight,
-      src: e.currentTarget.src
+      naturalWidth: img.naturalWidth,
+      naturalHeight: img.naturalHeight,
+      src: img.src,
+      complete: img.complete,
+      currentSrc: img.currentSrc
     });
+    setLogoError(false);
   };
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    console.error("Navigation: Failed to load logo image", {
+      attemptedSrc: e.currentTarget.src,
+      baseUrl: import.meta.env.BASE_URL,
+      complete: e.currentTarget.complete
+    });
+    setLogoError(true);
+    // Only set placeholder if we weren't already trying to load it
+    if (!e.currentTarget.src.includes('placeholder.svg')) {
+      e.currentTarget.src = `${import.meta.env.BASE_URL}placeholder.svg`;
+    }
+  };
+
+  // Construct the logo URL once to avoid recreation
+  const logoUrl = `${import.meta.env.BASE_URL}lovable-uploads/1b178297-dbe3-4d30-8a57-e6448cb797dc.png`;
+  console.log("Navigation: Using logo URL:", logoUrl);
 
   return (
     <nav className="fixed w-full bg-white/80 backdrop-blur-lg z-50 border-b">
@@ -25,14 +48,13 @@ export const Navigation = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <img 
-                src={import.meta.env.BASE_URL + "lovable-uploads/1b178297-dbe3-4d30-8a57-e6448cb797dc.png"}
-                alt="The New Home Source" 
-                className="h-8 w-auto"
+                src={logoUrl}
+                alt="The New Home Source"
+                className={`h-8 w-auto transition-opacity duration-200 ${
+                  logoError ? 'opacity-50' : 'opacity-100'
+                }`}
                 onLoad={handleImageLoad}
-                onError={(e) => {
-                  console.error("Navigation: Failed to load logo image", e.currentTarget.src);
-                  e.currentTarget.src = import.meta.env.BASE_URL + "placeholder.svg";
-                }}
+                onError={handleImageError}
               />
             </Link>
           </div>
