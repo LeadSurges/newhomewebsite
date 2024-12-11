@@ -1,3 +1,5 @@
+import { FavoriteButton } from "./FavoriteButton";
+
 interface PropertyImageProps {
   imageUrl?: string;
   title: string;
@@ -33,8 +35,7 @@ export const PropertyImage = ({
       )}
       {showFavorite && onFavoriteClick && (
         <FavoriteButton
-          isFavorite={isFavorite}
-          onClick={onFavoriteClick}
+          propertyId={title} // Using title as a temporary ID for the example
         />
       )}
     </div>
