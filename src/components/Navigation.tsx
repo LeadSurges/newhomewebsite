@@ -16,7 +16,7 @@ export const Navigation = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <img 
-                src="/logo.png" 
+                src="/lovable-uploads/4143fa04-b61c-472f-93a9-1e04c5c3c2ba.png" 
                 alt="The New Home Source" 
                 className="h-12 md:h-14 w-auto max-w-[260px] md:max-w-[280px] object-contain"
               />
