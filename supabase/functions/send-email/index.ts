@@ -33,7 +33,7 @@ serve(async (req) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'LuxuryHomes <no-reply@yourdomain.com>', // Replace yourdomain.com with your verified domain
+        from: 'LuxuryHomes <no-reply@resend.dev>',
         to: [to],
         subject,
         html,
