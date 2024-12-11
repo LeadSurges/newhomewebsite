@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
+import { SEO } from "@/components/SEO";
 
 const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -48,6 +49,21 @@ const PropertyDetails = () => {
 
   return (
     <div className="min-h-screen bg-secondary">
+      <SEO
+        title={`${property.title} | LuxuryHomes`}
+        description={`${property.title} - ${property.bedrooms} bed, ${property.bathrooms} bath, ${property.square_feet} sq ft luxury home in ${property.location}. ${property.description?.slice(0, 150)}...`}
+        keywords={`${property.location} homes, ${property.bedrooms} bedroom house, luxury properties, new construction, ${property.home_type}, ${property.construction_status}`}
+        image={images[0]}
+        type="property"
+        propertyData={{
+          price: property.price,
+          bedrooms: property.bedrooms,
+          bathrooms: property.bathrooms,
+          squareFeet: property.square_feet,
+          location: property.location,
+        }}
+      />
+      
       <Navigation />
       
       <main className="max-w-7xl mx-auto px-4 py-8 space-y-8">

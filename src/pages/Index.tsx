@@ -9,7 +9,12 @@ import { SEO } from "@/components/SEO";
 const Index = () => {
   return (
     <div className="min-h-screen bg-white">
-      <SEO />
+      <SEO
+        title="LuxuryHomes | Premium New Construction Homes in Ontario"
+        description="Discover exclusive new construction homes and luxury properties across Ontario. Browse our curated selection of premium real estate in Toronto, Ottawa, Mississauga and more. Find your dream home today."
+        keywords="luxury homes, new construction, premium properties, Ontario real estate, Toronto homes, Ottawa properties, Mississauga real estate, high-end condos, luxury real estate, new developments"
+        type="website"
+      />
       <Navigation />
       <HeroSection />
       <TrendingProperties />
