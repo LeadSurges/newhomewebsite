@@ -27,94 +27,94 @@ export const MobileNav = ({ isOpen }: { isOpen: boolean }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="md:hidden fixed inset-0" style={{ zIndex: 9999 }}>
-      <div className="fixed inset-0 bg-white/95 backdrop-blur-sm overflow-y-auto">
-        <div className="py-4 space-y-2 px-4">
-          <div className="space-y-1">
-            <p className="text-xs font-medium text-muted-foreground px-2">New Homes for Sale</p>
+    <div className="md:hidden fixed inset-0 w-full h-full" style={{ zIndex: 9999 }}>
+      <div className="fixed inset-0 w-full h-full bg-white/95 backdrop-blur-sm">
+        <div className="py-6 px-6 space-y-4 h-full overflow-y-auto">
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-muted-foreground">New Homes for Sale</p>
             <Link
               to="/properties?homeType=Single family home"
-              className="block px-2 py-1.5 rounded-md text-sm font-medium nav-link"
+              className="block py-2 text-base font-medium nav-link"
             >
               Single family homes
             </Link>
             <Link
               to="/properties?homeType=Townhouse"
-              className="block px-2 py-1.5 rounded-md text-sm font-medium nav-link"
+              className="block py-2 text-base font-medium nav-link"
             >
               Townhomes
             </Link>
             <Link
               to="/properties?homeType=Condo"
-              className="block px-2 py-1.5 rounded-md text-sm font-medium nav-link"
+              className="block py-2 text-base font-medium nav-link"
             >
               Condos
             </Link>
             <Link
               to="/properties?quickMoveIn=true"
-              className="block px-2 py-1.5 rounded-md text-sm font-medium nav-link"
+              className="block py-2 text-base font-medium nav-link"
             >
               Quick move-in homes
             </Link>
           </div>
 
-          <Separator className="my-2" />
+          <Separator className="my-4" />
 
-          <div className="space-y-1">
-            <p className="text-xs font-medium text-muted-foreground px-2">Professionals</p>
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-muted-foreground">Professionals</p>
             <Link
               to="/contact?type=builder"
-              className="block px-2 py-1.5 rounded-md text-sm font-medium nav-link"
+              className="block py-2 text-base font-medium nav-link"
             >
               Builder advertising
             </Link>
             <Link
               to="/contact?type=agent"
-              className="block px-2 py-1.5 rounded-md text-sm font-medium nav-link"
+              className="block py-2 text-base font-medium nav-link"
             >
               Agent advertising
             </Link>
           </div>
 
-          <Separator className="my-2" />
+          <Separator className="my-4" />
 
           {user ? (
             <>
               <Link
                 to="/favorites"
-                className="flex items-center px-2 py-1.5 rounded-md text-sm font-medium nav-link"
+                className="flex items-center py-2 text-base font-medium nav-link"
               >
-                <Heart className="h-4 w-4 mr-2" />
+                <Heart className="h-5 w-5 mr-2" />
                 My Favorites
               </Link>
               {isAdmin && (
                 <>
                   <Link
                     to="/admin/properties"
-                    className="block px-2 py-1.5 rounded-md text-sm font-medium nav-link"
+                    className="block py-2 text-base font-medium nav-link"
                   >
                     Properties
                   </Link>
                   <Link
                     to="/admin/builders"
-                    className="block px-2 py-1.5 rounded-md text-sm font-medium nav-link"
+                    className="block py-2 text-base font-medium nav-link"
                   >
                     Builders
                   </Link>
                 </>
               )}
-              <Button className="w-full mt-3" onClick={() => signOut()}>
+              <Button className="w-full mt-4" onClick={() => signOut()}>
                 Sign Out
               </Button>
             </>
           ) : (
-            <div className="space-y-2 mt-3">
+            <div className="space-y-3 mt-4">
               <Link to="/signin" className="block">
                 <Button className="w-full">Sign In</Button>
               </Link>
               <Link to="/signup" className="block">
                 <Button className="w-full" variant="outline">
-                  <UserPlus className="h-4 w-4 mr-2" />
+                  <UserPlus className="h-5 w-5 mr-2" />
                   Sign Up
                 </Button>
               </Link>
