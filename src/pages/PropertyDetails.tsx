@@ -5,25 +5,15 @@ import { PropertyContactForm } from "@/components/properties/PropertyContactForm
 import { FloorplanCard } from "@/components/properties/FloorplanCard";
 import { ImageGallery } from "@/components/properties/ImageGallery";
 import { SimilarProperties } from "@/components/properties/SimilarProperties";
+import { PropertyNavigation } from "@/components/properties/details/PropertyNavigation";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { SEO } from "@/components/SEO";
-import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { toast } from "sonner";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Link } from "react-router-dom";
 
 const PropertyDetails = () => {
   const { id, slug } = useParams<{ id: string; slug: string }>();
@@ -133,41 +123,11 @@ const PropertyDetails = () => {
       <Navigation />
       
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <nav className="bg-white shadow-md rounded-lg px-6 py-4 mb-8">
-          <div className="flex justify-between items-center">
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <Link to="/">
-                    <BreadcrumbLink>Home</BreadcrumbLink>
-                  </Link>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <Link to="/properties">
-                    <BreadcrumbLink>Properties</BreadcrumbLink>
-                  </Link>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className="font-medium">{property.title}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="bg-white hover:bg-gray-50"
-              onClick={handleFavoriteClick}
-            >
-              <Heart
-                className={`h-6 w-6 ${
-                  isPropertyFavorite ? "fill-red-500 text-red-500" : "text-gray-500"
-                }`}
-              />
-            </Button>
-          </div>
-        </nav>
+        <PropertyNavigation
+          title={property.title}
+          isPropertyFavorite={isPropertyFavorite}
+          onFavoriteClick={handleFavoriteClick}
+        />
 
         <div className="space-y-8">
           <ImageGallery images={images} title={property.title} />
