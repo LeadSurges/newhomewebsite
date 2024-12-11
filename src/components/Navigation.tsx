@@ -33,12 +33,12 @@ export const Navigation = () => {
     setLogoError(true);
     // Only set placeholder if we weren't already trying to load it
     if (!e.currentTarget.src.includes('placeholder.svg')) {
-      e.currentTarget.src = `${import.meta.env.BASE_URL}placeholder.svg`;
+      e.currentTarget.src = "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=164&h=164&fit=crop&auto=format";
     }
   };
 
-  // Construct the logo URL once to avoid recreation
-  const logoUrl = `${import.meta.env.BASE_URL}lovable-uploads/1b178297-dbe3-4d30-8a57-e6448cb797dc.png`;
+  // Use an absolute URL for the logo
+  const logoUrl = "https://87dcb231-3db3-4071-8dcc-030dc518f406.lovableproject.com/lovable-uploads/1b178297-dbe3-4d30-8a57-e6448cb797dc.png";
   console.log("Navigation: Using logo URL:", logoUrl);
 
   return (
