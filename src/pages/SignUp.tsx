@@ -25,11 +25,11 @@ const SignUp = () => {
   return (
     <div className="min-h-screen bg-white">
       <Navigation />
-      <div className="flex flex-col items-center justify-center py-16 px-4">
-        <div className="w-full max-w-md space-y-6">
+      <div className="flex flex-col items-center justify-center px-4 min-h-[calc(100vh-64px)] py-20">
+        <div className="w-full max-w-md space-y-8">
           <div className="text-center">
-            <h1 className="text-3xl font-bold">Create an Account</h1>
-            <p className="text-muted-foreground mt-2">
+            <h1 className="text-4xl font-bold tracking-tight">Create an Account</h1>
+            <p className="mt-4 text-lg text-muted-foreground">
               Sign up to start exploring new homes
             </p>
           </div>
