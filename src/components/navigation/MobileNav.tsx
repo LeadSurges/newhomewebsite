@@ -27,117 +27,135 @@ export const MobileNav = ({ isOpen }: { isOpen: boolean }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="md:hidden fixed inset-0 w-full h-[100dvh]" style={{ zIndex: 9999 }}>
-      <div className="fixed inset-0 w-full h-full bg-white/95 backdrop-blur-sm">
-        <div className="h-full flex flex-col">
-          <div className="flex-1 overflow-y-auto">
-            <div className="py-4 px-6 space-y-3">
-              {/* Search */}
-              <Link 
-                to="/properties" 
-                className="flex items-center py-2 text-base font-medium nav-link"
-              >
-                <Search className="h-5 w-5 mr-2" />
-                Search Properties
-              </Link>
+    <div className="md:hidden fixed inset-0 w-full h-[100dvh] bg-white z-50">
+      <div className="flex flex-col h-full">
+        {/* Main Content Area - Scrollable */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-6 space-y-6">
+            {/* Search */}
+            <Link 
+              to="/properties" 
+              className="flex items-center py-3 text-base font-medium hover:text-accent"
+            >
+              <Search className="h-5 w-5 mr-3" />
+              Search Properties
+            </Link>
 
-              <Separator className="my-2" />
+            <Separator />
 
-              {/* New Homes for Sale Section */}
-              <div className="space-y-1.5">
-                <p className="text-sm font-medium text-muted-foreground">New Homes for Sale</p>
+            {/* New Homes for Sale Section */}
+            <div className="space-y-3">
+              <p className="text-sm font-semibold text-muted-foreground">New Homes for Sale</p>
+              <div className="space-y-2">
                 <Link
                   to="/properties?homeType=Single family home"
-                  className="block py-1.5 text-base font-medium nav-link"
+                  className="block py-2 text-base hover:text-accent"
                 >
                   Single family homes
                 </Link>
                 <Link
                   to="/properties?homeType=Townhouse"
-                  className="block py-1.5 text-base font-medium nav-link"
+                  className="block py-2 text-base hover:text-accent"
                 >
                   Townhomes
                 </Link>
                 <Link
                   to="/properties?homeType=Condo"
-                  className="block py-1.5 text-base font-medium nav-link"
+                  className="block py-2 text-base hover:text-accent"
                 >
                   Condos
                 </Link>
                 <Link
                   to="/properties?quickMoveIn=true"
-                  className="block py-1.5 text-base font-medium nav-link"
+                  className="block py-2 text-base hover:text-accent"
                 >
                   Quick move-in homes
                 </Link>
               </div>
+            </div>
 
-              <Separator className="my-2" />
+            <Separator />
 
-              {/* Professionals Section */}
-              <div className="space-y-1.5">
-                <p className="text-sm font-medium text-muted-foreground">Professionals</p>
+            {/* Professionals Section */}
+            <div className="space-y-3">
+              <p className="text-sm font-semibold text-muted-foreground">Professionals</p>
+              <div className="space-y-2">
                 <Link
                   to="/contact?type=builder"
-                  className="block py-1.5 text-base font-medium nav-link"
+                  className="block py-2 text-base hover:text-accent"
                 >
                   Builder advertising
                 </Link>
                 <Link
                   to="/contact?type=agent"
-                  className="block py-1.5 text-base font-medium nav-link"
+                  className="block py-2 text-base hover:text-accent"
                 >
                   Agent advertising
                 </Link>
               </div>
             </div>
-          </div>
 
-          {/* User Section - Fixed at bottom */}
-          <div className="px-6 py-4 border-t bg-white/50">
-            {user ? (
-              <div className="space-y-3">
-                <Link
-                  to="/favorites"
-                  className="flex items-center py-2 text-base font-medium nav-link"
-                >
-                  <Heart className="h-5 w-5 mr-2" />
-                  My Favorites
-                </Link>
-                {isAdmin && (
-                  <>
+            {user && (
+              <>
+                <Separator />
+                <div className="space-y-3">
+                  <p className="text-sm font-semibold text-muted-foreground">My Account</p>
+                  <div className="space-y-2">
                     <Link
-                      to="/admin/properties"
-                      className="block py-1.5 text-base font-medium nav-link"
+                      to="/favorites"
+                      className="flex items-center py-2 text-base hover:text-accent"
                     >
-                      Properties
+                      <Heart className="h-5 w-5 mr-3" />
+                      My Favorites
                     </Link>
-                    <Link
-                      to="/admin/builders"
-                      className="block py-1.5 text-base font-medium nav-link"
-                    >
-                      Builders
-                    </Link>
-                  </>
-                )}
-                <Button className="w-full" onClick={() => signOut()}>
-                  Sign Out
-                </Button>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                <Link to="/signin" className="block">
-                  <Button className="w-full">Sign In</Button>
-                </Link>
-                <Link to="/signup" className="block">
-                  <Button className="w-full" variant="outline">
-                    <UserPlus className="h-5 w-5 mr-2" />
-                    Sign Up
-                  </Button>
-                </Link>
-              </div>
+                    {isAdmin && (
+                      <>
+                        <Link
+                          to="/admin/properties"
+                          className="block py-2 text-base hover:text-accent"
+                        >
+                          Properties
+                        </Link>
+                        <Link
+                          to="/admin/builders"
+                          className="block py-2 text-base hover:text-accent"
+                        >
+                          Builders
+                        </Link>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </>
             )}
           </div>
+        </div>
+
+        {/* User Actions - Fixed at Bottom */}
+        <div className="p-6 border-t bg-gray-50">
+          {user ? (
+            <Button 
+              className="w-full" 
+              variant="default"
+              onClick={() => signOut()}
+            >
+              Sign Out
+            </Button>
+          ) : (
+            <div className="space-y-3">
+              <Link to="/signin" className="block">
+                <Button className="w-full" variant="default">
+                  Sign In
+                </Button>
+              </Link>
+              <Link to="/signup" className="block">
+                <Button className="w-full" variant="outline">
+                  <UserPlus className="h-5 w-5 mr-2" />
+                  Sign Up
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>
