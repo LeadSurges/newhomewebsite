@@ -5,6 +5,7 @@ import PropertyDetails from "@/pages/PropertyDetails";
 import SignIn from "@/pages/SignIn";
 import SignUp from "@/pages/SignUp";
 import Contact from "@/pages/Contact";
+import Privacy from "@/pages/Privacy";
 import Favorites from "@/pages/Favorites";
 import AdminProperties from "@/pages/admin/AdminProperties";
 import AdminBuilders from "@/pages/admin/AdminBuilders";
@@ -21,6 +22,7 @@ export const AppRoutes = () => {
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/privacy" element={<Privacy />} />
       <Route path="/favorites" element={<Favorites />} />
       <Route
         path="/admin/properties"
