@@ -4,6 +4,7 @@ import { PropertyMainInfo } from "@/components/properties/PropertyMainInfo";
 import { PropertyContactForm } from "@/components/properties/PropertyContactForm";
 import { FloorplanCard } from "@/components/properties/FloorplanCard";
 import { ImageGallery } from "@/components/properties/ImageGallery";
+import { SimilarProperties } from "@/components/properties/SimilarProperties";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -126,6 +127,11 @@ const PropertyDetails = () => {
                   </div>
                 </Card>
               )}
+
+              <SimilarProperties 
+                currentPropertyId={property.id} 
+                location={property.location}
+              />
             </div>
 
             <div className="lg:col-span-1">
