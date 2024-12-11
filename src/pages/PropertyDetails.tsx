@@ -16,14 +16,19 @@ import { useFavorites } from "@/contexts/FavoritesContext";
 import { toast } from "sonner";
 
 const PropertyDetails = () => {
-  const { id, slug } = useParams<{ id: string; slug: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { isFavorite, addFavorite, removeFavorite } = useFavorites();
 
+  // Extract the ID from the slug (it's the first part before the first hyphen)
+  const id = slug?.split('-')[0];
+
   const { data: property, isLoading } = useQuery({
     queryKey: ["property", id],
     queryFn: async () => {
+      if (!id) throw new Error("No property ID provided");
+      
       const { data, error } = await supabase
         .from("properties")
         .select("*, builders(name, id)")
@@ -32,19 +37,15 @@ const PropertyDetails = () => {
 
       if (error) throw error;
       
-      // Create URL-friendly slug from property title
-      const propertySlug = data.title
+      // Create URL-friendly slug from property title and ID
+      const propertySlug = `${id}-${data.title
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '');
+        .replace(/(^-|-$)/g, '')}`;
 
-      // If we're on the old URL format, redirect to the new one with the slug
-      if (!slug) {
-        navigate(`/properties/details/${id}/${propertySlug}`, { replace: true });
-      }
-      // If we have a slug but it's wrong, redirect to the correct one
-      else if (slug !== propertySlug) {
-        navigate(`/properties/details/${id}/${propertySlug}`, { replace: true });
+      // If we're on the wrong slug, redirect to the correct one
+      if (slug !== propertySlug) {
+        navigate(`/property/${propertySlug}`, { replace: true });
       }
 
       console.log("Fetched property:", data);
