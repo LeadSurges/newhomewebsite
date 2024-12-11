@@ -22,7 +22,7 @@ export const PropertyNavigation = ({
   onFavoriteClick,
 }: PropertyNavigationProps) => {
   return (
-    <nav className="bg-white/95 backdrop-blur-sm shadow-md rounded-lg px-6 py-4 mt-20">
+    <nav className="bg-white/95 backdrop-blur-sm shadow-md rounded-lg px-6 py-4 mt-16">
       <div className="flex justify-between items-center">
         <Breadcrumb>
           <BreadcrumbList>
