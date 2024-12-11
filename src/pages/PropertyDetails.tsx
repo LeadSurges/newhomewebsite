@@ -127,11 +127,6 @@ const PropertyDetails = () => {
                   </div>
                 </Card>
               )}
-
-              <SimilarProperties 
-                currentPropertyId={property.id} 
-                location={property.location}
-              />
             </div>
 
             <div className="lg:col-span-1">
@@ -140,6 +135,11 @@ const PropertyDetails = () => {
               </div>
             </div>
           </div>
+
+          <SimilarProperties 
+            currentPropertyId={property.id} 
+            location={property.location}
+          />
         </div>
       </main>
       
