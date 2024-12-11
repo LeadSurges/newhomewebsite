@@ -10,6 +10,11 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
 import { SEO } from "@/components/SEO";
+import { Button } from "@/components/ui/button";
+import { Heart } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import { toast } from "sonner";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -23,6 +28,8 @@ import { Link } from "react-router-dom";
 const PropertyDetails = () => {
   const { id, slug } = useParams<{ id: string; slug: string }>();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { isFavorite, addFavorite, removeFavorite } = useFavorites();
 
   const { data: property, isLoading } = useQuery({
     queryKey: ["property", id],
@@ -56,6 +63,31 @@ const PropertyDetails = () => {
     enabled: !!id,
   });
 
+  const handleFavoriteClick = async () => {
+    if (!user) {
+      toast.error("Please sign in to save favorites", {
+        action: {
+          label: "Sign up",
+          onClick: () => navigate("/signup")
+        }
+      });
+      return;
+    }
+
+    try {
+      if (isFavorite(property.id)) {
+        await removeFavorite(property.id);
+        toast.success("Removed from favorites");
+      } else {
+        await addFavorite(property.id);
+        toast.success("Added to favorites");
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      toast.error("Failed to update favorites");
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-secondary">
@@ -73,6 +105,8 @@ const PropertyDetails = () => {
     ...property,
     builder: property.builders,
   };
+
+  const isPropertyFavorite = isFavorite(property.id);
 
   return (
     <div className="min-h-screen bg-secondary">
@@ -100,25 +134,39 @@ const PropertyDetails = () => {
       
       <main className="max-w-7xl mx-auto px-4 py-8">
         <nav className="bg-white shadow-md rounded-lg px-6 py-4 mb-8">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <Link to="/">
-                  <BreadcrumbLink>Home</BreadcrumbLink>
-                </Link>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <Link to="/properties">
-                  <BreadcrumbLink>Properties</BreadcrumbLink>
-                </Link>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage className="font-medium">{property.title}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <div className="flex justify-between items-center">
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <Link to="/">
+                    <BreadcrumbLink>Home</BreadcrumbLink>
+                  </Link>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <Link to="/properties">
+                    <BreadcrumbLink>Properties</BreadcrumbLink>
+                  </Link>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbItem>
+                  <BreadcrumbPage className="font-medium">{property.title}</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="bg-white hover:bg-gray-50"
+              onClick={handleFavoriteClick}
+            >
+              <Heart
+                className={`h-6 w-6 ${
+                  isPropertyFavorite ? "fill-red-500 text-red-500" : "text-gray-500"
+                }`}
+              />
+            </Button>
+          </div>
         </nav>
 
         <div className="space-y-8">
