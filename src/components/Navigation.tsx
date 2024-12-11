@@ -7,6 +7,8 @@ import { MobileMenuButton } from "./navigation/MobileMenuButton";
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const handleClose = () => setIsOpen(false);
+
   return (
     <nav className="fixed w-full bg-white/80 backdrop-blur-lg z-50 border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,7 +27,7 @@ export const Navigation = () => {
         </div>
       </div>
 
-      <MobileNav isOpen={isOpen} />
+      <MobileNav isOpen={isOpen} onClose={handleClose} />
     </nav>
   );
 };
