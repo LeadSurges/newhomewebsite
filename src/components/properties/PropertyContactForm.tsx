@@ -23,15 +23,21 @@ export const PropertyContactForm = ({ propertyTitle }: PropertyContactFormProps)
     setIsLoading(true);
 
     try {
-      const { error } = await supabase.functions.invoke('contact', {
+      const emailContent = `
+        <h2>Property Inquiry: ${propertyTitle}</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Message:</strong> ${message}</p>
+        <p><strong>Property:</strong> ${propertyTitle}</p>
+      `;
+
+      const { error } = await supabase.functions.invoke('send-email', {
         body: {
-          name,
-          email,
-          phone,
-          message,
-          type: "property",
-          propertyTitle,
           to: "officialleadsurge@gmail.com",
+          subject: `Property Inquiry: ${propertyTitle}`,
+          html: emailContent,
+          replyTo: email
         },
       });
 

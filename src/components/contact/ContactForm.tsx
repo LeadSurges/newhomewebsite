@@ -18,14 +18,21 @@ export const ContactForm = ({ type }: { type: "builder" | "agent" }) => {
     setIsLoading(true);
 
     try {
-      const { error } = await supabase.functions.invoke('contact', {
+      const emailContent = `
+        <h2>New ${type} Inquiry</h2>
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Phone:</strong> ${phone}</p>
+        <p><strong>Message:</strong> ${message}</p>
+        <p><strong>Type:</strong> ${type}</p>
+      `;
+
+      const { error } = await supabase.functions.invoke('send-email', {
         body: {
-          name,
-          email,
-          phone,
-          message,
-          type,
-          to: "officialleadsurge@gmail.com"
+          to: "officialleadsurge@gmail.com",
+          subject: `New ${type} Inquiry from ${name}`,
+          html: emailContent,
+          replyTo: email
         },
       });
 
