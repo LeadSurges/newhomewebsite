@@ -76,7 +76,7 @@ export const PropertyCard = ({ property, size = "default" }: PropertyCardProps) 
   );
 
   return (
-    <Link to={`/properties/${property.id}`} className="block">
+    <Link to={`/properties/details/${property.id}`} className="block">
       <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
         <div className={cn(
           "relative overflow-hidden",
