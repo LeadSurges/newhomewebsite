@@ -75,8 +75,8 @@ const PropertyDetails = () => {
       
       <Navigation />
       
-      <main className="max-w-7xl mx-auto px-4 py-8 space-y-8">
-        <nav className="bg-white shadow-sm rounded-lg px-4 py-3">
+      <main className="max-w-7xl mx-auto px-4 py-8">
+        <nav className="bg-white shadow-md rounded-lg px-6 py-4 mb-8">
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -92,39 +92,41 @@ const PropertyDetails = () => {
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>{property.title}</BreadcrumbPage>
+                <BreadcrumbPage className="font-medium">{property.title}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
         </nav>
 
-        <ImageGallery images={images} title={property.title} />
+        <div className="space-y-8">
+          <ImageGallery images={images} title={property.title} />
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-8">
-            <PropertyMainInfo {...propertyMainInfo} />
+          <div className="grid lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-8">
+              <PropertyMainInfo {...propertyMainInfo} />
 
-            {property.floorplan_url && (
-              <Card className="p-6">
-                <h2 className="text-xl font-semibold mb-6">Floor Plans</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                  <FloorplanCard
-                    name={property.title}
-                    price={property.price}
-                    bedrooms={property.bedrooms}
-                    bathrooms={property.bathrooms}
-                    squareFeet={property.square_feet}
-                    imageUrl={property.floorplan_url}
-                    status={property.floorplan_status}
-                  />
-                </div>
-              </Card>
-            )}
-          </div>
+              {property.floorplan_url && (
+                <Card className="p-6">
+                  <h2 className="text-xl font-semibold mb-6">Floor Plans</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                    <FloorplanCard
+                      name={property.title}
+                      price={property.price}
+                      bedrooms={property.bedrooms}
+                      bathrooms={property.bathrooms}
+                      squareFeet={property.square_feet}
+                      imageUrl={property.floorplan_url}
+                      status={property.floorplan_status}
+                    />
+                  </div>
+                </Card>
+              )}
+            </div>
 
-          <div className="lg:col-span-1">
-            <div className="sticky top-8">
-              <PropertyContactForm propertyTitle={property.title} />
+            <div className="lg:col-span-1">
+              <div className="sticky top-8">
+                <PropertyContactForm propertyTitle={property.title} />
+              </div>
             </div>
           </div>
         </div>
