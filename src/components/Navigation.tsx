@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { DesktopNav } from "./navigation/DesktopNav";
 import { MobileNav } from "./navigation/MobileNav";
@@ -9,6 +9,16 @@ export const Navigation = () => {
   const [logoError, setLogoError] = useState(false);
   
   console.log("Navigation: Initializing with BASE_URL:", import.meta.env.BASE_URL);
+
+  // Construct the logo URL once to avoid recreation
+  const logoUrl = `${import.meta.env.BASE_URL}lovable-uploads/6aa90a5f-0335-4b6a-b93e-73302bad62c9.png`;
+
+  // Preload the image
+  useEffect(() => {
+    const img = new Image();
+    img.src = logoUrl;
+    console.log("Navigation: Preloading logo image");
+  }, [logoUrl]);
 
   const handleClose = () => setIsOpen(false);
 
@@ -37,10 +47,6 @@ export const Navigation = () => {
     }
   };
 
-  // Construct the logo URL once to avoid recreation
-  const logoUrl = `${import.meta.env.BASE_URL}lovable-uploads/6aa90a5f-0335-4b6a-b93e-73302bad62c9.png`;
-  console.log("Navigation: Using logo URL:", logoUrl);
-
   return (
     <nav className="fixed w-full bg-[#ffffff] backdrop-blur-lg z-50 border-b">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -53,6 +59,8 @@ export const Navigation = () => {
                 className={`h-12 w-auto transition-opacity duration-200 ${
                   logoError ? 'opacity-50' : 'opacity-100'
                 }`}
+                loading="eager"
+                decoding="async"
                 onLoad={handleImageLoad}
                 onError={handleImageError}
               />
