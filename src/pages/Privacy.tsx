@@ -11,7 +11,7 @@ const Privacy = () => {
       />
       <Navigation />
       
-      <main className="max-w-4xl mx-auto px-4 py-12">
+      <main className="max-w-4xl mx-auto px-4 pt-24 pb-12">
         <h1 className="text-3xl font-bold mb-8">Privacy Policy for LuxuryHomes</h1>
         <div className="prose prose-slate max-w-none">
           <p className="text-muted-foreground mb-4">Effective Date: December 11th, 2024</p>

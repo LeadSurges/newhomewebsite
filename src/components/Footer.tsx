@@ -31,9 +31,6 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
             <div className="space-y-2">
-              <Link to="/contact" className="block text-muted-foreground hover:text-foreground">
-                Contact Us
-              </Link>
               <Link to="/privacy" className="block text-muted-foreground hover:text-foreground">
                 Privacy Policy
               </Link>
@@ -41,6 +38,7 @@ const Footer = () => {
           </div>
           
           <div>
+            <h3 className="text-lg font-semibold mb-4">About Us</h3>
             <p className="text-muted-foreground">
               LuxuryHomes is your trusted partner in finding the perfect new construction home. We connect homebuyers with top builders across Ontario.
             </p>
