@@ -107,7 +107,11 @@ export const PropertyContactForm = ({ propertyTitle }: PropertyContactFormProps)
               className="min-h-[100px]"
             />
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button 
+            type="submit" 
+            className="w-full bg-accent hover:bg-accent/90 text-white" 
+            disabled={isLoading}
+          >
             {isLoading ? "Sending..." : "Request Information"}
           </Button>
         </form>
