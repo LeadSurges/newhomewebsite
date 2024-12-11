@@ -33,7 +33,7 @@ serve(async (req) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'LuxuryHomes <no-reply@resend.dev>',
+        from: 'LuxuryHomes <no-reply@thenewhomesource.com>',
         to: [to],
         subject,
         html,
