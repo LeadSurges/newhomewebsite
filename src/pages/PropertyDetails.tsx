@@ -27,7 +27,9 @@ const PropertyDetails = () => {
   const { data: property, isLoading } = useQuery({
     queryKey: ["property", id],
     queryFn: async () => {
-      if (!id) throw new Error("No property ID provided");
+      if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
+        throw new Error("Invalid property ID");
+      }
       
       const { data, error } = await supabase
         .from("properties")
