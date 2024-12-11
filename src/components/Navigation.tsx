@@ -16,9 +16,9 @@ export const Navigation = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <img 
-                src="/lovable-uploads/80c8d194-9451-48a8-8664-f0244d009219.png" 
+                src="/logo.png" 
                 alt="The New Home Source" 
-                className="h-12 md:h-14 w-auto max-w-[260px] md:max-w-[280px] object-contain" // Increased max-width and added object-contain
+                className="h-12 md:h-14 w-auto max-w-[260px] md:max-w-[280px] object-contain"
               />
             </Link>
           </div>
