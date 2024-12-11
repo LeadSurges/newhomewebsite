@@ -27,8 +27,8 @@ export const MobileNav = ({ isOpen }: { isOpen: boolean }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="md:hidden">
-      <div className="fixed inset-0 z-[100] bg-white/95 backdrop-blur-sm overflow-y-auto">
+    <div className="md:hidden fixed inset-0" style={{ zIndex: 9999 }}>
+      <div className="fixed inset-0 bg-white/95 backdrop-blur-sm overflow-y-auto">
         <div className="py-4 space-y-2 px-4">
           <div className="space-y-1">
             <p className="text-xs font-medium text-muted-foreground px-2">New Homes for Sale</p>
