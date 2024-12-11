@@ -74,9 +74,9 @@ export const PropertyMainInfo = ({
             </div>
           )}
           
-          <div className="text-2xl sm:text-3xl font-bold text-primary">
+          <div className="text-xl font-semibold text-primary">
             <div className="flex items-center">
-              <DollarSign className="h-6 w-6 sm:h-7 sm:w-7 mr-1" />
+              <DollarSign className="h-5 w-5 mr-1" />
               From ${price?.toLocaleString()}
             </div>
           </div>
