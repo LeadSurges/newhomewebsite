@@ -31,7 +31,7 @@ export const OntarioLocations = () => {
             <Link
               key={location.id}
               to={`/properties?location=${encodeURIComponent(location.name)}`}
-              className="p-4 text-center hover:bg-accent rounded-lg transition-colors"
+              className="p-4 text-center transition-transform duration-300 hover:scale-105 rounded-lg"
             >
               <div className="font-medium">New Homes {location.name}</div>
             </Link>
