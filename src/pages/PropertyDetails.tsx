@@ -27,8 +27,9 @@ const PropertyDetails = () => {
   const { data: property, isLoading } = useQuery({
     queryKey: ["property", id],
     queryFn: async () => {
-      if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)) {
-        throw new Error("Invalid property ID");
+      if (!id) {
+        console.error("No property ID provided");
+        throw new Error("No property ID provided");
       }
       
       const { data, error } = await supabase
@@ -37,24 +38,51 @@ const PropertyDetails = () => {
         .eq("id", id)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching property:", error);
+        throw error;
+      }
       
-      // Create URL-friendly slug from property title and ID
-      const propertySlug = `${id}-${data.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '')}`;
-
-      // If we're on the wrong slug, redirect to the correct one
-      if (slug !== propertySlug) {
-        navigate(`/property/${propertySlug}`, { replace: true });
+      if (!data) {
+        console.error("Property not found");
+        throw new Error("Property not found");
       }
 
       console.log("Fetched property:", data);
       return data;
     },
-    enabled: !!id,
+    retry: false,
   });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-secondary">
+        <Navigation />
+        <div className="max-w-7xl mx-auto px-4 py-8">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!property) {
+    return (
+      <div className="min-h-screen bg-secondary">
+        <Navigation />
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <h1 className="text-2xl font-bold">Property not found</h1>
+          <p className="mt-4">The property you're looking for could not be found.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const images = property.image_url ? property.image_url.split(',') : ['/placeholder.svg'];
+
+  const propertyMainInfo = {
+    ...property,
+    builder: property.builders,
+  };
+
+  const isPropertyFavorite = isFavorite(property.id);
 
   const handleFavoriteClick = async () => {
     if (!user) {
@@ -68,38 +96,16 @@ const PropertyDetails = () => {
     }
 
     try {
-      if (isFavorite(property.id)) {
+      if (isPropertyFavorite) {
         await removeFavorite(property.id);
-        toast.success("Removed from favorites");
       } else {
         await addFavorite(property.id);
-        toast.success("Added to favorites");
       }
     } catch (error) {
       console.error("Error toggling favorite:", error);
       toast.error("Failed to update favorites");
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-secondary">
-        <Navigation />
-        <div className="max-w-7xl mx-auto px-4 py-8">Loading...</div>
-      </div>
-    );
-  }
-
-  if (!property) return null;
-
-  const images = property.image_url ? property.image_url.split(',') : ['/placeholder.svg'];
-
-  const propertyMainInfo = {
-    ...property,
-    builder: property.builders,
-  };
-
-  const isPropertyFavorite = isFavorite(property.id);
 
   return (
     <div className="min-h-screen bg-secondary">
@@ -119,7 +125,7 @@ const PropertyDetails = () => {
         breadcrumbs={[
           { name: "Home", item: "/" },
           { name: "Properties", item: "/properties" },
-          { name: property.title, item: `/properties/details/${id}/${slug}` }
+          { name: property.title, item: `/property/${slug}` }
         ]}
       />
       
