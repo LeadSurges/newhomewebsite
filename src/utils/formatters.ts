@@ -5,3 +5,11 @@ export const generatePropertyUrl = (id: string, title: string) => {
     .replace(/(^-|-$)/g, '');
   return `/properties/details/${id}/${slug}`;
 };
+
+export const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(price);
+};

@@ -7,62 +7,53 @@ import { PriceDisplay } from "./card/PriceDisplay";
 import { BuilderInfo } from "./card/BuilderInfo";
 import { FavoriteButton } from "./card/FavoriteButton";
 import { generatePropertyUrl } from "@/utils/formatters";
+import type { Property } from "@/types/property";
 
 interface PropertyCardProps {
-  id: string;
-  title: string;
-  location: string;
-  price: number;
-  bedrooms?: number;
-  bathrooms?: number;
-  square_feet?: number;
-  image_url?: string;
-  featured?: boolean;
-  builder?: {
-    id: string;
-    name: string;
-  };
+  property: Property;
+  size?: "default" | "small";
   className?: string;
 }
 
 export const PropertyCard = ({
-  id,
-  title,
-  location,
-  price,
-  bedrooms,
-  bathrooms,
-  square_feet,
-  image_url,
-  featured,
-  builder,
+  property,
+  size = "default",
   className = "",
 }: PropertyCardProps) => {
-  const propertyUrl = generatePropertyUrl(id, title);
+  const propertyUrl = generatePropertyUrl(property.id, property.title);
 
   return (
     <Card className={`group overflow-hidden ${className}`}>
       <Link to={propertyUrl} className="block">
-        <PropertyImage imageUrl={image_url} title={title} featured={featured} />
+        <PropertyImage 
+          imageUrl={property.image_url} 
+          title={property.title} 
+          size={size}
+          featured={property.featured}
+        />
       </Link>
 
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
           <Link to={propertyUrl} className="block flex-grow">
-            <PropertyTitle title={title} location={location} />
+            <PropertyTitle 
+              title={property.title} 
+              location={property.location}
+              size={size} 
+            />
           </Link>
-          <FavoriteButton propertyId={id} />
+          <FavoriteButton propertyId={property.id} />
         </div>
 
-        <PriceDisplay price={price} />
+        <PriceDisplay price={property.price} size={size} />
         
         <PropertyStats
-          bedrooms={bedrooms}
-          bathrooms={bathrooms}
-          square_feet={square_feet}
+          bedroomsDisplay={property.bedrooms?.toString()}
+          bathroomsDisplay={property.bathrooms?.toString()}
+          squareFeetDisplay={property.square_feet?.toString()}
         />
 
-        {builder && <BuilderInfo builder={builder} />}
+        {property.builders && <BuilderInfo builder={property.builders} />}
       </div>
     </Card>
   );
