@@ -169,12 +169,12 @@ export const MobileNav = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =>
           ) : (
             <div className="space-y-3">
               <Link to="/signin" className="block" onClick={onClose}>
-                <Button className="w-full" variant="default">
+                <Button className="w-full" variant="outline">
                   Sign In
                 </Button>
               </Link>
               <Link to="/signup" className="block" onClick={onClose}>
-                <Button className="w-full" variant="outline">
+                <Button className="w-full bg-accent hover:bg-accent/90">
                   <UserPlus className="h-5 w-5 mr-2" />
                   Sign Up
                 </Button>

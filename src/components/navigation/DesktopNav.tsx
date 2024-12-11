@@ -115,7 +115,7 @@ export const DesktopNav = () => {
             </Button>
           </Link>
           <Link to="/signup">
-            <Button>
+            <Button className="bg-accent hover:bg-accent/90">
               <UserPlus className="h-5 w-5 mr-2" />
               Sign Up
             </Button>
