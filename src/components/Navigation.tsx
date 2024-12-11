@@ -13,7 +13,8 @@ export const Navigation = () => {
   const handleImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     console.log("Navigation: Logo loaded successfully", {
       naturalWidth: e.currentTarget.naturalWidth,
-      naturalHeight: e.currentTarget.naturalHeight
+      naturalHeight: e.currentTarget.naturalHeight,
+      src: e.currentTarget.src
     });
   };
 
@@ -24,13 +25,13 @@ export const Navigation = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <img 
-                src="/lovable-uploads/1b178297-dbe3-4d30-8a57-e6448cb797dc.png"
+                src={import.meta.env.BASE_URL + "lovable-uploads/1b178297-dbe3-4d30-8a57-e6448cb797dc.png"}
                 alt="The New Home Source" 
                 className="h-8 w-auto"
                 onLoad={handleImageLoad}
                 onError={(e) => {
-                  console.error("Navigation: Failed to load logo image");
-                  e.currentTarget.src = "/placeholder.svg";
+                  console.error("Navigation: Failed to load logo image", e.currentTarget.src);
+                  e.currentTarget.src = import.meta.env.BASE_URL + "placeholder.svg";
                 }}
               />
             </Link>
