@@ -6,6 +6,7 @@ import { MobileMenuButton } from "./navigation/MobileMenuButton";
 
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  console.log("Navigation: Rendering navigation component");
 
   const handleClose = () => setIsOpen(false);
 
@@ -18,7 +19,11 @@ export const Navigation = () => {
               <img 
                 src="/lovable-uploads/4143fa04-b61c-472f-93a9-1e04c5c3c2ba.png" 
                 alt="The New Home Source" 
-                className="h-12 md:h-14 w-auto max-w-[260px] md:max-w-[280px] object-contain"
+                className="h-8 w-auto"
+                onError={(e) => {
+                  console.error("Navigation: Failed to load logo image");
+                  e.currentTarget.src = "/placeholder.svg";
+                }}
               />
             </Link>
           </div>
