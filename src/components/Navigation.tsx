@@ -38,7 +38,7 @@ export const Navigation = () => {
   };
 
   // Construct the logo URL once to avoid recreation
-  const logoUrl = `${import.meta.env.BASE_URL}lovable-uploads/1b178297-dbe3-4d30-8a57-e6448cb797dc.png`;
+  const logoUrl = `${import.meta.env.BASE_URL}lovable-uploads/6aa90a5f-0335-4b6a-b93e-73302bad62c9.png`;
   console.log("Navigation: Using logo URL:", logoUrl);
 
   return (
