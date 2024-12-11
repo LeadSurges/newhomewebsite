@@ -17,7 +17,7 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact Us</h3>
             <div className="space-y-2 text-muted-foreground">
-              <p>Email: info@luxuryhomes.com</p>
+              <p>Get in touch with us for any questions or inquiries.</p>
             </div>
           </div>
           

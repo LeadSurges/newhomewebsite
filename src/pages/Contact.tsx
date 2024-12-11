@@ -1,6 +1,7 @@
 import { Navigation } from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { ContactForm } from "@/components/contact/ContactForm";
+import { GeneralContactForm } from "@/components/contact/GeneralContactForm";
 import { useSearchParams } from "react-router-dom";
 
 const Contact = () => {
@@ -14,13 +15,7 @@ const Contact = () => {
         {type ? (
           <ContactForm type={type} />
         ) : (
-          <>
-            <h1 className="text-3xl font-bold mb-4">Contact Us</h1>
-            <p className="text-lg text-muted-foreground mb-6">
-              We would love to hear from you! Please reach out with any questions or comments.
-            </p>
-            <ContactForm type="builder" />
-          </>
+          <GeneralContactForm />
         )}
       </div>
       <Footer />
