@@ -4,21 +4,17 @@ import { DesktopNav } from "./navigation/DesktopNav";
 import { MobileNav } from "./navigation/MobileNav";
 import { MobileMenuButton } from "./navigation/MobileMenuButton";
 
+// Preload the image immediately when the file is loaded
+const logoUrl = `${import.meta.env.BASE_URL}lovable-uploads/6aa90a5f-0335-4b6a-b93e-73302bad62c9.png`;
+const preloadImage = new Image();
+preloadImage.src = logoUrl;
+console.log("Navigation: Started preloading logo image");
+
 export const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [logoError, setLogoError] = useState(false);
   
   console.log("Navigation: Initializing with BASE_URL:", import.meta.env.BASE_URL);
-
-  // Construct the logo URL once to avoid recreation
-  const logoUrl = `${import.meta.env.BASE_URL}lovable-uploads/6aa90a5f-0335-4b6a-b93e-73302bad62c9.png`;
-
-  // Preload the image
-  useEffect(() => {
-    const img = new Image();
-    img.src = logoUrl;
-    console.log("Navigation: Preloading logo image");
-  }, [logoUrl]);
 
   const handleClose = () => setIsOpen(false);
 
@@ -61,6 +57,7 @@ export const Navigation = () => {
                 }`}
                 loading="eager"
                 decoding="async"
+                fetchpriority="high"
                 onLoad={handleImageLoad}
                 onError={handleImageError}
               />
