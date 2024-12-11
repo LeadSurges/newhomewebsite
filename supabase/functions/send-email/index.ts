@@ -24,6 +24,7 @@ serve(async (req) => {
 
     console.log('Sending email to:', to)
     console.log('Subject:', subject)
+    console.log('Reply-To:', replyTo)
 
     const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -32,7 +33,7 @@ serve(async (req) => {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'LuxuryHomes <no-reply@yourdomain.com>',
+        from: 'LuxuryHomes <no-reply@yourdomain.com>', // Replace yourdomain.com with your verified domain
         to: [to],
         subject,
         html,
@@ -43,9 +44,13 @@ serve(async (req) => {
     const data = await res.json()
     console.log('Resend API response:', data)
 
+    if (!res.ok) {
+      throw new Error(data.message || 'Failed to send email')
+    }
+
     return new Response(JSON.stringify(data), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: res.ok ? 200 : 400
+      status: 200
     })
   } catch (error) {
     console.error('Error sending email:', error)
