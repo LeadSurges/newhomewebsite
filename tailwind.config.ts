@@ -1,4 +1,7 @@
 import type { Config } from "tailwindcss";
+import { colors } from "./src/theme/colors";
+import { keyframes, animations } from "./src/theme/animations";
+import { backgroundImage } from "./src/theme/gradients";
 
 export default {
   darkMode: ["class"],
@@ -18,84 +21,15 @@ export default {
       },
     },
     extend: {
-      colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "#1A1F2C",
-          foreground: "#FFFFFF",
-          accent: "#004aad",
-        },
-        secondary: {
-          DEFAULT: "#F6F6F7",
-          foreground: "#1A1F2C",
-          accent: "#e2d1c3",
-        },
-        accent: {
-          DEFAULT: "#004aad",
-          foreground: "#FFFFFF",
-          muted: "#E8F1FF",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        muted: {
-          DEFAULT: "#F1F0FB",
-          foreground: "#666666",
-        },
-        card: {
-          DEFAULT: "rgba(255, 255, 255, 0.8)",
-          foreground: "#1A1F2C",
-        },
-      },
+      colors,
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      keyframes: {
-        "fade-up": {
-          "0%": {
-            opacity: "0",
-            transform: "translateY(10px)",
-          },
-          "100%": {
-            opacity: "1",
-            transform: "translateY(0)",
-          },
-        },
-        "fade-in": {
-          "0%": {
-            opacity: "0",
-          },
-          "100%": {
-            opacity: "1",
-          },
-        },
-        "scale-in": {
-          "0%": {
-            transform: "scale(0.95)",
-            opacity: "0",
-          },
-          "100%": {
-            transform: "scale(1)",
-            opacity: "1",
-          },
-        },
-      },
-      animation: {
-        "fade-up": "fade-up 0.5s ease-out",
-        "fade-in": "fade-in 0.3s ease-out",
-        "scale-in": "scale-in 0.2s ease-out",
-      },
-      backgroundImage: {
-        'gradient-primary': 'linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)',
-        'gradient-accent': 'linear-gradient(90deg, hsla(277, 75%, 84%, 1) 0%, hsla(297, 50%, 51%, 1) 100%)',
-      },
+      keyframes,
+      animation: animations,
+      backgroundImage,
     },
   },
   plugins: [require("tailwindcss-animate")],
