@@ -5,14 +5,15 @@ import { SEO } from "@/components/SEO";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { PropertiesList } from "@/components/properties/PropertiesList";
 import { PropertiesHeader } from "@/components/properties/PropertiesHeader";
 
 const Properties = () => {
+  const { location: urlLocation } = useParams();
   const [searchParams] = useSearchParams();
   const [filters, setFilters] = useState({
-    location: searchParams.get("location") || "",
+    location: urlLocation || searchParams.get("location") || "",
     priceRange: [0, 5000000],
     bedroomRange: [1, 7],
     bathroomRange: [1, 5],
@@ -29,22 +30,22 @@ const Properties = () => {
 
   const [showMap, setShowMap] = useState(true);
 
-  // Handle URL parameters
+  // Handle URL parameters and path location
   useEffect(() => {
-    const location = searchParams.get("location");
+    const locationFromUrl = urlLocation || searchParams.get("location");
     const homeType = searchParams.get("homeType");
     const quickMoveIn = searchParams.get("quickMoveIn") === "true";
 
-    if (location || homeType || quickMoveIn) {
-      console.log("URL params changed, updating filters with location:", location);
+    if (locationFromUrl || homeType || quickMoveIn) {
+      console.log("URL params/path changed, updating filters with location:", locationFromUrl);
       setFilters(prev => ({
         ...prev,
-        location: location || prev.location,
+        location: locationFromUrl || prev.location,
         homeType: homeType || prev.homeType,
         quickMoveIn: quickMoveIn
       }));
     }
-  }, [searchParams]);
+  }, [urlLocation, searchParams]);
 
   const { data: properties, isLoading } = useQuery({
     queryKey: ["properties", filters],
@@ -146,15 +147,29 @@ const Properties = () => {
   };
 
   const handlePropertyClick = (propertyId: string) => {
-    window.location.href = `/properties/${propertyId}`;
+    window.location.href = `/properties/details/${propertyId}`;
   };
+
+  // Generate breadcrumbs for SEO
+  const breadcrumbs = [
+    { name: "Home", item: "/" },
+    { name: "Properties", item: "/properties" },
+  ];
+
+  if (filters.location) {
+    breadcrumbs.push({
+      name: `New Homes in ${filters.location}`,
+      item: `/properties/${filters.location.toLowerCase()}`
+    });
+  }
 
   return (
     <div className="min-h-screen bg-secondary">
       <SEO 
-        title={`${filters.location || 'All'} Properties | LuxuryHomes`}
+        title={`${filters.location ? `New Homes in ${filters.location}` : 'All Properties'} | LuxuryHomes`}
         description={`Browse our collection of luxury properties and new construction homes in ${filters.location || 'all locations'}. Find your perfect home today.`}
         keywords={`luxury properties, new homes, real estate listings, premium real estate, ${filters.location}`}
+        breadcrumbs={breadcrumbs}
       />
       <Navigation />
       
