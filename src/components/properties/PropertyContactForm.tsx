@@ -35,7 +35,7 @@ export const PropertyContactForm = ({ propertyTitle }: PropertyContactFormProps)
       const { error } = await supabase.functions.invoke('send-email', {
         body: {
           to: "officialleadsurge@gmail.com",
-          subject: `Property Inquiry: ${propertyTitle}`,
+          subject: `Property Inquiry for ${propertyTitle}`,
           html: emailContent,
           replyTo: email
         },
