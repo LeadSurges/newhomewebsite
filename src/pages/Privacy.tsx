@@ -6,18 +6,18 @@ const Privacy = () => {
   return (
     <div className="min-h-screen bg-background">
       <SEO 
-        title="Privacy Policy | LuxuryHomes"
+        title="Privacy Policy | The New Home Source"
         description="Read our privacy policy to understand how we collect, use, and protect your personal information."
       />
       <Navigation />
       
       <main className="max-w-4xl mx-auto px-4 pt-24 pb-12">
-        <h1 className="text-3xl font-bold mb-8">Privacy Policy for LuxuryHomes</h1>
+        <h1 className="text-3xl font-bold mb-8">Privacy Policy for The New Home Source</h1>
         <div className="prose prose-slate max-w-none">
           <p className="text-muted-foreground mb-4">Effective Date: December 11th, 2024</p>
           
           <p className="mb-6">
-            LuxuryHomes ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website. Please read this policy carefully to understand our practices regarding your personal information.
+            The New Home Source ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website. Please read this policy carefully to understand our practices regarding your personal information.
           </p>
 
           <h2 className="text-2xl font-semibold mt-8 mb-4">1. Information We Collect</h2>
@@ -99,7 +99,7 @@ const Privacy = () => {
           <h2 className="text-2xl font-semibold mt-8 mb-4">9. Contact Us</h2>
           <p>If you have any questions about this Privacy Policy, please contact us from our contact us page.</p>
 
-          <p className="mt-8">Thank you for visiting LuxuryHomes. Your privacy is important to us.</p>
+          <p className="mt-8">Thank you for visiting The New Home Source. Your privacy is important to us.</p>
         </div>
       </main>
       
