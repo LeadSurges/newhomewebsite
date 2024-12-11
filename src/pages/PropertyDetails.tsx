@@ -5,7 +5,7 @@ import { PropertyContactForm } from "@/components/properties/PropertyContactForm
 import { FloorplanCard } from "@/components/properties/FloorplanCard";
 import { ImageGallery } from "@/components/properties/ImageGallery";
 import { SimilarProperties } from "@/components/properties/SimilarProperties";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/ui/card";
@@ -21,7 +21,8 @@ import {
 import { Link } from "react-router-dom";
 
 const PropertyDetails = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id, slug } = useParams<{ id: string; slug: string }>();
+  const navigate = useNavigate();
 
   const { data: property, isLoading } = useQuery({
     queryKey: ["property", id],
@@ -33,6 +34,22 @@ const PropertyDetails = () => {
         .single();
 
       if (error) throw error;
+      
+      // Create URL-friendly slug from property title
+      const propertySlug = data.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
+
+      // If we're on the old URL format, redirect to the new one with the slug
+      if (!slug) {
+        navigate(`/properties/details/${id}/${propertySlug}`, { replace: true });
+      }
+      // If we have a slug but it's wrong, redirect to the correct one
+      else if (slug !== propertySlug) {
+        navigate(`/properties/details/${id}/${propertySlug}`, { replace: true });
+      }
+
       console.log("Fetched property:", data);
       return data;
     },
@@ -75,7 +92,7 @@ const PropertyDetails = () => {
         breadcrumbs={[
           { name: "Home", item: "/" },
           { name: "Properties", item: "/properties" },
-          { name: property.title, item: `/properties/${property.id}` }
+          { name: property.title, item: `/properties/details/${id}/${slug}` }
         ]}
       />
       
