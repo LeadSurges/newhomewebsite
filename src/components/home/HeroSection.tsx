@@ -22,7 +22,7 @@ export const HeroSection = () => {
       return;
     }
 
-    navigate(`/properties?location=${encodeURIComponent(searchQuery.trim())}`);
+    navigate(`/properties/${encodeURIComponent(searchQuery.trim().toLowerCase())}`);
   };
 
   const handleClear = () => {

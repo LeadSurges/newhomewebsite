@@ -30,7 +30,7 @@ export const OntarioLocations = () => {
           {locations.map((location) => (
             <Link
               key={location.id}
-              to={`/properties?location=${encodeURIComponent(location.name)}`}
+              to={`/properties/${encodeURIComponent(location.name.toLowerCase())}`}
               className="p-4 text-center transition-transform duration-300 hover:scale-105 rounded-lg"
             >
               <div className="font-medium">New Homes {location.name}</div>
