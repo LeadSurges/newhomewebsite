@@ -71,6 +71,11 @@ const PropertyDetails = () => {
           squareFeet: property.square_feet,
           location: property.location,
         }}
+        breadcrumbs={[
+          { name: "Home", item: "/" },
+          { name: "Properties", item: "/properties" },
+          { name: property.title, item: `/properties/${property.id}` }
+        ]}
       />
       
       <Navigation />

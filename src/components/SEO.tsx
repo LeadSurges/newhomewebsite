@@ -14,6 +14,10 @@ interface SEOProps {
     squareFeet?: number;
     location?: string;
   };
+  breadcrumbs?: Array<{
+    name: string;
+    item: string;
+  }>;
 }
 
 export const SEO = ({
@@ -24,6 +28,7 @@ export const SEO = ({
   url = window.location.href,
   type = "website",
   propertyData,
+  breadcrumbs,
 }: SEOProps) => {
   const siteUrl = window.location.origin;
   const canonicalUrl = url.split('?')[0]; // Remove query parameters for canonical URL
@@ -35,6 +40,22 @@ export const SEO = ({
       "@type": "PriceSpecification",
       "price": price.toString(),
       "priceCurrency": "CAD"
+    };
+  };
+
+  // Generate breadcrumb structured data
+  const getBreadcrumbData = () => {
+    if (!breadcrumbs) return null;
+    
+    return {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": breadcrumbs.map((item, index) => ({
+        "@type": "ListItem",
+        "position": index + 1,
+        "name": item.name,
+        "item": `${siteUrl}${item.item}`
+      }))
     };
   };
 
@@ -127,6 +148,13 @@ export const SEO = ({
       <script type="application/ld+json">
         {JSON.stringify(getStructuredData())}
       </script>
+      
+      {/* Breadcrumb Structured Data */}
+      {breadcrumbs && (
+        <script type="application/ld+json">
+          {JSON.stringify(getBreadcrumbData())}
+        </script>
+      )}
     </Helmet>
   );
 };

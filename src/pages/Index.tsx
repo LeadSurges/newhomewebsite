@@ -14,12 +14,18 @@ const Index = () => {
         description="Discover exclusive new construction homes and luxury properties across Ontario. Browse our curated selection of premium real estate in Toronto, Ottawa, Mississauga and more. Find your dream home today."
         keywords="luxury homes, new construction, premium properties, Ontario real estate, Toronto homes, Ottawa properties, Mississauga real estate, high-end condos, luxury real estate, new developments"
         type="website"
+        breadcrumbs={[
+          { name: "Home", item: "/" }
+        ]}
       />
       <Navigation />
-      <HeroSection />
-      <TrendingProperties />
-      <BuildersSection />
-      <OntarioLocations />
+      <main>
+        <h1 className="sr-only">LuxuryHomes - Premium New Construction Homes in Ontario</h1>
+        <HeroSection />
+        <TrendingProperties />
+        <BuildersSection />
+        <OntarioLocations />
+      </main>
       <Footer />
     </div>
   );
