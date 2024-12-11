@@ -18,7 +18,7 @@ export const Navigation = () => {
               <img 
                 src="/lovable-uploads/80c8d194-9451-48a8-8664-f0244d009219.png" 
                 alt="The New Home Source" 
-                className="h-12 md:h-14 w-auto max-w-[180px] md:max-w-[200px]" // Added width constraints while keeping height
+                className="h-12 md:h-14 w-auto max-w-[220px] md:max-w-[240px]" // Increased max-width while maintaining aspect ratio
               />
             </Link>
           </div>
