@@ -18,7 +18,7 @@ export const Navigation = () => {
               <img 
                 src="/lovable-uploads/6d174b2c-dbd9-4490-ad0a-1b27333022c0.png" 
                 alt="The New Home Source" 
-                className="h-8"
+                className="h-12 md:h-14" // Increased height, with responsive sizing
               />
             </Link>
           </div>
