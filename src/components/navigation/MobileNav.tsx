@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { UserPlus, Heart } from "lucide-react";
+import { UserPlus, Heart, Search } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Separator } from "@/components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
@@ -30,6 +30,18 @@ export const MobileNav = ({ isOpen }: { isOpen: boolean }) => {
     <div className="md:hidden fixed inset-0 w-full h-full" style={{ zIndex: 9999 }}>
       <div className="fixed inset-0 w-full h-full bg-white/95 backdrop-blur-sm">
         <div className="py-6 px-6 space-y-4 h-full overflow-y-auto">
+          {/* Search */}
+          <Link 
+            to="/properties" 
+            className="flex items-center py-2 text-base font-medium nav-link"
+          >
+            <Search className="h-5 w-5 mr-2" />
+            Search Properties
+          </Link>
+
+          <Separator className="my-4" />
+
+          {/* New Homes for Sale Section */}
           <div className="space-y-2">
             <p className="text-sm font-medium text-muted-foreground">New Homes for Sale</p>
             <Link
@@ -60,6 +72,7 @@ export const MobileNav = ({ isOpen }: { isOpen: boolean }) => {
 
           <Separator className="my-4" />
 
+          {/* Professionals Section */}
           <div className="space-y-2">
             <p className="text-sm font-medium text-muted-foreground">Professionals</p>
             <Link
@@ -78,6 +91,7 @@ export const MobileNav = ({ isOpen }: { isOpen: boolean }) => {
 
           <Separator className="my-4" />
 
+          {/* User Section */}
           {user ? (
             <>
               <Link
