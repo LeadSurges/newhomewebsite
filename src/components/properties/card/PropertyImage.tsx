@@ -29,7 +29,7 @@ export const PropertyImage = ({
         className="object-cover w-full h-full"
       />
       {featured && (
-        <div className="absolute top-2 left-2 bg-primary text-primary-foreground px-2 py-1 rounded text-sm">
+        <div className="absolute top-2 left-2 bg-accent text-white px-2 py-1 rounded text-sm">
           Featured
         </div>
       )}
