@@ -14,7 +14,7 @@ export interface FormData {
   featured: boolean;
   builder_id?: string;
   home_type: string;
-  construction_status: string;
+  construction_status: "preconstruction" | "under_construction" | "complete";
   ownership_type: string;
   quick_move_in: boolean;
   master_planned: boolean;
