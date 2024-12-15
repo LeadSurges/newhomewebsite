@@ -63,22 +63,7 @@ export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFields
             <SelectItem value="Freehold">Freehold</SelectItem>
             <SelectItem value="Condominium">Condominium</SelectItem>
             <SelectItem value="Leasehold">Leasehold</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div>
-        <Label>Floorplan Status</Label>
-        <Select
-          value={formData.floorplan_status || "For Sale"}
-          onValueChange={(value) => setFormData({ ...formData, floorplan_status: value })}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select floorplan status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="For Sale">For Sale</SelectItem>
-            <SelectItem value="Sold">Sold</SelectItem>
+            <SelectItem value="Co-op">Co-op</SelectItem>
           </SelectContent>
         </Select>
       </div>
