@@ -38,7 +38,7 @@ export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFields
             <SelectValue placeholder="Select construction status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="preconstruction">Pre-Construction</SelectItem>
+            <SelectItem value="preconstruction">Preconstruction</SelectItem>
             <SelectItem value="construction">Under Construction</SelectItem>
             <SelectItem value="complete">Complete</SelectItem>
           </SelectContent>
