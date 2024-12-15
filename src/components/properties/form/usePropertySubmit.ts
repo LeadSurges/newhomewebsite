@@ -50,6 +50,14 @@ export const usePropertySubmit = (initialData?: Property) => {
         floorplan_url = publicUrl;
       }
 
+      // Ensure construction_status is one of the allowed values
+      const validConstructionStatuses = ["preconstruction", "under_construction", "complete"];
+      const construction_status = validConstructionStatuses.includes(formData.construction_status) 
+        ? formData.construction_status 
+        : "preconstruction";
+
+      console.log("Submitting with construction_status:", construction_status);
+
       const propertyData = {
         title: formData.title,
         description: formData.description,
@@ -67,12 +75,12 @@ export const usePropertySubmit = (initialData?: Property) => {
         image_url: image_urls.join(','),
         featured: formData.featured,
         floorplan_url,
-        home_type: formData.home_type,
-        construction_status: formData.construction_status,
-        ownership_type: formData.ownership_type,
+        home_type: formData.home_type || null,
+        construction_status,
+        ownership_type: formData.ownership_type || null,
         quick_move_in: formData.quick_move_in,
         master_planned: formData.master_planned,
-        garage_spaces: formData.garage_spaces === "4+" ? 4 : Number(formData.garage_spaces),
+        garage_spaces: formData.garage_spaces ? Number(formData.garage_spaces) : null,
         completion_year: formData.completion_year ? Number(formData.completion_year) : null,
         keywords: formData.keywords,
         builder_id: formData.builder_id,
@@ -82,7 +90,7 @@ export const usePropertySubmit = (initialData?: Property) => {
         features_and_finishes: formData.features_and_finishes,
       };
 
-      console.log("Submitting property data:", propertyData);
+      console.log("Final property data being submitted:", propertyData);
 
       if (initialData) {
         const { error: updateError } = await supabase
@@ -111,6 +119,7 @@ export const usePropertySubmit = (initialData?: Property) => {
 
       return true;
     } catch (error: any) {
+      console.error("Error submitting property:", error);
       toast({
         variant: "destructive",
         title: "Error",
