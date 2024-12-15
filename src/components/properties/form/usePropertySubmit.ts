@@ -4,12 +4,22 @@ import { useToast } from "@/components/ui/use-toast";
 import type { FormData } from "../types";
 import type { Property } from "@/types/property";
 
+const VALID_CONSTRUCTION_STATUSES = ["preconstruction", "under_construction", "complete"] as const;
+
 export const usePropertySubmit = (initialData?: Property) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [selectedFloorplan, setSelectedFloorplan] = useState<File | null>(null);
   const [previews, setPreviews] = useState<string[]>(initialData?.image_url ? initialData.image_url.split(',') : []);
   const [floorplanPreview, setFloorplanPreview] = useState<string | null>(initialData?.floorplan_url || null);
   const { toast } = useToast();
+
+  const validateConstructionStatus = (status: string): typeof VALID_CONSTRUCTION_STATUSES[number] => {
+    if (VALID_CONSTRUCTION_STATUSES.includes(status as any)) {
+      return status as typeof VALID_CONSTRUCTION_STATUSES[number];
+    }
+    console.warn(`Invalid construction status: ${status}, defaulting to "preconstruction"`);
+    return "preconstruction";
+  };
 
   const handleSubmit = async (formData: FormData) => {
     try {
@@ -50,13 +60,8 @@ export const usePropertySubmit = (initialData?: Property) => {
         floorplan_url = publicUrl;
       }
 
-      // Ensure construction_status is one of the allowed values
-      const validConstructionStatuses = ["preconstruction", "under_construction", "complete"];
-      const construction_status = validConstructionStatuses.includes(formData.construction_status) 
-        ? formData.construction_status 
-        : "preconstruction";
-
-      console.log("Submitting with construction_status:", construction_status);
+      // Validate and ensure construction_status is one of the allowed values
+      const construction_status = validateConstructionStatus(formData.construction_status);
 
       const propertyData = {
         title: formData.title,
