@@ -38,14 +38,14 @@ export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFields
       <div>
         <Label>Construction Status</Label>
         <Select
-          value={formData.construction_status}
+          value={formData.construction_status || ""}
           onValueChange={handleConstructionStatusChange}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select construction status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="preconstruction">Preconstruction</SelectItem>
+            <SelectItem value="preconstruction">Pre-construction</SelectItem>
             <SelectItem value="under_construction">Under Construction</SelectItem>
             <SelectItem value="complete">Complete</SelectItem>
           </SelectContent>
