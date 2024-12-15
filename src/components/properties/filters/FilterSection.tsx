@@ -109,15 +109,15 @@ export function FilterSection({ type, value, onChange }: FilterSectionProps) {
             </div>
             <RadioGroup value={value || ""} onValueChange={onChange}>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="Preconstruction" id="preconstruction" />
+                <RadioGroupItem value="preconstruction" id="preconstruction" />
                 <Label htmlFor="preconstruction">Preconstruction</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="Construction" id="construction" />
+                <RadioGroupItem value="under_construction" id="construction" />
                 <Label htmlFor="construction">Under Construction</Label>
               </div>
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="Complete" id="complete" />
+                <RadioGroupItem value="complete" id="complete" />
                 <Label htmlFor="complete">Complete</Label>
               </div>
             </RadioGroup>
