@@ -8,8 +8,13 @@ interface PropertyTypeFieldsProps {
 }
 
 export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFieldsProps) => {
-  console.log("Construction status value:", formData.construction_status);
+  console.log("PropertyTypeFields - Current construction status:", formData.construction_status);
   
+  const handleConstructionStatusChange = (value: string) => {
+    console.log("Setting construction status to:", value);
+    setFormData({ ...formData, construction_status: value });
+  };
+
   return (
     <div className="space-y-4">
       <div>
@@ -34,16 +39,13 @@ export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFields
         <Label>Construction Status</Label>
         <Select
           value={formData.construction_status || ""}
-          onValueChange={(value) => {
-            console.log("Setting construction status to:", value);
-            setFormData({ ...formData, construction_status: value });
-          }}
+          onValueChange={handleConstructionStatusChange}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select construction status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="preconstruction">Preconstruction</SelectItem>
+            <SelectItem value="preconstruction">Pre-Construction</SelectItem>
             <SelectItem value="under_construction">Under Construction</SelectItem>
             <SelectItem value="complete">Complete</SelectItem>
           </SelectContent>

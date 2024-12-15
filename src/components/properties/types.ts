@@ -13,13 +13,13 @@ export interface FormData {
   square_feet_max: string;
   featured: boolean;
   builder_id?: string;
-  home_type: string | null;
-  construction_status: string | null;
-  ownership_type: string | null;
+  home_type: string;
+  construction_status: string;
+  ownership_type: string;
   quick_move_in: boolean;
   master_planned: boolean;
-  garage_spaces: string | null;
-  completion_year: string | null;
+  garage_spaces: string;
+  completion_year: string;
   keywords: string[];
   deposit_structure: string;
   incentives: string;

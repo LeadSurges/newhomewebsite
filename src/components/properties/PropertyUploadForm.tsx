@@ -26,13 +26,13 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     square_feet_max: initialData?.square_feet_max?.toString() || "", 
     featured: initialData?.featured || false,
     builder_id: initialData?.builder_id || undefined,
-    home_type: initialData?.home_type || null,
-    construction_status: initialData?.construction_status || null,
-    ownership_type: initialData?.ownership_type || null,
+    home_type: initialData?.home_type || "",
+    construction_status: initialData?.construction_status || "",
+    ownership_type: initialData?.ownership_type || "",
     quick_move_in: initialData?.quick_move_in || false,
     master_planned: initialData?.master_planned || false,
-    garage_spaces: initialData?.garage_spaces?.toString() || null,
-    completion_year: initialData?.completion_year?.toString() || null,
+    garage_spaces: initialData?.garage_spaces?.toString() || "",
+    completion_year: initialData?.completion_year?.toString() || "",
     keywords: initialData?.keywords || [],
     deposit_structure: initialData?.deposit_structure?.toString() || "",
     incentives: initialData?.incentives?.toString() || "",
@@ -40,6 +40,8 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     features_and_finishes: initialData?.features_and_finishes || "",
     floorplan_status: initialData?.floorplan_status || "For Sale",
   });
+
+  console.log("PropertyUploadForm - Initial form data:", formData);
 
   const {
     selectedFiles,
@@ -55,6 +57,7 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Submitting form data:", formData);
     const success = await handleSubmit(formData);
     
     if (success && !initialData) {
@@ -70,18 +73,19 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
         square_feet_min: "",
         square_feet_max: "",
         featured: false,
-        home_type: null,
-        construction_status: null,
-        ownership_type: null,
+        home_type: "",
+        construction_status: "",
+        ownership_type: "",
         quick_move_in: false,
         master_planned: false,
-        garage_spaces: null,
-        completion_year: null,
+        garage_spaces: "",
+        completion_year: "",
         keywords: [],
         deposit_structure: "",
         incentives: "",
         amenities: [],
         features_and_finishes: "",
+        floorplan_status: "For Sale",
       });
       setSelectedFiles([]);
       setSelectedFloorplan(null);
