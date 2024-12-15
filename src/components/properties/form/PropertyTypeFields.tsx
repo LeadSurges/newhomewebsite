@@ -32,7 +32,7 @@ export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFields
         <Label>Construction Status</Label>
         <Select
           value={formData.construction_status}
-          onValueChange={(value) => {
+          onValueChange={(value: "preconstruction" | "under_construction" | "complete") => {
             console.log("Setting construction status to:", value);
             setFormData({ ...formData, construction_status: value });
           }}
