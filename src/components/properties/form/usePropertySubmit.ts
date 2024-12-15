@@ -5,6 +5,7 @@ import type { FormData } from "../types";
 import type { Property } from "@/types/property";
 
 const VALID_CONSTRUCTION_STATUSES = ["preconstruction", "under_construction", "complete"] as const;
+type ConstructionStatus = typeof VALID_CONSTRUCTION_STATUSES[number];
 
 export const usePropertySubmit = (initialData?: Property) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -13,9 +14,9 @@ export const usePropertySubmit = (initialData?: Property) => {
   const [floorplanPreview, setFloorplanPreview] = useState<string | null>(initialData?.floorplan_url || null);
   const { toast } = useToast();
 
-  const validateConstructionStatus = (status: string): typeof VALID_CONSTRUCTION_STATUSES[number] => {
-    if (VALID_CONSTRUCTION_STATUSES.includes(status as any)) {
-      return status as typeof VALID_CONSTRUCTION_STATUSES[number];
+  const validateConstructionStatus = (status: string): ConstructionStatus => {
+    if (VALID_CONSTRUCTION_STATUSES.includes(status as ConstructionStatus)) {
+      return status as ConstructionStatus;
     }
     console.warn(`Invalid construction status: ${status}, defaulting to "preconstruction"`);
     return "preconstruction";
@@ -23,6 +24,8 @@ export const usePropertySubmit = (initialData?: Property) => {
 
   const handleSubmit = async (formData: FormData) => {
     try {
+      console.log("Starting property submission with data:", formData);
+      
       // Upload main images if selected
       let image_urls: string[] = initialData?.image_url ? initialData.image_url.split(',') : [];
       if (selectedFiles.length > 0) {
