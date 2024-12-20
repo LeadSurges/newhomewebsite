@@ -45,6 +45,11 @@ export const HeroSection = () => {
     setSearchQuery("");
   };
 
+  const handleFilterClick = (homeType: string) => {
+    console.log("Filtering by home type:", homeType);
+    navigate(`/properties?homeType=${encodeURIComponent(homeType)}`);
+  };
+
   return (
     <section className="min-h-[80vh] flex items-center justify-center pt-20 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-secondary/20">
       <div className="max-w-7xl mx-auto text-center">
@@ -103,31 +108,24 @@ export const HeroSection = () => {
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Button
               variant="outline"
-              onClick={() => navigate("/properties?homeType=Single family home")}
+              onClick={() => handleFilterClick("Single family home")}
               className="text-sm hover:bg-accent hover:text-white transition-colors"
             >
               Single Family Homes
             </Button>
             <Button
               variant="outline"
-              onClick={() => navigate("/properties?homeType=Townhouse")}
+              onClick={() => handleFilterClick("Townhouse")}
               className="text-sm hover:bg-accent hover:text-white transition-colors"
             >
               Townhomes
             </Button>
             <Button
               variant="outline"
-              onClick={() => navigate("/properties?homeType=Condo")}
+              onClick={() => handleFilterClick("Condo")}
               className="text-sm hover:bg-accent hover:text-white transition-colors"
             >
               Condos
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => navigate("/properties?quickMoveIn=true")}
-              className="text-sm hover:bg-accent hover:text-white transition-colors"
-            >
-              Quick Move-in
             </Button>
           </div>
         </div>
