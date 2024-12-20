@@ -23,9 +23,12 @@ export class FirecrawlService {
   static async crawlWebsite(url: string): Promise<{ success: boolean; error?: string; data?: any }> {
     try {
       console.log('Making crawl request to Firecrawl API');
-      const apiKey = Deno.env.get('FIRECRAWL_API_KEY');
+      
+      // Using environment variable from Supabase Edge Function
+      const apiKey = import.meta.env.VITE_FIRECRAWL_API_KEY;
       
       if (!apiKey) {
+        console.error('API key not found');
         return { success: false, error: 'API key not found' };
       }
 
@@ -37,15 +40,16 @@ export class FirecrawlService {
         limit: 100,
         scrapeOptions: {
           formats: ['markdown', 'html'],
-          selectors: {
-            title: 'h1, .property-title',
-            price: '.price, .property-price',
-            description: '.description, .property-description',
-            location: '.location, .property-location',
-            bedrooms: '.bedrooms, .property-bedrooms',
-            bathrooms: '.bathrooms, .property-bathrooms',
-            squareFeet: '.square-feet, .property-square-feet',
-            images: 'img.property-image',
+          // Using custom CSS selectors through data attributes for better targeting
+          cssSelectors: {
+            title: '[data-property="title"], h1, .property-title',
+            price: '[data-property="price"], .price, .property-price',
+            description: '[data-property="description"], .description, .property-description',
+            location: '[data-property="location"], .location, .property-location',
+            bedrooms: '[data-property="bedrooms"], .bedrooms, .property-bedrooms',
+            bathrooms: '[data-property="bathrooms"], .bathrooms, .property-bathrooms',
+            squareFeet: '[data-property="square-feet"], .square-feet, .property-square-feet',
+            images: '[data-property="image"], img.property-image'
           }
         }
       }) as CrawlResponse;
