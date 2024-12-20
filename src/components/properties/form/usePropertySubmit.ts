@@ -9,9 +9,9 @@ type ConstructionStatus = typeof VALID_CONSTRUCTION_STATUSES[number];
 
 export const usePropertySubmit = (initialData?: Property) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [selectedFloorplan, setSelectedFloorplan] = useState<File | null>(null);
+  const [selectedFloorplans, setSelectedFloorplans] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>(initialData?.image_url ? initialData.image_url.split(',') : []);
-  const [floorplanPreview, setFloorplanPreview] = useState<string | null>(initialData?.floorplan_url || null);
+  const [floorplanPreviews, setFloorplanPreviews] = useState<string[]>(initialData?.floorplan_url ? initialData.floorplan_url.split(',') : []);
   const { toast } = useToast();
 
   const validateConstructionStatus = (status: string): ConstructionStatus => {
@@ -47,24 +47,26 @@ export const usePropertySubmit = (initialData?: Property) => {
         image_urls = newUrls;
       }
 
-      // Upload floorplan if selected
-      let floorplan_url = initialData?.floorplan_url || "";
-      if (selectedFloorplan) {
-        const { data: floorplanData, error: floorplanError } = await supabase.storage
-          .from("property-images")
-          .upload(`floorplans/${Date.now()}-${selectedFloorplan.name}`, selectedFloorplan);
+      // Upload floorplans if selected
+      let floorplan_urls: string[] = initialData?.floorplan_url ? initialData.floorplan_url.split(',') : [];
+      if (selectedFloorplans.length > 0) {
+        const uploadPromises = selectedFloorplans.map(async (file) => {
+          const { data: floorplanData, error: floorplanError } = await supabase.storage
+            .from("property-images")
+            .upload(`floorplans/${Date.now()}-${file.name}`, file);
 
-        if (floorplanError) throw floorplanError;
+          if (floorplanError) throw floorplanError;
 
-        const { data: { publicUrl } } = supabase.storage
-          .from("property-images")
-          .getPublicUrl(floorplanData.path);
+          const { data: { publicUrl } } = supabase.storage
+            .from("property-images")
+            .getPublicUrl(floorplanData.path);
 
-        floorplan_url = publicUrl;
+          return publicUrl;
+        });
+
+        const newUrls = await Promise.all(uploadPromises);
+        floorplan_urls = newUrls;
       }
-
-      // Validate and ensure construction_status is one of the allowed values
-      const construction_status = validateConstructionStatus(formData.construction_status);
 
       const propertyData = {
         title: formData.title,
@@ -82,9 +84,9 @@ export const usePropertySubmit = (initialData?: Property) => {
         square_feet_max: formData.square_feet_max || null,
         image_url: image_urls.join(','),
         featured: formData.featured,
-        floorplan_url,
+        floorplan_url: floorplan_urls.join(','),
         home_type: formData.home_type || null,
-        construction_status,
+        construction_status: validateConstructionStatus(formData.construction_status),
         ownership_type: formData.ownership_type || null,
         quick_move_in: formData.quick_move_in,
         master_planned: formData.master_planned,
@@ -140,12 +142,12 @@ export const usePropertySubmit = (initialData?: Property) => {
   return {
     selectedFiles,
     setSelectedFiles,
-    selectedFloorplan,
-    setSelectedFloorplan,
+    selectedFloorplans,
+    setSelectedFloorplans,
     previews,
     setPreviews,
-    floorplanPreview,
-    setFloorplanPreview,
+    floorplanPreviews,
+    setFloorplanPreviews,
     handleSubmit,
   };
 };

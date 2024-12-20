@@ -46,12 +46,12 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
   const {
     selectedFiles,
     setSelectedFiles,
-    selectedFloorplan,
-    setSelectedFloorplan,
+    selectedFloorplans,
+    setSelectedFloorplans,
     previews,
     setPreviews,
-    floorplanPreview,
-    setFloorplanPreview,
+    floorplanPreviews,
+    setFloorplanPreviews,
     handleSubmit,
   } = usePropertySubmit(initialData);
 
@@ -88,9 +88,9 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
         floorplan_status: "For Sale",
       });
       setSelectedFiles([]);
-      setSelectedFloorplan(null);
+      setSelectedFloorplans([]);
       setPreviews([]);
-      setFloorplanPreview(null);
+      setFloorplanPreviews([]);
     }
   };
 
@@ -119,12 +119,13 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
               id="floorplan"
               label="Floor Plans"
               icon={FileText}
-              preview={floorplanPreview ? [floorplanPreview] : null}
+              preview={floorplanPreviews}
+              multiple={true}
               onChange={(files) => {
-                if (files[0]) {
-                  setSelectedFloorplan(files[0]);
-                  setFloorplanPreview(URL.createObjectURL(files[0]));
-                }
+                const fileArray = Array.from(files);
+                setSelectedFloorplans(fileArray);
+                const newPreviews = fileArray.map(file => URL.createObjectURL(file));
+                setFloorplanPreviews(newPreviews);
               }}
             />
           </div>
