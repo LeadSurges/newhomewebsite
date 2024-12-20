@@ -40,8 +40,7 @@ export class FirecrawlService {
         limit: 100,
         scrapeOptions: {
           formats: ['markdown', 'html'],
-          // Using selectors property instead of cssSelectors
-          selectors: {
+          cssSelector: {
             title: '[data-property="title"], h1, .property-title',
             price: '[data-property="price"], .price, .property-price',
             description: '[data-property="description"], .description, .property-description',
