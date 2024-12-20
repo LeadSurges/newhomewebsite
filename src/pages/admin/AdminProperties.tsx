@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,16 @@ import { useAuth } from "@/contexts/AuthContext";
 import { PropertyUploadForm } from "@/components/properties/PropertyUploadForm";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Helmet } from "react-helmet-async";
 
 type Property = Database['public']['Tables']['properties']['Row'];
@@ -16,17 +26,21 @@ const AdminProperties = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
+  const [deletingProperty, setDeletingProperty] = useState<Property | null>(null);
 
   const { data: properties, isLoading } = useQuery({
     queryKey: ["admin-properties"],
     queryFn: async () => {
+      console.log("Fetching properties for admin view");
       const { data, error } = await supabase
         .from("properties")
         .select("*, builders(name)")
         .order("created_at", { ascending: false });
 
       if (error) {
+        console.error("Error fetching properties:", error);
         toast({
           variant: "destructive",
           title: "Error fetching properties",
@@ -35,9 +49,41 @@ const AdminProperties = () => {
         throw error;
       }
 
+      console.log("Fetched properties:", data);
       return data as Property[];
     },
   });
+
+  const handleDeleteProperty = async () => {
+    if (!deletingProperty) return;
+
+    try {
+      console.log("Deleting property:", deletingProperty.id);
+      const { error } = await supabase
+        .from("properties")
+        .delete()
+        .eq("id", deletingProperty.id);
+
+      if (error) throw error;
+
+      // Invalidate the properties query to refetch the list
+      queryClient.invalidateQueries({ queryKey: ["admin-properties"] });
+
+      toast({
+        title: "Success",
+        description: "Property has been deleted successfully.",
+      });
+    } catch (error: any) {
+      console.error("Error deleting property:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message,
+      });
+    } finally {
+      setDeletingProperty(null);
+    }
+  };
 
   if (!user) {
     navigate("/signin");
@@ -93,10 +139,33 @@ const AdminProperties = () => {
                     )}
                   </DialogContent>
                 </Dialog>
+
+                <Button
+                  variant="destructive"
+                  onClick={() => setDeletingProperty(property)}
+                >
+                  Delete
+                </Button>
               </div>
             </div>
           ))}
         </div>
+
+        <AlertDialog open={!!deletingProperty} onOpenChange={(open) => !open && setDeletingProperty(null)}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete the property
+                and all associated data.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDeleteProperty}>Delete</AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </main>
     </div>
   );
