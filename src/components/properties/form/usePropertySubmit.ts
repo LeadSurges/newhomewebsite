@@ -15,9 +15,12 @@ export const usePropertySubmit = (initialData?: Property) => {
   const handleSubmit = async (formData: FormData) => {
     try {
       console.log("Starting property submission with data:", formData);
+      console.log("Current image order:", imageOrder);
+      
+      // Get existing image URLs if updating
+      let image_urls: string[] = initialData?.image_url ? initialData.image_url.split(',') : [];
       
       // Upload main images if selected
-      let image_urls: string[] = initialData?.image_url ? initialData.image_url.split(',') : [];
       if (selectedFiles.length > 0) {
         const uploadPromises = selectedFiles.map(async (file) => {
           const { data: uploadData, error: uploadError } = await supabase.storage
@@ -34,8 +37,9 @@ export const usePropertySubmit = (initialData?: Property) => {
         });
 
         const newUrls = await Promise.all(uploadPromises);
-        // Preserve existing URLs if updating
+        // For updates, combine existing and new URLs
         image_urls = initialData ? [...image_urls, ...newUrls] : newUrls;
+        console.log("Updated image URLs:", image_urls);
       }
 
       // Upload floorplans if selected
@@ -59,17 +63,20 @@ export const usePropertySubmit = (initialData?: Property) => {
         floorplan_urls = newUrls;
       }
 
-      // Ensure image_order contains all images in the correct order
-      const finalImageOrder = imageOrder.filter(url => 
-        image_urls.includes(url) || url.startsWith('blob:')
-      );
+      // Process image order
+      let finalImageOrder = [...imageOrder];
       
-      // Add any new images that aren't in the order yet
+      // Remove any URLs that no longer exist in image_urls
+      finalImageOrder = finalImageOrder.filter(url => image_urls.includes(url));
+      
+      // Add any new images that aren't in the order
       image_urls.forEach(url => {
         if (!finalImageOrder.includes(url)) {
           finalImageOrder.push(url);
         }
       });
+
+      console.log("Final image order:", finalImageOrder);
 
       const propertyData = {
         ...formData,

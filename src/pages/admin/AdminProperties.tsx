@@ -6,6 +6,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { PropertyUploadForm } from "@/components/properties/PropertyUploadForm";
+import { BulkUploadForm } from "@/components/properties/BulkUploadForm";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -18,6 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Helmet } from "react-helmet-async";
 
 type Property = Database['public']['Tables']['properties']['Row'];
@@ -102,54 +104,69 @@ const AdminProperties = () => {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">Manage Properties</h1>
-          <Button onClick={() => navigate("/upload-property")}>
-            Add New Property
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={() => navigate("/upload-property")}>
+              Add New Property
+            </Button>
+          </div>
         </div>
 
-        <div className="grid gap-4">
-          {properties?.map((property) => (
-            <div
-              key={property.id}
-              className="border rounded-lg p-4 flex justify-between items-center bg-background"
-            >
-              <div>
-                <h3 className="font-semibold">{property.title}</h3>
-                <p className="text-sm text-gray-600">{property.location}</p>
-                <p className="text-sm font-medium">
-                  ${property.price.toLocaleString()}
-                </p>
-              </div>
-              <div className="flex gap-2">
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button
-                      variant="outline"
-                      onClick={() => setEditingProperty(property)}
-                    >
-                      Edit
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                      <DialogTitle>Edit Property</DialogTitle>
-                    </DialogHeader>
-                    {editingProperty && (
-                      <PropertyUploadForm initialData={editingProperty} />
-                    )}
-                  </DialogContent>
-                </Dialog>
+        <Tabs defaultValue="properties" className="space-y-6">
+          <TabsList>
+            <TabsTrigger value="properties">Properties</TabsTrigger>
+            <TabsTrigger value="bulk-upload">Bulk Upload</TabsTrigger>
+          </TabsList>
 
-                <Button
-                  variant="destructive"
-                  onClick={() => setDeletingProperty(property)}
+          <TabsContent value="properties">
+            <div className="grid gap-4">
+              {properties?.map((property) => (
+                <div
+                  key={property.id}
+                  className="border rounded-lg p-4 flex justify-between items-center bg-background"
                 >
-                  Delete
-                </Button>
-              </div>
+                  <div>
+                    <h3 className="font-semibold">{property.title}</h3>
+                    <p className="text-sm text-gray-600">{property.location}</p>
+                    <p className="text-sm font-medium">
+                      ${property.price.toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          variant="outline"
+                          onClick={() => setEditingProperty(property)}
+                        >
+                          Edit
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                        <DialogHeader>
+                          <DialogTitle>Edit Property</DialogTitle>
+                        </DialogHeader>
+                        {editingProperty && (
+                          <PropertyUploadForm initialData={editingProperty} />
+                        )}
+                      </DialogContent>
+                    </Dialog>
+
+                    <Button
+                      variant="destructive"
+                      onClick={() => setDeletingProperty(property)}
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </TabsContent>
+
+          <TabsContent value="bulk-upload">
+            <BulkUploadForm />
+          </TabsContent>
+        </Tabs>
 
         <AlertDialog open={!!deletingProperty} onOpenChange={(open) => !open && setDeletingProperty(null)}>
           <AlertDialogContent>
