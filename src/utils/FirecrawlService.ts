@@ -1,4 +1,4 @@
-import { FirecrawlApp } from "@mendable/firecrawl-js";
+import FirecrawlApp from "@mendable/firecrawl-js";
 
 const client = new FirecrawlApp({ 
   apiKey: import.meta.env.VITE_FIRECRAWL_API_KEY 
