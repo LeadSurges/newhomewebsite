@@ -64,7 +64,7 @@ export const BulkUploadForm = () => {
       if (result.success && result.data) {
         setScrapedData(result.data);
         await processAndUploadData(result.data);
-      } else {
+      } else if (!result.success && 'error' in result) {
         toast({
           variant: "destructive",
           title: "Error",
