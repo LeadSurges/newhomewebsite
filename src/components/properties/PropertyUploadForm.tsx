@@ -74,7 +74,7 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
         square_feet_min: "",
         square_feet_max: "",
         featured: false,
-        home_type: "",
+        home_type: [],
         construction_status: "preconstruction",
         ownership_type: "",
         quick_move_in: false,
