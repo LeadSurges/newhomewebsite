@@ -4,6 +4,10 @@ export class FirecrawlService {
   static async crawlWebsite(url: string) {
     try {
       console.log("Starting website crawl for:", url);
+      const client = new FirecrawlApp({ 
+        apiKey: import.meta.env.VITE_FIRECRAWL_API_KEY 
+      });
+      
       const response = await client.crawlUrl(url, {
         limit: 100,
         scrapeOptions: {
