@@ -34,7 +34,8 @@ export const usePropertySubmit = (initialData?: Property) => {
         });
 
         const newUrls = await Promise.all(uploadPromises);
-        image_urls = newUrls;
+        // Preserve existing URLs if updating
+        image_urls = initialData ? [...image_urls, ...newUrls] : newUrls;
       }
 
       // Upload floorplans if selected
@@ -58,8 +59,17 @@ export const usePropertySubmit = (initialData?: Property) => {
         floorplan_urls = newUrls;
       }
 
-      // Use the current imageOrder if it exists, otherwise use the image URLs
-      const finalImageOrder = imageOrder.length > 0 ? imageOrder : image_urls;
+      // Ensure image_order contains all images in the correct order
+      const finalImageOrder = imageOrder.filter(url => 
+        image_urls.includes(url) || url.startsWith('blob:')
+      );
+      
+      // Add any new images that aren't in the order yet
+      image_urls.forEach(url => {
+        if (!finalImageOrder.includes(url)) {
+          finalImageOrder.push(url);
+        }
+      });
 
       const propertyData = {
         ...formData,

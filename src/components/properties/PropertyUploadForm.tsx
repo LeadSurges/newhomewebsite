@@ -113,8 +113,18 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
                 const fileArray = Array.from(files);
                 setSelectedFiles(fileArray);
                 const newPreviews = fileArray.map(file => URL.createObjectURL(file));
-                setPreviews(newPreviews);
-                setImageOrder(newPreviews);
+                setPreviews(prevPreviews => {
+                  const updatedPreviews = [...prevPreviews, ...newPreviews];
+                  // Maintain existing order and append new images
+                  const updatedOrder = [...imageOrder];
+                  newPreviews.forEach(preview => {
+                    if (!updatedOrder.includes(preview)) {
+                      updatedOrder.push(preview);
+                    }
+                  });
+                  setImageOrder(updatedOrder);
+                  return updatedPreviews;
+                });
               }}
             />
 
