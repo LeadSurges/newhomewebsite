@@ -5,6 +5,7 @@ import { ImagePlus, FileText } from "lucide-react";
 import { PropertyFormFields } from "./PropertyFormFields";
 import { FileUploadField } from "./FileUploadField";
 import { usePropertySubmit } from "./form/usePropertySubmit";
+import { ImageOrderManager } from "./ImageOrderManager";
 import type { FormData } from "./types";
 import type { Property } from "@/types/property";
 
@@ -41,8 +42,6 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     floorplan_status: initialData?.floorplan_status || "For Sale",
   });
 
-  console.log("PropertyUploadForm - Initial form data:", formData);
-
   const {
     selectedFiles,
     setSelectedFiles,
@@ -52,6 +51,8 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     setPreviews,
     floorplanPreviews,
     setFloorplanPreviews,
+    imageOrder,
+    setImageOrder,
     handleSubmit,
   } = usePropertySubmit(initialData);
 
@@ -91,6 +92,7 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
       setSelectedFloorplans([]);
       setPreviews([]);
       setFloorplanPreviews([]);
+      setImageOrder([]);
     }
   };
 
@@ -112,6 +114,7 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
                 setSelectedFiles(fileArray);
                 const newPreviews = fileArray.map(file => URL.createObjectURL(file));
                 setPreviews(newPreviews);
+                setImageOrder(newPreviews);
               }}
             />
 
@@ -129,6 +132,15 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
               }}
             />
           </div>
+
+          {previews.length > 0 && (
+            <div className="mt-6">
+              <ImageOrderManager
+                images={previews}
+                onChange={setImageOrder}
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
 

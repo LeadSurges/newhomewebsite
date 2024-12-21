@@ -4,23 +4,13 @@ import { useToast } from "@/components/ui/use-toast";
 import type { FormData } from "../types";
 import type { Property } from "@/types/property";
 
-const VALID_CONSTRUCTION_STATUSES = ["preconstruction", "under_construction", "complete"] as const;
-type ConstructionStatus = typeof VALID_CONSTRUCTION_STATUSES[number];
-
 export const usePropertySubmit = (initialData?: Property) => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [selectedFloorplans, setSelectedFloorplans] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>(initialData?.image_url ? initialData.image_url.split(',') : []);
   const [floorplanPreviews, setFloorplanPreviews] = useState<string[]>(initialData?.floorplan_url ? initialData.floorplan_url.split(',') : []);
+  const [imageOrder, setImageOrder] = useState<string[]>(initialData?.image_order || []);
   const { toast } = useToast();
-
-  const validateConstructionStatus = (status: string): ConstructionStatus => {
-    if (VALID_CONSTRUCTION_STATUSES.includes(status as ConstructionStatus)) {
-      return status as ConstructionStatus;
-    }
-    console.warn(`Invalid construction status: ${status}, defaulting to "preconstruction"`);
-    return "preconstruction";
-  };
 
   const handleSubmit = async (formData: FormData) => {
     try {
@@ -69,35 +59,10 @@ export const usePropertySubmit = (initialData?: Property) => {
       }
 
       const propertyData = {
-        title: formData.title,
-        description: formData.description,
-        price: Number(formData.price),
-        location: formData.location,
-        bedrooms: formData.bedrooms_min ? Number(formData.bedrooms_min) : null,
-        bedrooms_min: formData.bedrooms_min || null,
-        bedrooms_max: formData.bedrooms_max || null,
-        bathrooms: formData.bathrooms_min ? Number(formData.bathrooms_min) : null,
-        bathrooms_min: formData.bathrooms_min || null,
-        bathrooms_max: formData.bathrooms_max || null,
-        square_feet: formData.square_feet_min ? Number(formData.square_feet_min) : null,
-        square_feet_min: formData.square_feet_min || null,
-        square_feet_max: formData.square_feet_max || null,
+        ...formData,
         image_url: image_urls.join(','),
-        featured: formData.featured,
         floorplan_url: floorplan_urls.join(','),
-        home_type: formData.home_type || null,
-        construction_status: validateConstructionStatus(formData.construction_status),
-        ownership_type: formData.ownership_type || null,
-        quick_move_in: formData.quick_move_in,
-        master_planned: formData.master_planned,
-        garage_spaces: formData.garage_spaces ? Number(formData.garage_spaces) : null,
-        completion_year: formData.completion_year ? Number(formData.completion_year) : null,
-        keywords: formData.keywords,
-        builder_id: formData.builder_id,
-        deposit_structure: formData.deposit_structure,
-        incentives: formData.incentives,
-        amenities: formData.amenities,
-        features_and_finishes: formData.features_and_finishes,
+        image_order: imageOrder.length > 0 ? imageOrder : image_urls,
       };
 
       console.log("Final property data being submitted:", propertyData);
@@ -148,6 +113,8 @@ export const usePropertySubmit = (initialData?: Property) => {
     setPreviews,
     floorplanPreviews,
     setFloorplanPreviews,
+    imageOrder,
+    setImageOrder,
     handleSubmit,
   };
 };

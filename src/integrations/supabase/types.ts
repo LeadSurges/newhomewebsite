@@ -161,6 +161,7 @@ export type Database = {
           garage_spaces: number | null
           home_type: string | null
           id: string
+          image_order: string[] | null
           image_url: string | null
           incentives: Json | null
           keywords: string[] | null
@@ -202,6 +203,7 @@ export type Database = {
           garage_spaces?: number | null
           home_type?: string | null
           id?: string
+          image_order?: string[] | null
           image_url?: string | null
           incentives?: Json | null
           keywords?: string[] | null
@@ -243,6 +245,7 @@ export type Database = {
           garage_spaces?: number | null
           home_type?: string | null
           id?: string
+          image_order?: string[] | null
           image_url?: string | null
           incentives?: Json | null
           keywords?: string[] | null
