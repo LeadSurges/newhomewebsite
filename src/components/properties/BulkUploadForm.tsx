@@ -16,10 +16,34 @@ export const BulkUploadForm = () => {
 
   const mapHomeType = (scrapedType: string): string => {
     // Convert scraped home type to one of our valid types
-    const type = scrapedType?.toLowerCase() || '';
-    if (type.includes('condo') || type.includes('apartment')) return 'Condo';
-    if (type.includes('town') || type.includes('row')) return 'Townhouse';
-    if (type.includes('semi')) return 'Semi-Detached';
+    const type = scrapedType?.toLowerCase().trim() || '';
+    
+    // Handle various possible input formats
+    if (type.includes('condo') || 
+        type.includes('apartment') || 
+        type.includes('apt')) {
+      return 'Condo';
+    }
+    
+    if (type.includes('town') || 
+        type.includes('row') || 
+        type.includes('townhome')) {
+      return 'Townhouse';
+    }
+    
+    if (type.includes('semi') || 
+        type.includes('semi-detached') || 
+        type.includes('semi detached')) {
+      return 'Semi-Detached';
+    }
+    
+    if (type.includes('single') || 
+        type.includes('detached') || 
+        type.includes('house')) {
+      return 'Detached';
+    }
+    
+    console.log('Unmapped property type:', scrapedType, 'defaulting to Detached');
     return 'Detached'; // Default to Detached if no match
   };
 
@@ -27,17 +51,24 @@ export const BulkUploadForm = () => {
     console.log('Processing scraped data for upload:', data);
     
     try {
-      const properties = data.map(item => ({
-        title: item.title || 'Untitled Property',
-        description: item.description || '',
-        price: parseFloat(item.price?.replace(/[^0-9.]/g, '')) || 0,
-        location: item.location || '',
-        bedrooms: parseInt(item.bedrooms?.replace(/[^0-9]/g, '')) || null,
-        bathrooms: parseInt(item.bathrooms?.replace(/[^0-9]/g, '')) || null,
-        square_feet: parseInt(item.squareFeet?.replace(/[^0-9]/g, '')) || null,
-        image_url: item.images?.join(',') || null,
-        home_type: mapHomeType(item.propertyType || ''),
-      }));
+      const properties = data.map(item => {
+        const mappedHomeType = mapHomeType(item.propertyType || '');
+        console.log('Mapped home type:', item.propertyType, 'to:', mappedHomeType);
+        
+        return {
+          title: item.title || 'Untitled Property',
+          description: item.description || '',
+          price: parseFloat(item.price?.replace(/[^0-9.]/g, '')) || 0,
+          location: item.location || '',
+          bedrooms: parseInt(item.bedrooms?.replace(/[^0-9]/g, '')) || null,
+          bathrooms: parseInt(item.bathrooms?.replace(/[^0-9]/g, '')) || null,
+          square_feet: parseInt(item.squareFeet?.replace(/[^0-9]/g, '')) || null,
+          image_url: item.images?.join(',') || null,
+          home_type: mappedHomeType,
+        };
+      });
+
+      console.log('Prepared properties for upload:', properties);
 
       const { error } = await supabase
         .from('properties')
