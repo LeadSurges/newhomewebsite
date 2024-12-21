@@ -45,9 +45,11 @@ export const usePropertyData = (filters: PropertyFilters) => {
         query = query.lte("square_feet", filters.squareFeet.max);
       }
 
-      // Apply home type filter
+      // Apply home type filter - Fixed array contains query
       if (filters.homeType) {
-        query = query.eq("home_type", filters.homeType);
+        console.log("Applying home type filter:", filters.homeType);
+        // Use contains to check if the array column contains the value
+        query = query.contains('home_type', [filters.homeType]);
       }
 
       // Apply construction status filter
@@ -85,6 +87,7 @@ export const usePropertyData = (filters: PropertyFilters) => {
         query = query.contains('keywords', [filters.keywords]);
       }
 
+      console.log("Final query:", query);
       const { data, error } = await query;
       
       if (error) {
