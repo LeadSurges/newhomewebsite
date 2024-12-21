@@ -12,18 +12,29 @@ export class FirecrawlService {
         limit: 100,
         scrapeOptions: {
           formats: ['markdown', 'html'],
-          selectors: {
-            title: '[data-property="title"], h1, .property-title',
-            price: '[data-property="price"], .price, .property-price',
-            description: '[data-property="description"], .description, .property-description',
-            location: '[data-property="location"], .location, .property-location',
-            bedrooms: '[data-property="bedrooms"], .bedrooms, .property-bedrooms',
-            bathrooms: '[data-property="bathrooms"], .bathrooms, .property-bathrooms',
-            squareFeet: '[data-property="square-feet"], .square-feet, .property-square-feet',
-            images: '[data-property="image"], img.property-image'
-          }
+          // Remove the selectors property as it's not part of the CrawlScrapeOptions type
+          // We'll need to process the data after crawling to extract the specific fields
         }
       });
+      
+      // Process the crawled data to extract the fields we need
+      if (response.success && response.data) {
+        const processedData = response.data.map((item: any) => ({
+          title: item.title || '',
+          price: item.price || '',
+          description: item.description || '',
+          location: item.location || '',
+          bedrooms: item.bedrooms || '',
+          bathrooms: item.bathrooms || '',
+          squareFeet: item.squareFeet || '',
+          images: item.images || []
+        }));
+        
+        return {
+          success: true,
+          data: processedData
+        };
+      }
       
       console.log("Crawl response:", response);
       return response;
