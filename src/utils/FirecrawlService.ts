@@ -1,9 +1,5 @@
 import FirecrawlApp from "@mendable/firecrawl-js";
 
-const client = new FirecrawlApp({ 
-  apiKey: import.meta.env.VITE_FIRECRAWL_API_KEY 
-});
-
 export class FirecrawlService {
   static async crawlWebsite(url: string) {
     try {
@@ -12,7 +8,7 @@ export class FirecrawlService {
         limit: 100,
         scrapeOptions: {
           formats: ['markdown', 'html'],
-          cssSelectors: {
+          selectors: {
             title: '[data-property="title"], h1, .property-title',
             price: '[data-property="price"], .price, .property-price',
             description: '[data-property="description"], .description, .property-description',
