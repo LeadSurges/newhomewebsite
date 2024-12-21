@@ -1,5 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { FormData } from "../types";
 
 interface PropertyTypeFieldsProps {
@@ -7,35 +8,44 @@ interface PropertyTypeFieldsProps {
   setFormData: (data: FormData) => void;
 }
 
+const HOME_TYPES = ["Detached", "Semi-Detached", "Townhouse", "Condo"];
+
 export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFieldsProps) => {
+  const toggleHomeType = (type: string) => {
+    const currentTypes = formData.home_type || [];
+    const newTypes = currentTypes.includes(type)
+      ? currentTypes.filter(t => t !== type)
+      : [...currentTypes, type];
+    setFormData({ ...formData, home_type: newTypes });
+  };
+
   return (
     <div className="space-y-4">
       <div>
-        <Label>Home Type</Label>
-        <Select
-          value={formData.home_type || ""}
-          onValueChange={(value) => setFormData({ ...formData, home_type: value })}
-        >
-          <SelectTrigger>
-            <SelectValue placeholder="Select home type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Detached">Detached</SelectItem>
-            <SelectItem value="Semi-Detached">Semi-Detached</SelectItem>
-            <SelectItem value="Townhouse">Townhouse</SelectItem>
-            <SelectItem value="Condo">Condo</SelectItem>
-          </SelectContent>
-        </Select>
+        <Label className="text-base">Home Types</Label>
+        <div className="grid grid-cols-2 gap-4 mt-2">
+          {HOME_TYPES.map((type) => (
+            <div key={type} className="flex items-center space-x-2">
+              <Checkbox
+                id={`home-type-${type}`}
+                checked={formData.home_type?.includes(type)}
+                onCheckedChange={() => toggleHomeType(type)}
+              />
+              <Label htmlFor={`home-type-${type}`} className="text-sm font-normal">
+                {type}
+              </Label>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div>
         <Label>Construction Status</Label>
         <Select
           value={formData.construction_status}
-          onValueChange={(value: "preconstruction" | "under_construction" | "complete") => {
-            console.log("Setting construction status to:", value);
-            setFormData({ ...formData, construction_status: value });
-          }}
+          onValueChange={(value: "preconstruction" | "under_construction" | "complete") => 
+            setFormData({ ...formData, construction_status: value })
+          }
         >
           <SelectTrigger>
             <SelectValue placeholder="Select construction status" />

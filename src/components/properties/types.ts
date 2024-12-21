@@ -13,7 +13,7 @@ export interface FormData {
   square_feet_max: string;
   featured: boolean;
   builder_id?: string;
-  home_type: string;
+  home_type: string[];
   construction_status: "preconstruction" | "under_construction" | "complete";
   ownership_type: string;
   quick_move_in: boolean;
@@ -54,7 +54,7 @@ export interface PropertyMainInfoProps {
   bathrooms_max?: string;
   square_feet_min?: string;
   square_feet_max?: string;
-  home_type?: string | null;
+  home_type?: string[];
   amenities?: string[];
   features_and_finishes?: string;
 }

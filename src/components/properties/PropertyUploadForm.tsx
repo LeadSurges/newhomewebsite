@@ -27,7 +27,7 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     square_feet_max: initialData?.square_feet_max?.toString() || "", 
     featured: initialData?.featured || false,
     builder_id: initialData?.builder_id || undefined,
-    home_type: initialData?.home_type || "",
+    home_type: initialData?.home_type || [],
     construction_status: (initialData?.construction_status as "preconstruction" | "under_construction" | "complete") || "preconstruction",
     ownership_type: initialData?.ownership_type || "",
     quick_move_in: initialData?.quick_move_in || false,
