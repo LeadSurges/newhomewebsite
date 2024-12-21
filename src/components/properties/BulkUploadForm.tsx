@@ -14,6 +14,15 @@ export const BulkUploadForm = () => {
   const [progress, setProgress] = useState(0);
   const [scrapedData, setScrapedData] = useState<any[] | null>(null);
 
+  const mapHomeType = (scrapedType: string): string => {
+    // Convert scraped home type to one of our valid types
+    const type = scrapedType?.toLowerCase() || '';
+    if (type.includes('condo') || type.includes('apartment')) return 'Condo';
+    if (type.includes('town') || type.includes('row')) return 'Townhouse';
+    if (type.includes('semi')) return 'Semi-Detached';
+    return 'Detached'; // Default to Detached if no match
+  };
+
   const processAndUploadData = async (data: any[]) => {
     console.log('Processing scraped data for upload:', data);
     
@@ -27,8 +36,7 @@ export const BulkUploadForm = () => {
         bathrooms: parseInt(item.bathrooms?.replace(/[^0-9]/g, '')) || null,
         square_feet: parseInt(item.squareFeet?.replace(/[^0-9]/g, '')) || null,
         image_url: item.images?.join(',') || null,
-        // Set a valid home_type from the allowed values
-        home_type: 'Detached',
+        home_type: mapHomeType(item.propertyType || ''),
       }));
 
       const { error } = await supabase
