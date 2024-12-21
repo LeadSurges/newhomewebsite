@@ -27,6 +27,8 @@ export const BulkUploadForm = () => {
         bathrooms: parseInt(item.bathrooms?.replace(/[^0-9]/g, '')) || null,
         square_feet: parseInt(item.squareFeet?.replace(/[^0-9]/g, '')) || null,
         image_url: item.images?.join(',') || null,
+        // Set a default valid home_type
+        home_type: 'Detached',
       }));
 
       const { error } = await supabase

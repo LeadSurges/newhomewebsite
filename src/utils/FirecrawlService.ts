@@ -1,24 +1,34 @@
-import { FirecrawlClient } from "@mendable/firecrawl-js";
+import { FirecrawlApp } from "@mendable/firecrawl-js";
 
-const client = new FirecrawlClient(import.meta.env.VITE_FIRECRAWL_API_KEY);
+const client = new FirecrawlApp({ 
+  apiKey: import.meta.env.VITE_FIRECRAWL_API_KEY 
+});
 
 export class FirecrawlService {
-  static async scrapeWebsite(url: string) {
+  static async crawlWebsite(url: string) {
     try {
-      const scrapeOptions = {
-        url,
-        selectors: {
-          title: "h1",
-          description: "meta[name='description']",
-          price: ".price",
-          location: ".location",
+      console.log("Starting website crawl for:", url);
+      const response = await client.crawlUrl(url, {
+        limit: 100,
+        scrapeOptions: {
+          formats: ['markdown', 'html'],
+          selectors: {
+            title: '[data-property="title"], h1, .property-title',
+            price: '[data-property="price"], .price, .property-price',
+            description: '[data-property="description"], .description, .property-description',
+            location: '[data-property="location"], .location, .property-location',
+            bedrooms: '[data-property="bedrooms"], .bedrooms, .property-bedrooms',
+            bathrooms: '[data-property="bathrooms"], .bathrooms, .property-bathrooms',
+            squareFeet: '[data-property="square-feet"], .square-feet, .property-square-feet',
+            images: '[data-property="image"], img.property-image'
+          }
         }
-      };
-
-      const response = await client.scrape(scrapeOptions);
+      });
+      
+      console.log("Crawl response:", response);
       return response;
     } catch (error) {
-      console.error("Error scraping website:", error);
+      console.error("Error crawling website:", error);
       throw error;
     }
   }
