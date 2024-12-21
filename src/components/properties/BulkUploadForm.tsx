@@ -14,59 +14,55 @@ export const BulkUploadForm = () => {
   const [progress, setProgress] = useState(0);
   const [scrapedData, setScrapedData] = useState<any[] | null>(null);
 
-  const mapHomeType = (scrapedType: string): string => {
-    // Convert scraped home type to one of our valid types
+  const mapHomeType = (scrapedType: string): string[] => {
+    // Convert scraped home type to our valid types array
     const type = scrapedType?.toLowerCase().trim() || '';
+    const homeTypes: string[] = [];
     
     // Handle various possible input formats
     if (type.includes('condo') || 
         type.includes('apartment') || 
         type.includes('apt')) {
-      return 'Condo';
+      homeTypes.push('Condo');
     }
     
     if (type.includes('town') || 
         type.includes('row') || 
         type.includes('townhome')) {
-      return 'Townhouse';
+      homeTypes.push('Townhouse');
     }
     
     if (type.includes('semi') || 
         type.includes('semi-detached') || 
         type.includes('semi detached')) {
-      return 'Semi-Detached';
+      homeTypes.push('Semi-Detached');
     }
     
     if (type.includes('single') || 
         type.includes('detached') || 
         type.includes('house')) {
-      return 'Detached';
+      homeTypes.push('Detached');
     }
     
-    console.log('Unmapped property type:', scrapedType, 'defaulting to Detached');
-    return 'Detached'; // Default to Detached if no match
+    console.log('Mapped property type:', scrapedType, 'to:', homeTypes);
+    return homeTypes.length > 0 ? homeTypes : ['Detached']; // Default to Detached if no match
   };
 
   const processAndUploadData = async (data: any[]) => {
     console.log('Processing scraped data for upload:', data);
     
     try {
-      const properties = data.map(item => {
-        const mappedHomeType = mapHomeType(item.propertyType || '');
-        console.log('Mapped home type:', item.propertyType, 'to:', mappedHomeType);
-        
-        return {
-          title: item.title || 'Untitled Property',
-          description: item.description || '',
-          price: parseFloat(item.price?.replace(/[^0-9.]/g, '')) || 0,
-          location: item.location || '',
-          bedrooms: parseInt(item.bedrooms?.replace(/[^0-9]/g, '')) || null,
-          bathrooms: parseInt(item.bathrooms?.replace(/[^0-9]/g, '')) || null,
-          square_feet: parseInt(item.squareFeet?.replace(/[^0-9]/g, '')) || null,
-          image_url: item.images?.join(',') || null,
-          home_type: mappedHomeType,
-        };
-      });
+      const properties = data.map(item => ({
+        title: item.title || 'Untitled Property',
+        description: item.description || '',
+        price: parseFloat(item.price?.replace(/[^0-9.]/g, '')) || 0,
+        location: item.location || '',
+        bedrooms: parseInt(item.bedrooms?.replace(/[^0-9]/g, '')) || null,
+        bathrooms: parseInt(item.bathrooms?.replace(/[^0-9]/g, '')) || null,
+        square_feet: parseInt(item.squareFeet?.replace(/[^0-9]/g, '')) || null,
+        image_url: item.images?.join(',') || null,
+        home_type: mapHomeType(item.propertyType || ''),
+      }));
 
       console.log('Prepared properties for upload:', properties);
 
