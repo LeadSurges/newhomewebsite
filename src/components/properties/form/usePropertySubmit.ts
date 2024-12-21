@@ -63,6 +63,9 @@ export const usePropertySubmit = (initialData?: Property) => {
         image_url: image_urls.join(','),
         floorplan_url: floorplan_urls.join(','),
         image_order: imageOrder.length > 0 ? imageOrder : image_urls,
+        price: parseFloat(formData.price),
+        completion_year: formData.completion_year ? parseInt(formData.completion_year) : null,
+        garage_spaces: formData.garage_spaces ? parseInt(formData.garage_spaces) : null
       };
 
       console.log("Final property data being submitted:", propertyData);
