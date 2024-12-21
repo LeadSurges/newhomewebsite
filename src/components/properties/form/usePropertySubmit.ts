@@ -9,7 +9,7 @@ export const usePropertySubmit = (initialData?: Property) => {
   const [selectedFloorplans, setSelectedFloorplans] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>(initialData?.image_url ? initialData.image_url.split(',') : []);
   const [floorplanPreviews, setFloorplanPreviews] = useState<string[]>(initialData?.floorplan_url ? initialData.floorplan_url.split(',') : []);
-  const [imageOrder, setImageOrder] = useState<string[]>(initialData?.image_order || []);
+  const [imageOrder, setImageOrder] = useState<string[]>(initialData?.image_order || initialData?.image_url?.split(',') || []);
   const { toast } = useToast();
 
   const handleSubmit = async (formData: FormData) => {
@@ -58,11 +58,14 @@ export const usePropertySubmit = (initialData?: Property) => {
         floorplan_urls = newUrls;
       }
 
+      // Use the current imageOrder if it exists, otherwise use the image URLs
+      const finalImageOrder = imageOrder.length > 0 ? imageOrder : image_urls;
+
       const propertyData = {
         ...formData,
         image_url: image_urls.join(','),
         floorplan_url: floorplan_urls.join(','),
-        image_order: imageOrder.length > 0 ? imageOrder : image_urls,
+        image_order: finalImageOrder,
         price: parseFloat(formData.price),
         completion_year: formData.completion_year ? parseInt(formData.completion_year) : null,
         garage_spaces: formData.garage_spaces ? parseInt(formData.garage_spaces) : null
