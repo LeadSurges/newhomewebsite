@@ -12,10 +12,10 @@ export class FirecrawlService {
         limit: 100,
         scrapeOptions: {
           formats: ['markdown', 'html'],
-          // Remove the selectors property as it's not part of the CrawlScrapeOptions type
-          // We'll need to process the data after crawling to extract the specific fields
         }
       });
+      
+      console.log("Crawl response:", response);
       
       // Process the crawled data to extract the fields we need
       if (response.success && response.data) {
@@ -27,6 +27,7 @@ export class FirecrawlService {
           bedrooms: item.bedrooms || '',
           bathrooms: item.bathrooms || '',
           squareFeet: item.squareFeet || '',
+          propertyType: item.propertyType || '',
           images: item.images || []
         }));
         
@@ -36,7 +37,6 @@ export class FirecrawlService {
         };
       }
       
-      console.log("Crawl response:", response);
       return response;
     } catch (error) {
       console.error("Error crawling website:", error);
