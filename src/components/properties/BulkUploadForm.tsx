@@ -93,6 +93,10 @@ export const BulkUploadForm = () => {
     setScrapedData(null);
     
     try {
+      if (!import.meta.env.VITE_FIRECRAWL_API_KEY) {
+        throw new Error("Firecrawl API key is not configured");
+      }
+
       console.log('Starting crawl for URL:', url);
       const result = await FirecrawlService.crawlWebsite(url);
       
