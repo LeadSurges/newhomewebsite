@@ -34,7 +34,7 @@ export class FirecrawlService {
             { name: 'images', selector: 'img', attribute: 'src' }
           ],
           waitFor: '.property-details, .listing-details',
-          timeout: 10000
+          timeout: 10000 // Changed from string '10000' to number 10000
         }
       });
       
