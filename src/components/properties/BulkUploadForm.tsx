@@ -15,54 +15,58 @@ export const BulkUploadForm = () => {
   const [scrapedData, setScrapedData] = useState<any[] | null>(null);
 
   const mapHomeType = (scrapedType: string): string[] => {
-    // Convert scraped home type to our valid types array
     const type = scrapedType?.toLowerCase().trim() || '';
     const homeTypes: string[] = [];
     
-    // Handle various possible input formats
-    if (type.includes('condo') || 
-        type.includes('apartment') || 
-        type.includes('apt')) {
+    if (type.includes('condo') || type.includes('apartment')) {
       homeTypes.push('Condo');
-    }
-    
-    if (type.includes('town') || 
-        type.includes('row') || 
-        type.includes('townhome')) {
+    } else if (type.includes('town') || type.includes('townhome')) {
       homeTypes.push('Townhouse');
-    }
-    
-    if (type.includes('semi') || 
-        type.includes('semi-detached') || 
-        type.includes('semi detached')) {
+    } else if (type.includes('semi')) {
       homeTypes.push('Semi-Detached');
-    }
-    
-    if (type.includes('single') || 
-        type.includes('detached') || 
-        type.includes('house')) {
+    } else if (type.includes('single') || type.includes('detached')) {
       homeTypes.push('Detached');
     }
     
     console.log('Mapped property type:', scrapedType, 'to:', homeTypes);
-    return homeTypes.length > 0 ? homeTypes : ['Detached']; // Default to Detached if no match
+    return homeTypes.length > 0 ? homeTypes : ['Detached'];
+  };
+
+  const cleanNumber = (value: string | null | undefined): number | null => {
+    if (!value) return null;
+    const cleaned = value.replace(/[^0-9.]/g, '');
+    const num = parseFloat(cleaned);
+    return isNaN(num) ? null : num;
   };
 
   const processAndUploadData = async (data: any[]) => {
     console.log('Processing scraped data for upload:', data);
     
     try {
-      const properties = data.map(item => ({
-        title: item.title || 'Untitled Property',
-        description: item.description || '',
-        price: parseFloat(item.price?.replace(/[^0-9.]/g, '')) || 0,
-        location: item.location || '',
-        bedrooms: parseInt(item.bedrooms?.replace(/[^0-9]/g, '')) || null,
-        bathrooms: parseInt(item.bathrooms?.replace(/[^0-9]/g, '')) || null,
-        square_feet: parseInt(item.squareFeet?.replace(/[^0-9]/g, '')) || null,
-        image_url: item.images?.join(',') || null,
-        home_type: mapHomeType(item.propertyType || ''),
-      }));
+      const properties = data.map(item => {
+        console.log('Processing item:', item);
+        
+        const price = cleanNumber(item.price);
+        const bedrooms = cleanNumber(item.bedrooms);
+        const bathrooms = cleanNumber(item.bathrooms);
+        const squareFeet = cleanNumber(item.squareFeet);
+        
+        console.log('Cleaned values:', { price, bedrooms, bathrooms, squareFeet });
+
+        return {
+          title: item.title || 'Untitled Property',
+          description: item.description || '',
+          price: price || 0,
+          location: item.location || '',
+          bedrooms: bedrooms || null,
+          bathrooms: bathrooms || null,
+          square_feet: squareFeet || null,
+          image_url: Array.isArray(item.images) ? item.images.join(',') : null,
+          home_type: mapHomeType(item.propertyType || ''),
+          construction_status: 'preconstruction',
+          featured: false
+        };
+      });
 
       console.log('Prepared properties for upload:', properties);
 
@@ -97,13 +101,15 @@ export const BulkUploadForm = () => {
       const result = await FirecrawlService.crawlWebsite(url);
       
       if (result.success && result.data) {
+        console.log('Crawl successful, data:', result.data);
         setScrapedData(result.data);
         await processAndUploadData(result.data);
-      } else if (!result.success && 'error' in result) {
+      } else {
+        console.error('Crawl failed:', result);
         toast({
           variant: "destructive",
           title: "Error",
-          description: result.error || "Failed to crawl website",
+          description: "Failed to crawl website",
         });
       }
     } catch (error: any) {
@@ -128,14 +134,14 @@ export const BulkUploadForm = () => {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <label htmlFor="url" className="text-sm font-medium">
-              Website URL to Scrape
+              Property Page URL to Scrape
             </label>
             <Input
               id="url"
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://example.com/properties"
+              placeholder="https://example.com/property/123"
               required
             />
           </div>
