@@ -22,15 +22,19 @@ export class FirecrawlService {
         scrapeOptions: {
           formats: ['markdown', 'html'],
           elements: [
-            { name: 'title', selector: 'h1' },
-            { name: 'description', selector: 'meta[name="description"]' },
+            { name: 'title', selector: 'h1, .property-title, .listing-title' },
+            { name: 'description', selector: '.description, .property-description, [data-description]' },
             { name: 'price', selector: '.price, .property-price, [data-price]' },
             { name: 'location', selector: '.location, .property-location, address' },
-            { name: 'bedrooms', selector: '.bedrooms, .beds' },
-            { name: 'bathrooms', selector: '.bathrooms, .baths' },
-            { name: 'squareFeet', selector: '.square-feet, .sqft' },
-            { name: 'propertyType', selector: '.property-type, .home-type' },
-            { name: 'images', selector: 'img', attribute: 'src' }
+            { name: 'bedrooms', selector: '.bedrooms, .beds, [data-bedrooms]' },
+            { name: 'bathrooms', selector: '.bathrooms, .baths, [data-bathrooms]' },
+            { name: 'squareFeet', selector: '.square-feet, .sqft, [data-sqft]' },
+            { name: 'propertyType', selector: '.property-type, .home-type, [data-type]' },
+            { name: 'images', selector: 'img.property-image, img.listing-image, [data-property-image]', attribute: 'src' },
+            { name: 'floorplans', selector: 'img.floorplan, img.floor-plan, [data-floorplan]', attribute: 'src' },
+            { name: 'features', selector: '.features, .amenities, [data-features]' },
+            { name: 'constructionStatus', selector: '.construction-status, [data-construction]' },
+            { name: 'completionYear', selector: '.completion-year, [data-completion]' }
           ],
           waitFor: '.property-details, .listing-details',
           timeout: 10000

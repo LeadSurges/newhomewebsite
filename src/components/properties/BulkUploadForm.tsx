@@ -50,8 +50,9 @@ export const BulkUploadForm = () => {
         const bedrooms = cleanNumber(item.bedrooms);
         const bathrooms = cleanNumber(item.bathrooms);
         const squareFeet = cleanNumber(item.squareFeet);
+        const completionYear = cleanNumber(item.completionYear);
         
-        console.log('Cleaned values:', { price, bedrooms, bathrooms, squareFeet });
+        console.log('Cleaned values:', { price, bedrooms, bathrooms, squareFeet, completionYear });
 
         return {
           title: item.title || 'Untitled Property',
@@ -62,9 +63,12 @@ export const BulkUploadForm = () => {
           bathrooms: bathrooms || null,
           square_feet: squareFeet || null,
           image_url: Array.isArray(item.images) ? item.images.join(',') : null,
+          floorplan_url: Array.isArray(item.floorplans) ? item.floorplans.join(',') : null,
           home_type: mapHomeType(item.propertyType || ''),
-          construction_status: 'preconstruction',
-          featured: false
+          construction_status: item.constructionStatus?.toLowerCase() || 'preconstruction',
+          completion_year: completionYear || null,
+          featured: false,
+          amenities: item.features ? item.features.split(',').map((f: string) => f.trim()) : [],
         };
       });
 
