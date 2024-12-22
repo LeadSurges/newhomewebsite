@@ -21,7 +21,7 @@ export class FirecrawlService {
         limit: 1,
         scrapeOptions: {
           formats: ['markdown', 'html'],
-          selectors: [
+          elements: [
             { name: 'title', selector: 'h1, .property-title, .listing-title' },
             { name: 'description', selector: '.description, .property-description, [data-description]' },
             { name: 'price', selector: '.price, .property-price, [data-price]' },
