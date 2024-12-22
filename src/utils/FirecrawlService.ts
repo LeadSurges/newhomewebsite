@@ -21,7 +21,7 @@ export class FirecrawlService {
         limit: 1,
         scrapeOptions: {
           formats: ['markdown', 'html'],
-          elements: [
+          selectors: [
             { name: 'title', selector: 'h1, .property-title, .listing-title' },
             { name: 'description', selector: '.description, .property-description, [data-description]' },
             { name: 'price', selector: '.price, .property-price, [data-price]' },
@@ -36,7 +36,7 @@ export class FirecrawlService {
             { name: 'constructionStatus', selector: '.construction-status, [data-construction]' },
             { name: 'completionYear', selector: '.completion-year, [data-completion]' }
           ],
-          waitFor: 5000, // Changed from string to number (milliseconds)
+          waitFor: 5000,
           timeout: 10000
         }
       });
