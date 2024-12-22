@@ -1,11 +1,20 @@
 import FirecrawlApp from "@mendable/firecrawl-js";
+import { supabase } from "@/integrations/supabase/client";
 
 export class FirecrawlService {
   static async crawlWebsite(url: string) {
     try {
-      console.log("Starting website crawl for:", url);
+      console.log("Getting Firecrawl API key from Supabase");
+      const { data: { secret }, error: secretError } = await supabase.functions.invoke('get-firecrawl-key');
+      
+      if (secretError || !secret) {
+        console.error("Error getting Firecrawl API key:", secretError);
+        throw new Error("Failed to get Firecrawl API key");
+      }
+
+      console.log("Initializing Firecrawl client");
       const client = new FirecrawlApp({ 
-        apiKey: import.meta.env.VITE_FIRECRAWL_API_KEY 
+        apiKey: secret
       });
       
       const response = await client.crawlUrl(url, {
@@ -16,30 +25,9 @@ export class FirecrawlService {
       });
       
       console.log("Crawl response:", response);
-      
-      // Process the crawled data to extract the fields we need
-      if (response.success && response.data) {
-        const processedData = response.data.map((item: any) => ({
-          title: item.title || '',
-          price: item.price || '',
-          description: item.description || '',
-          location: item.location || '',
-          bedrooms: item.bedrooms || '',
-          bathrooms: item.bathrooms || '',
-          squareFeet: item.squareFeet || '',
-          propertyType: item.propertyType || '',
-          images: item.images || []
-        }));
-        
-        return {
-          success: true,
-          data: processedData
-        };
-      }
-      
       return response;
     } catch (error) {
-      console.error("Error crawling website:", error);
+      console.error("Error in FirecrawlService:", error);
       throw error;
     }
   }
