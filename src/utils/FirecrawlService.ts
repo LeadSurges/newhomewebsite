@@ -18,25 +18,23 @@ export class FirecrawlService {
       });
       
       const response = await client.crawlUrl(url, {
-        limit: 1, // Start with just one page for testing
+        limit: 1,
         scrapeOptions: {
           formats: ['markdown', 'html'],
-          selectors: {
-            title: "h1",
-            description: "meta[name='description']",
-            price: ".price, .property-price, [data-price]",
-            location: ".location, .property-location, address",
-            bedrooms: ".bedrooms, .beds",
-            bathrooms: ".bathrooms, .baths",
-            squareFeet: ".square-feet, .sqft",
-            propertyType: ".property-type, .home-type",
-            images: {
-              selector: "img",
-              attribute: "src"
-            }
-          },
-          waitForSelector: ".property-details, .listing-details",
-          maxWaitTime: 10000
+          // Using CSS selectors in the elements array instead of a selectors object
+          elements: [
+            { name: 'title', selector: 'h1' },
+            { name: 'description', selector: 'meta[name="description"]' },
+            { name: 'price', selector: '.price, .property-price, [data-price]' },
+            { name: 'location', selector: '.location, .property-location, address' },
+            { name: 'bedrooms', selector: '.bedrooms, .beds' },
+            { name: 'bathrooms', selector: '.bathrooms, .baths' },
+            { name: 'squareFeet', selector: '.square-feet, .sqft' },
+            { name: 'propertyType', selector: '.property-type, .home-type' },
+            { name: 'images', selector: 'img', attribute: 'src' }
+          ],
+          waitFor: '.property-details, .listing-details',
+          timeout: 10000
         }
       });
       
