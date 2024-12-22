@@ -21,7 +21,6 @@ export class FirecrawlService {
         limit: 1,
         scrapeOptions: {
           formats: ['markdown', 'html'],
-          // Using CSS selectors in the elements array instead of a selectors object
           elements: [
             { name: 'title', selector: 'h1' },
             { name: 'description', selector: 'meta[name="description"]' },
@@ -34,7 +33,7 @@ export class FirecrawlService {
             { name: 'images', selector: 'img', attribute: 'src' }
           ],
           waitFor: '.property-details, .listing-details',
-          timeout: 10000 // Changed from string '10000' to number 10000
+          timeout: 10000
         }
       });
       
