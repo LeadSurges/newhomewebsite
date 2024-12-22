@@ -1,4 +1,5 @@
 import FirecrawlApp from "@mendable/firecrawl-js";
+import { supabase } from "@/integrations/supabase/client";
 
 export class FirecrawlService {
   static async crawlWebsite(url: string) {
@@ -22,7 +23,7 @@ export class FirecrawlService {
           formats: ['markdown', 'html'],
           waitFor: 5000,
           timeout: 10000,
-          queries: [
+          selectors: [
             { name: 'title', selector: 'h1, .property-title, .listing-title' },
             { name: 'description', selector: '.description, .property-description, [data-description]' },
             { name: 'price', selector: '.price, .property-price, [data-price]' },
