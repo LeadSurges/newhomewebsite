@@ -36,7 +36,7 @@ export class FirecrawlService {
             { name: 'constructionStatus', selector: '.construction-status, [data-construction]' },
             { name: 'completionYear', selector: '.completion-year, [data-completion]' }
           ],
-          waitFor: '.property-details, .listing-details',
+          waitFor: 5000, // Changed from string to number (milliseconds)
           timeout: 10000
         }
       });
