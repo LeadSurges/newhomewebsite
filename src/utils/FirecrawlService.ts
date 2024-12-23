@@ -22,7 +22,8 @@ export class FirecrawlService {
         scrapeOptions: {
           waitFor: 5000,
           formats: ['html'],
-          selectors: {
+          // Using CSS selectors directly in the content extraction
+          content: {
             title: 'h1, .property-title, .listing-title',
             description: '.description, .property-description, [data-description]',
             price: '.price, .property-price, [data-price]',
@@ -31,6 +32,12 @@ export class FirecrawlService {
             bathrooms: '.bathrooms, .baths, [data-bathrooms]',
             squareFeet: '.square-feet, .sqft, [data-sqft]',
             propertyType: '.property-type, .home-type, [data-type]',
+            features: '.features, .amenities, [data-features]',
+            constructionStatus: '.construction-status, [data-construction]',
+            completionYear: '.completion-year, [data-completion]'
+          },
+          // Using CSS selectors for media elements
+          media: {
             images: {
               selector: 'img.property-image, img.listing-image, [data-property-image]',
               attribute: 'src'
@@ -38,10 +45,7 @@ export class FirecrawlService {
             floorplans: {
               selector: 'img.floorplan, img.floor-plan, [data-floorplan]',
               attribute: 'src'
-            },
-            features: '.features, .amenities, [data-features]',
-            constructionStatus: '.construction-status, [data-construction]',
-            completionYear: '.completion-year, [data-completion]'
+            }
           }
         }
       });
