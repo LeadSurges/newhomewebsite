@@ -20,23 +20,29 @@ export class FirecrawlService {
       const response = await client.crawlUrl(url, {
         limit: 1,
         scrapeOptions: {
-          formats: ['markdown', 'html'],
-          waitFor: 5000,
+          waitForSelector: '.property-title, .listing-title, h1',
+          waitForTimeout: 5000,
           timeout: 10000,
-          extract: {
-            title: { selector: 'h1, .property-title, .listing-title' },
-            description: { selector: '.description, .property-description, [data-description]' },
-            price: { selector: '.price, .property-price, [data-price]' },
-            location: { selector: '.location, .property-location, address' },
-            bedrooms: { selector: '.bedrooms, .beds, [data-bedrooms]' },
-            bathrooms: { selector: '.bathrooms, .baths, [data-bathrooms]' },
-            squareFeet: { selector: '.square-feet, .sqft, [data-sqft]' },
-            propertyType: { selector: '.property-type, .home-type, [data-type]' },
-            images: { selector: 'img.property-image, img.listing-image, [data-property-image]', attribute: 'src' },
-            floorplans: { selector: 'img.floorplan, img.floor-plan, [data-floorplan]', attribute: 'src' },
-            features: { selector: '.features, .amenities, [data-features]' },
-            constructionStatus: { selector: '.construction-status, [data-construction]' },
-            completionYear: { selector: '.completion-year, [data-completion]' }
+          selectors: {
+            title: 'h1, .property-title, .listing-title',
+            description: '.description, .property-description, [data-description]',
+            price: '.price, .property-price, [data-price]',
+            location: '.location, .property-location, address',
+            bedrooms: '.bedrooms, .beds, [data-bedrooms]',
+            bathrooms: '.bathrooms, .baths, [data-bathrooms]',
+            squareFeet: '.square-feet, .sqft, [data-sqft]',
+            propertyType: '.property-type, .home-type, [data-type]',
+            images: {
+              selector: 'img.property-image, img.listing-image, [data-property-image]',
+              attribute: 'src'
+            },
+            floorplans: {
+              selector: 'img.floorplan, img.floor-plan, [data-floorplan]',
+              attribute: 'src'
+            },
+            features: '.features, .amenities, [data-features]',
+            constructionStatus: '.construction-status, [data-construction]',
+            completionYear: '.completion-year, [data-completion]'
           }
         }
       });
