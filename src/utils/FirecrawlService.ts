@@ -19,10 +19,10 @@ export class FirecrawlService {
       
       const response = await client.crawlUrl(url, {
         limit: 1,
+        timeout: 10000,
         scrapeOptions: {
-          waitForSelector: '.property-title, .listing-title, h1',
+          waitFor: '.property-title, .listing-title, h1',
           waitForTimeout: 5000,
-          timeout: 10000,
           selectors: {
             title: 'h1, .property-title, .listing-title',
             description: '.description, .property-description, [data-description]',
