@@ -22,7 +22,7 @@ export class FirecrawlService {
         scrapeOptions: {
           waitFor: 5000,
           formats: ['html'],
-          selectors: {
+          content: {
             title: 'h1, .property-title, .listing-title',
             description: '.description, .property-description, [data-description]',
             price: '.price, .property-price, [data-price]',
