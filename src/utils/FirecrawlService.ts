@@ -22,27 +22,21 @@ export class FirecrawlService {
         scrapeOptions: {
           waitFor: 5000,
           formats: ['html'],
-          content: {
-            title: 'h1, .property-title, .listing-title',
-            description: '.description, .property-description, [data-description]',
-            price: '.price, .property-price, [data-price]',
-            location: '.location, .property-location, address',
-            bedrooms: '.bedrooms, .beds, [data-bedrooms]',
-            bathrooms: '.bathrooms, .baths, [data-bathrooms]',
-            squareFeet: '.square-feet, .sqft, [data-sqft]',
-            propertyType: '.property-type, .home-type, [data-type]',
-            features: '.features, .amenities, [data-features]',
-            constructionStatus: '.construction-status, [data-construction]',
-            completionYear: '.completion-year, [data-completion]',
-            images: {
-              selector: 'img.property-image, img.listing-image, [data-property-image]',
-              attribute: 'src'
-            },
-            floorplans: {
-              selector: 'img.floorplan, img.floor-plan, [data-floorplan]',
-              attribute: 'src'
-            }
-          }
+          selectors: [
+            { name: 'title', selector: 'h1, .property-title, .listing-title' },
+            { name: 'description', selector: '.description, .property-description, [data-description]' },
+            { name: 'price', selector: '.price, .property-price, [data-price]' },
+            { name: 'location', selector: '.location, .property-location, address' },
+            { name: 'bedrooms', selector: '.bedrooms, .beds, [data-bedrooms]' },
+            { name: 'bathrooms', selector: '.bathrooms, .baths, [data-bathrooms]' },
+            { name: 'squareFeet', selector: '.square-feet, .sqft, [data-sqft]' },
+            { name: 'propertyType', selector: '.property-type, .home-type, [data-type]' },
+            { name: 'features', selector: '.features, .amenities, [data-features]' },
+            { name: 'constructionStatus', selector: '.construction-status, [data-construction]' },
+            { name: 'completionYear', selector: '.completion-year, [data-completion]' },
+            { name: 'images', selector: 'img.property-image, img.listing-image, [data-property-image]', attribute: 'src' },
+            { name: 'floorplans', selector: 'img.floorplan, img.floor-plan, [data-floorplan]', attribute: 'src' }
+          ]
         }
       });
       
