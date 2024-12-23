@@ -23,7 +23,7 @@ export class FirecrawlService {
           formats: ['markdown', 'html'],
           waitFor: 5000,
           timeout: 10000,
-          extractors: {
+          extract: {
             title: { selector: 'h1, .property-title, .listing-title' },
             description: { selector: '.description, .property-description, [data-description]' },
             price: { selector: '.price, .property-price, [data-price]' },
