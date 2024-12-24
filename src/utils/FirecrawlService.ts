@@ -120,9 +120,6 @@ export class FirecrawlService {
     const descriptionMatch = markdown.match(/## Overview\n\n([\s\S]*?)(?=\n\n|$)/);
     if (descriptionMatch) data.description = descriptionMatch[1].trim();
 
-    // Extract and validate construction status
-    data.construction_status = this.parseConstructionStatus(markdown);
-
     // Extract home type
     if (markdown.toLowerCase().includes('townhouse')) {
       data.home_type = ['Townhouse'];
@@ -134,12 +131,12 @@ export class FirecrawlService {
     return data;
   }
 
-  private static parseConstructionStatus(markdown: string): ConstructionStatus {
-    const content = markdown.toLowerCase();
+  private static parseConstructionStatus(content: string): ConstructionStatus {
+    const lowerContent = content.toLowerCase();
     
-    if (content.includes('under construction')) {
+    if (lowerContent.includes('under construction')) {
       return 'under_construction';
-    } else if (content.includes('complete') || content.includes('completed')) {
+    } else if (lowerContent.includes('complete') || lowerContent.includes('completed')) {
       return 'complete';
     }
     
@@ -154,25 +151,28 @@ export class FirecrawlService {
       try {
         console.log('Preparing property for upload:', property);
         
+        const propertyData = {
+          title: property.title || 'Untitled Property',
+          description: property.description || '',
+          price: property.price || 0,
+          location: property.location || '',
+          bedrooms_min: property.bedrooms_min || null,
+          bedrooms_max: property.bedrooms_max || null,
+          bathrooms_min: property.bathrooms_min || null,
+          bathrooms_max: property.bathrooms_max || null,
+          square_feet_min: property.square_feet_min || null,
+          square_feet_max: property.square_feet_max || null,
+          construction_status: this.parseConstructionStatus(property.description || '') as ConstructionStatus,
+          home_type: property.home_type || ['Detached'],
+          image_url: property.images?.[0] || null,
+          floorplan_url: property.floorplans?.[0] || null,
+          price_range_max: property.price_range_max || null,
+        };
+
+        console.log('Uploading property data:', propertyData);
         const { error } = await supabase
           .from('properties')
-          .insert([{
-            title: property.title,
-            description: property.description,
-            price: property.price,
-            location: property.location,
-            bedrooms_min: property.bedrooms_min,
-            bedrooms_max: property.bedrooms_max,
-            bathrooms_min: property.bathrooms_min,
-            bathrooms_max: property.bathrooms_max,
-            square_feet_min: property.square_feet_min,
-            square_feet_max: property.square_feet_max,
-            construction_status: this.parseConstructionStatus(property.description || ''),
-            home_type: property.home_type || ['Detached'],
-            image_url: property.images[0],
-            floorplan_url: property.floorplans[0],
-            price_range_max: property.price_range_max,
-          }]);
+          .insert([propertyData]);
 
         if (error) throw error;
       } catch (error) {
