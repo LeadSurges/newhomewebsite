@@ -1,22 +1,6 @@
-import FirecrawlApp from '@mendable/firecrawl-js';
 import { supabase } from "@/integrations/supabase/client";
 
-interface ErrorResponse {
-  success: false;
-  error: string;
-}
-
-interface CrawlStatusResponse {
-  success: true;
-  status: string;
-  completed: number;
-  total: number;
-  creditsUsed: number;
-  expiresAt: string;
-  data: any[];
-}
-
-type CrawlResponse = CrawlStatusResponse | ErrorResponse;
+type ConstructionStatus = "preconstruction" | "under_construction" | "complete";
 
 export class FirecrawlService {
   static async crawlWebsite(url: string): Promise<{ success: boolean; error?: string; data?: any }> {
@@ -120,14 +104,9 @@ export class FirecrawlService {
     const descriptionMatch = markdown.match(/## Overview\n\n([\s\S]*?)(?=\n\n|$)/);
     if (descriptionMatch) data.description = descriptionMatch[1].trim();
 
-    // Extract construction status - Updated to match database enum values
-    if (markdown.toLowerCase().includes('under construction')) {
-      data.construction_status = 'under_construction';
-    } else if (markdown.toLowerCase().includes('complete')) {
-      data.construction_status = 'complete';
-    } else {
-      data.construction_status = 'preconstruction';
-    }
+    // Extract and validate construction status
+    const constructionStatus = this.parseConstructionStatus(markdown);
+    data.construction_status = constructionStatus;
 
     // Extract home type
     if (markdown.toLowerCase().includes('townhouse')) {
@@ -140,11 +119,25 @@ export class FirecrawlService {
     return data;
   }
 
+  private static parseConstructionStatus(markdown: string): ConstructionStatus {
+    const content = markdown.toLowerCase();
+    
+    if (content.includes('under construction')) {
+      return 'under_construction';
+    } else if (content.includes('complete') || content.includes('completed')) {
+      return 'complete';
+    } else {
+      return 'preconstruction';
+    }
+  }
+
   static async processAndUploadData(properties: any[]): Promise<void> {
     console.log('Processing and uploading property data:', properties);
     
     for (const property of properties) {
       try {
+        console.log('Preparing property for upload:', property);
+        
         const { error } = await supabase
           .from('properties')
           .insert([{
@@ -158,10 +151,10 @@ export class FirecrawlService {
             bathrooms_max: property.bathrooms_max,
             square_feet_min: property.square_feet_min,
             square_feet_max: property.square_feet_max,
-            construction_status: property.construction_status || 'preconstruction', // Ensure we always have a valid value
-            home_type: property.home_type || ['Detached'], // Default to Detached if not specified
-            image_url: property.images[0], // Use first image as main image
-            floorplan_url: property.floorplans[0], // Use first floorplan
+            construction_status: property.construction_status as ConstructionStatus,
+            home_type: property.home_type || ['Detached'],
+            image_url: property.images[0],
+            floorplan_url: property.floorplans[0],
             price_range_max: property.price_range_max,
           }]);
 
