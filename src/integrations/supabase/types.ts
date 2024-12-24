@@ -179,6 +179,7 @@ export type Database = {
           square_feet_min: string | null
           storage_cost: number | null
           title: string
+          total_homes: number | null
           updated_at: string
           user_id: string | null
         }
@@ -221,6 +222,7 @@ export type Database = {
           square_feet_min?: string | null
           storage_cost?: number | null
           title: string
+          total_homes?: number | null
           updated_at?: string
           user_id?: string | null
         }
@@ -263,6 +265,7 @@ export type Database = {
           square_feet_min?: string | null
           storage_cost?: number | null
           title?: string
+          total_homes?: number | null
           updated_at?: string
           user_id?: string | null
         }
