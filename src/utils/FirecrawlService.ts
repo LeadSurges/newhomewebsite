@@ -65,7 +65,6 @@ export class FirecrawlService {
     }
   }
 
-  // Changed from private to public static
   static parseMarkdownContent(markdown: string): any {
     const data: any = {
       images: [],
@@ -121,9 +120,11 @@ export class FirecrawlService {
     const descriptionMatch = markdown.match(/## Overview\n\n([\s\S]*?)(?=\n\n|$)/);
     if (descriptionMatch) data.description = descriptionMatch[1].trim();
 
-    // Extract construction status
-    if (markdown.includes('Construction')) {
+    // Extract construction status - Updated to match database enum values
+    if (markdown.toLowerCase().includes('under construction')) {
       data.construction_status = 'under_construction';
+    } else if (markdown.toLowerCase().includes('complete')) {
+      data.construction_status = 'complete';
     } else {
       data.construction_status = 'preconstruction';
     }
@@ -139,7 +140,6 @@ export class FirecrawlService {
     return data;
   }
 
-  // Added new method to process and upload data
   static async processAndUploadData(properties: any[]): Promise<void> {
     console.log('Processing and uploading property data:', properties);
     
@@ -158,14 +158,17 @@ export class FirecrawlService {
             bathrooms_max: property.bathrooms_max,
             square_feet_min: property.square_feet_min,
             square_feet_max: property.square_feet_max,
-            construction_status: property.construction_status,
-            home_type: property.home_type,
+            construction_status: property.construction_status || 'preconstruction', // Ensure we always have a valid value
+            home_type: property.home_type || ['Detached'], // Default to Detached if not specified
             image_url: property.images[0], // Use first image as main image
             floorplan_url: property.floorplans[0], // Use first floorplan
             price_range_max: property.price_range_max,
           }]);
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error details:', error);
+          throw error;
+        }
         console.log('Successfully uploaded property:', property.title);
       } catch (error) {
         console.error('Error uploading property:', error);
