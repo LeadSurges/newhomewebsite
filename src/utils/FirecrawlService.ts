@@ -1,5 +1,5 @@
-import FirecrawlApp from '@mendable/firecrawl-js';
 import { supabase } from "@/integrations/supabase/client";
+import FirecrawlApp from '@mendable/firecrawl-js';
 
 interface ErrorResponse {
   success: false;
@@ -70,14 +70,17 @@ export class FirecrawlService {
       floorplans: []
     };
 
-    // Extract images
+    // Extract all images
     const imageRegex = /!\[(.*?)\]\((.*?)\)/g;
     let match;
     while ((match = imageRegex.exec(markdown)) !== null) {
-      if (match[1].includes('hero-image')) {
-        data.images.push(match[2]);
-      } else if (match[1].toLowerCase().includes('floor')) {
-        data.floorplans.push(match[2]);
+      const altText = match[1].toLowerCase();
+      const imageUrl = match[2];
+      
+      if (altText.includes('floor') || altText.includes('plan')) {
+        data.floorplans.push(imageUrl);
+      } else {
+        data.images.push(imageUrl);
       }
     }
 
@@ -85,11 +88,19 @@ export class FirecrawlService {
     const titleMatch = markdown.match(/# (.*?)(\n|$)/);
     if (titleMatch) data.title = titleMatch[1].trim();
 
+    // Extract total homes
+    const totalHomesMatch = markdown.match(/total of (\d+) units/i);
+    if (totalHomesMatch) {
+      data.total_homes = parseInt(totalHomesMatch[1]);
+    }
+
     // Extract price range
-    const priceMatch = markdown.match(/From \$([\d,]+) to \$([\d,]+)/);
-    if (priceMatch) {
-      data.price = parseFloat(priceMatch[1].replace(/,/g, ''));
-      data.price_range_max = parseFloat(priceMatch[2].replace(/,/g, ''));
+    const priceRangeMatch = markdown.match(/(?:from|price range:?)\s*\$?([\d,]+(?:\.\d+)?)\s*(?:to|-)?\s*\$?([\d,]+(?:\.\d+)?)/i);
+    if (priceRangeMatch) {
+      data.price = parseFloat(priceRangeMatch[1].replace(/,/g, ''));
+      if (priceRangeMatch[2]) {
+        data.price_range_max = parseFloat(priceRangeMatch[2].replace(/,/g, ''));
+      }
     }
 
     // Extract location
@@ -113,6 +124,12 @@ export class FirecrawlService {
     if (sqftMatch) {
       data.square_feet_min = sqftMatch[1].replace(/,/g, '');
       data.square_feet_max = sqftMatch[2].replace(/,/g, '');
+    }
+
+    // Extract deposit structure
+    const depositMatch = markdown.match(/(?:deposit structure|payment structure|payment plan):?\s*([\s\S]*?)(?=\n\n|$)/i);
+    if (depositMatch) {
+      data.deposit_structure = depositMatch[1].trim();
     }
 
     // Extract description
@@ -149,9 +166,11 @@ export class FirecrawlService {
           square_feet_min: property.square_feet_min || null,
           square_feet_max: property.square_feet_max || null,
           home_type: property.home_type || ['Detached'],
-          image_url: property.images?.[0] || null,
-          floorplan_url: property.floorplans?.[0] || null,
+          image_url: property.images?.join(',') || null,
+          floorplan_url: property.floorplans?.join(',') || null,
           price_range_max: property.price_range_max || null,
+          total_homes: property.total_homes || null,
+          deposit_structure: property.deposit_structure || null
         };
 
         console.log('Uploading property data:', propertyData);
