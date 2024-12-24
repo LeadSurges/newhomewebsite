@@ -65,7 +65,8 @@ export class FirecrawlService {
     }
   }
 
-  private static parseMarkdownContent(markdown: string): any {
+  // Changed from private to public static
+  static parseMarkdownContent(markdown: string): any {
     const data: any = {
       images: [],
       floorplans: []
@@ -136,5 +137,40 @@ export class FirecrawlService {
 
     console.log("Parsed property data:", data);
     return data;
+  }
+
+  // Added new method to process and upload data
+  static async processAndUploadData(properties: any[]): Promise<void> {
+    console.log('Processing and uploading property data:', properties);
+    
+    for (const property of properties) {
+      try {
+        const { error } = await supabase
+          .from('properties')
+          .insert([{
+            title: property.title,
+            description: property.description,
+            price: property.price,
+            location: property.location,
+            bedrooms_min: property.bedrooms_min,
+            bedrooms_max: property.bedrooms_max,
+            bathrooms_min: property.bathrooms_min,
+            bathrooms_max: property.bathrooms_max,
+            square_feet_min: property.square_feet_min,
+            square_feet_max: property.square_feet_max,
+            construction_status: property.construction_status,
+            home_type: property.home_type,
+            image_url: property.images[0], // Use first image as main image
+            floorplan_url: property.floorplans[0], // Use first floorplan
+            price_range_max: property.price_range_max,
+          }]);
+
+        if (error) throw error;
+        console.log('Successfully uploaded property:', property.title);
+      } catch (error) {
+        console.error('Error uploading property:', error);
+        throw new Error(`Failed to upload property: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    }
   }
 }
