@@ -167,7 +167,7 @@ export class FirecrawlService {
             bathrooms_max: property.bathrooms_max,
             square_feet_min: property.square_feet_min,
             square_feet_max: property.square_feet_max,
-            construction_status: property.construction_status,
+            construction_status: this.parseConstructionStatus(property.description || ''),
             home_type: property.home_type || ['Detached'],
             image_url: property.images[0],
             floorplan_url: property.floorplans[0],
