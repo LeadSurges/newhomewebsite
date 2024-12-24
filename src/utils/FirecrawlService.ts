@@ -17,7 +17,6 @@ interface CrawlStatusResponse {
 }
 
 type CrawlResponse = CrawlStatusResponse | ErrorResponse;
-type ConstructionStatus = "preconstruction" | "under_construction" | "complete";
 
 export class FirecrawlService {
   static async crawlWebsite(url: string): Promise<{ success: boolean; error?: string; data?: any }> {
@@ -131,19 +130,6 @@ export class FirecrawlService {
     return data;
   }
 
-  private static parseConstructionStatus(content: string): ConstructionStatus {
-    const lowerContent = content.toLowerCase();
-    
-    if (lowerContent.includes('under construction')) {
-      return 'under_construction';
-    } else if (lowerContent.includes('complete') || lowerContent.includes('completed')) {
-      return 'complete';
-    }
-    
-    // Default to preconstruction if no other status is found
-    return 'preconstruction';
-  }
-
   static async processAndUploadData(properties: any[]): Promise<void> {
     console.log('Processing and uploading property data:', properties);
     
@@ -162,7 +148,6 @@ export class FirecrawlService {
           bathrooms_max: property.bathrooms_max || null,
           square_feet_min: property.square_feet_min || null,
           square_feet_max: property.square_feet_max || null,
-          construction_status: this.parseConstructionStatus(property.description || '') as ConstructionStatus,
           home_type: property.home_type || ['Detached'],
           image_url: property.images?.[0] || null,
           floorplan_url: property.floorplans?.[0] || null,
