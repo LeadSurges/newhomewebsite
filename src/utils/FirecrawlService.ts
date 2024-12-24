@@ -1,5 +1,22 @@
+import FirecrawlApp from '@mendable/firecrawl-js';
 import { supabase } from "@/integrations/supabase/client";
 
+interface ErrorResponse {
+  success: false;
+  error: string;
+}
+
+interface CrawlStatusResponse {
+  success: true;
+  status: string;
+  completed: number;
+  total: number;
+  creditsUsed: number;
+  expiresAt: string;
+  data: any[];
+}
+
+type CrawlResponse = CrawlStatusResponse | ErrorResponse;
 type ConstructionStatus = "preconstruction" | "under_construction" | "complete";
 
 export class FirecrawlService {
@@ -21,7 +38,7 @@ export class FirecrawlService {
           waitFor: 5000,
           formats: ['markdown']
         }
-      });
+      }) as CrawlResponse;
 
       if (!response.success) {
         console.error('Crawl failed:', (response as ErrorResponse).error);
@@ -158,11 +175,7 @@ export class FirecrawlService {
             price_range_max: property.price_range_max,
           }]);
 
-        if (error) {
-          console.error('Error details:', error);
-          throw error;
-        }
-        console.log('Successfully uploaded property:', property.title);
+        if (error) throw error;
       } catch (error) {
         console.error('Error uploading property:', error);
         throw new Error(`Failed to upload property: ${error instanceof Error ? error.message : 'Unknown error'}`);
