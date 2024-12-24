@@ -1,29 +1,35 @@
-import FirecrawlApp from "@mendable/firecrawl-js";
-import { supabase } from "@/integrations/supabase/client";
+import FirecrawlApp from '@mendable/firecrawl-js';
 
-interface CrawlResult {
-  success: boolean;
-  data?: any[];
-  error?: string;
+interface ErrorResponse {
+  success: false;
+  error: string;
 }
 
+interface CrawlStatusResponse {
+  success: true;
+  status: string;
+  completed: number;
+  total: number;
+  creditsUsed: number;
+  expiresAt: string;
+  data: any[];
+}
+
+type CrawlResponse = CrawlStatusResponse | ErrorResponse;
+
 export class FirecrawlService {
-  static async crawlWebsite(url: string): Promise<CrawlResult> {
+  static async crawlWebsite(url: string): Promise<{ success: boolean; error?: string; data?: any }> {
     try {
-      console.log("Getting Firecrawl API key from Supabase");
+      console.log('Getting Firecrawl API key from Supabase');
       const { data: { secret }, error: secretError } = await supabase.functions.invoke('get-firecrawl-key');
       
       if (secretError || !secret) {
         console.error("Error getting Firecrawl API key:", secretError);
-        throw new Error("Failed to get Firecrawl API key");
+        return { success: false, error: "Failed to get Firecrawl API key" };
       }
 
-      console.log("Initializing Firecrawl client");
-      const client = new FirecrawlApp({ 
-        apiKey: secret
-      });
-
-      console.log("Making crawl request to Firecrawl API");
+      console.log('Making crawl request to Firecrawl API');
+      const client = new FirecrawlApp({ apiKey: secret });
       const response = await client.crawlUrl(url, {
         limit: 1,
         scrapeOptions: {
@@ -33,27 +39,27 @@ export class FirecrawlService {
       });
 
       if (!response.success) {
-        console.error("Crawl failed:", response.error);
+        console.error('Crawl failed:', (response as ErrorResponse).error);
         return { 
           success: false, 
-          error: response.error || "Failed to crawl website" 
+          error: (response as ErrorResponse).error || 'Failed to crawl website' 
         };
       }
 
-      // Parse the markdown content to extract property information
-      const markdownContent = response.data[0]?.content || '';
+      // Parse the markdown content
+      const markdownContent = response.data[0]?.markdown || '';
       const propertyData = this.parseMarkdownContent(markdownContent);
 
-      console.log("Crawl successful, parsed data:", propertyData);
+      console.log('Crawl successful, parsed data:', propertyData);
       return { 
         success: true,
-        data: [propertyData]
+        data: propertyData 
       };
     } catch (error) {
-      console.error("Error during crawl:", error);
+      console.error('Error during crawl:', error);
       return { 
         success: false, 
-        error: error instanceof Error ? error.message : "Failed to connect to Firecrawl API" 
+        error: error instanceof Error ? error.message : 'Failed to connect to Firecrawl API' 
       };
     }
   }
@@ -115,7 +121,9 @@ export class FirecrawlService {
 
     // Extract construction status
     if (markdown.includes('Construction')) {
-      data.construction_status = 'Under Construction';
+      data.construction_status = 'under_construction';
+    } else {
+      data.construction_status = 'preconstruction';
     }
 
     // Extract home type
