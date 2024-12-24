@@ -1,4 +1,5 @@
 import FirecrawlApp from '@mendable/firecrawl-js';
+import { supabase } from "@/integrations/supabase/client";
 
 interface ErrorResponse {
   success: false;

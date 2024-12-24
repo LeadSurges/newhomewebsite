@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { PropertyUploadForm } from "@/components/properties/PropertyUploadForm";
 import { BulkUploadForm } from "@/components/properties/BulkUploadForm";
+import { MarkdownUploadForm } from "@/components/properties/MarkdownUploadForm";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -115,6 +116,7 @@ const AdminProperties = () => {
           <TabsList>
             <TabsTrigger value="properties">Properties</TabsTrigger>
             <TabsTrigger value="bulk-upload">Bulk Upload</TabsTrigger>
+            <TabsTrigger value="markdown-upload">Markdown Upload</TabsTrigger>
           </TabsList>
 
           <TabsContent value="properties">
@@ -165,6 +167,10 @@ const AdminProperties = () => {
 
           <TabsContent value="bulk-upload">
             <BulkUploadForm />
+          </TabsContent>
+
+          <TabsContent value="markdown-upload">
+            <MarkdownUploadForm />
           </TabsContent>
         </Tabs>
 
