@@ -48,7 +48,6 @@ export class FirecrawlService {
         };
       }
 
-      // Parse the markdown content
       const markdownContent = response.data[0]?.markdown || '';
       const propertyData = this.parseMarkdownContent(markdownContent);
 
@@ -122,8 +121,7 @@ export class FirecrawlService {
     if (descriptionMatch) data.description = descriptionMatch[1].trim();
 
     // Extract and validate construction status
-    const constructionStatus = this.parseConstructionStatus(markdown);
-    data.construction_status = constructionStatus;
+    data.construction_status = this.parseConstructionStatus(markdown);
 
     // Extract home type
     if (markdown.toLowerCase().includes('townhouse')) {
@@ -143,9 +141,10 @@ export class FirecrawlService {
       return 'under_construction';
     } else if (content.includes('complete') || content.includes('completed')) {
       return 'complete';
-    } else {
-      return 'preconstruction';
     }
+    
+    // Default to preconstruction if no other status is found
+    return 'preconstruction';
   }
 
   static async processAndUploadData(properties: any[]): Promise<void> {
@@ -168,7 +167,7 @@ export class FirecrawlService {
             bathrooms_max: property.bathrooms_max,
             square_feet_min: property.square_feet_min,
             square_feet_max: property.square_feet_max,
-            construction_status: property.construction_status as ConstructionStatus,
+            construction_status: property.construction_status,
             home_type: property.home_type || ['Detached'],
             image_url: property.images[0],
             floorplan_url: property.floorplans[0],
