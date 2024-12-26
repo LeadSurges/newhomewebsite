@@ -109,11 +109,11 @@ export const BulkUploadForm = () => {
         setScrapedData(result.data);
         await processAndUploadData(result.data);
       } else {
-        console.error('Crawl failed:', result);
+        console.error('Crawl failed:', result.error);
         toast({
           variant: "destructive",
           title: "Error",
-          description: "Failed to crawl website",
+          description: result.error || "Failed to crawl website",
         });
       }
     } catch (error: any) {
