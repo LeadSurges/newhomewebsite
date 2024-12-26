@@ -1,7 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import FirecrawlApp from '@mendable/firecrawl-js';
 
-interface CrawlResponse {
+interface CrawlResult {
   success: boolean;
   data?: any[];
   error?: string;
@@ -19,7 +19,7 @@ export class FirecrawlService {
     }
   }
 
-  static async crawlWebsite(url: string): Promise<CrawlResponse> {
+  static async crawlWebsite(url: string): Promise<CrawlResult> {
     try {
       console.log('Getting Firecrawl API key...');
       const apiKey = await this.getFirecrawlKey();
@@ -36,6 +36,14 @@ export class FirecrawlService {
       });
 
       console.log('Crawl response:', response);
+      
+      if (!response.success) {
+        return {
+          success: false,
+          error: 'Failed to crawl website'
+        };
+      }
+
       return {
         success: true,
         data: response.data || []

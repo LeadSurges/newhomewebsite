@@ -43,34 +43,23 @@ export const BulkUploadForm = () => {
     console.log('Processing scraped data for upload:', data);
     
     try {
-      const properties = data.map(item => {
-        console.log('Processing item:', item);
-        
-        const price = cleanNumber(item.price);
-        const bedrooms = cleanNumber(item.bedrooms);
-        const bathrooms = cleanNumber(item.bathrooms);
-        const squareFeet = cleanNumber(item.squareFeet);
-        const completionYear = cleanNumber(item.completionYear);
-        
-        console.log('Cleaned values:', { price, bedrooms, bathrooms, squareFeet, completionYear });
-
-        return {
-          title: item.title || 'Untitled Property',
-          description: item.description || '',
-          price: price || 0,
-          location: item.location || '',
-          bedrooms: bedrooms || null,
-          bathrooms: bathrooms || null,
-          square_feet: squareFeet || null,
-          image_url: Array.isArray(item.images) ? item.images.join(',') : null,
-          floorplan_url: Array.isArray(item.floorplans) ? item.floorplans.join(',') : null,
-          home_type: mapHomeType(item.propertyType || ''),
-          construction_status: item.constructionStatus?.toLowerCase() || 'preconstruction',
-          completion_year: completionYear || null,
-          featured: false,
-          amenities: item.features ? item.features.split(',').map((f: string) => f.trim()) : [],
-        };
-      });
+      const properties = data.map(item => ({
+        title: item.title || 'Untitled Property',
+        description: item.description || '',
+        price: cleanNumber(item.price) || 0,
+        location: item.location || '',
+        bedrooms: cleanNumber(item.bedrooms) || null,
+        bathrooms: cleanNumber(item.bathrooms) || null,
+        square_feet: cleanNumber(item.squareFeet) || null,
+        image_url: Array.isArray(item.images) ? item.images.join(',') : null,
+        floorplan_url: Array.isArray(item.floorplans) ? item.floorplans.join(',') : null,
+        home_type: mapHomeType(item.propertyType || ''),
+        construction_status: item.constructionStatus?.toLowerCase() || 'preconstruction',
+        ownership_type: 'freehold', // Set a default valid ownership type
+        completion_year: cleanNumber(item.completionYear) || null,
+        featured: false,
+        amenities: item.features ? item.features.split(',').map((f: string) => f.trim()) : [],
+      }));
 
       console.log('Prepared properties for upload:', properties);
 
