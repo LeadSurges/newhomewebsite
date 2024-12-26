@@ -51,6 +51,13 @@ export class FirecrawlService {
       }
     }
 
+    // Extract floorplans
+    const floorplanRegex = /### Floor Plans\n\n([\s\S]*?)(?=\n\n###|$)/;
+    const floorplanMatch = markdown.match(floorplanRegex);
+    const floorplans = floorplanMatch 
+      ? floorplanMatch[1].match(/!\[.*?\]\((.*?)\)/g)?.map(url => url.match(/\((.*?)\)/)[1]) || []
+      : [];
+
     // Extract price range
     const priceRegex = /From \$([0-9,]+) to \$([0-9,]+)/;
     const priceMatch = markdown.match(priceRegex);
@@ -69,50 +76,78 @@ export class FirecrawlService {
     }
 
     // Extract location
-    const locationRegex = /\[(.*?)\].*?(?=Overview)/;
+    const locationRegex = /Location:\s*(.*?)(?=\n|$)/m;
     const locationMatch = markdown.match(locationRegex);
     const location = locationMatch ? locationMatch[1].trim() : '';
 
+    // Extract description
+    const descriptionRegex = /### Description\n\n([\s\S]*?)(?=\n\n###|$)/;
+    const descriptionMatch = markdown.match(descriptionRegex);
+    const description = descriptionMatch ? descriptionMatch[1].trim() : '';
+
     // Extract bedroom range
-    const bedroomRegex = /(\d+)\s*-\s*(\d+)(?=\n)/;
+    const bedroomRegex = /Bedrooms:\s*(\d+)\s*-\s*(\d+)/;
     const bedroomMatch = markdown.match(bedroomRegex);
     const bedrooms_min = bedroomMatch ? bedroomMatch[1] : '';
     const bedrooms_max = bedroomMatch ? bedroomMatch[2] : '';
 
     // Extract bathroom range
-    const bathroomRegex = new RegExp(`${bedrooms_max}\\s*\\n\\s*(\\d+)\\s*-\\s*(\\d+)`);
+    const bathroomRegex = /Bathrooms:\s*(\d+)\s*-\s*(\d+)/;
     const bathroomMatch = markdown.match(bathroomRegex);
     const bathrooms_min = bathroomMatch ? bathroomMatch[1] : '';
     const bathrooms_max = bathroomMatch ? bathroomMatch[2] : '';
 
     // Extract square footage range
-    const sqftRegex = /(\d+(?:,\d+)?)\s*-\s*(\d+(?:,\d+)?)/;
+    const sqftRegex = /Square Feet:\s*(\d+(?:,\d+)?)\s*-\s*(\d+(?:,\d+)?)/;
     const sqftMatch = markdown.match(sqftRegex);
     const square_feet_min = sqftMatch ? sqftMatch[1].replace(/,/g, '') : '';
     const square_feet_max = sqftMatch ? sqftMatch[2].replace(/,/g, '') : '';
 
-    // Extract description
-    const descriptionRegex = /Get additional information.*?(?=\n)/;
-    const descriptionMatch = markdown.match(descriptionRegex);
-    const description = descriptionMatch ? descriptionMatch[0].trim() : '';
+    // Extract home types
+    const homeTypeRegex = /Home Types:\s*(.*?)(?=\n|$)/m;
+    const homeTypeMatch = markdown.match(homeTypeRegex);
+    const home_type = homeTypeMatch 
+      ? homeTypeMatch[1].split(',').map(type => type.trim())
+      : ['Detached'];
 
     // Extract construction status
-    const statusRegex = /Construction|Selling|Registration/i;
+    const statusRegex = /Status:\s*(Preconstruction|Under Construction|Complete)/i;
     const statusMatch = markdown.match(statusRegex);
     const construction_status = statusMatch 
-      ? statusMatch[0].toLowerCase() === 'construction' 
-        ? 'under_construction'
-        : statusMatch[0].toLowerCase() === 'selling'
-        ? 'complete'
-        : 'preconstruction'
+      ? statusMatch[1].toLowerCase().replace(' ', '_')
       : 'preconstruction';
 
-    // Extract amenities from the content
-    const amenitiesRegex = /Amenities(.*?)(?=\n\n)/s;
+    // Extract deposit structure
+    const depositRegex = /### Deposit Structure\n\n([\s\S]*?)(?=\n\n###|$)/;
+    const depositMatch = markdown.match(depositRegex);
+    const deposit_structure = depositMatch ? depositMatch[1].trim() : '';
+
+    // Extract incentives
+    const incentivesRegex = /### Incentives\n\n([\s\S]*?)(?=\n\n###|$)/;
+    const incentivesMatch = markdown.match(incentivesRegex);
+    const incentives = incentivesMatch ? incentivesMatch[1].trim() : '';
+
+    // Extract features and finishes
+    const featuresRegex = /### Features and Finishes\n\n([\s\S]*?)(?=\n\n###|$)/;
+    const featuresMatch = markdown.match(featuresRegex);
+    const features_and_finishes = featuresMatch ? featuresMatch[1].trim() : '';
+
+    // Extract amenities
+    const amenitiesRegex = /### Amenities\n\n([\s\S]*?)(?=\n\n###|$)/;
     const amenitiesMatch = markdown.match(amenitiesRegex);
     const amenities = amenitiesMatch 
-      ? amenitiesMatch[1].split('\n').filter(a => a.trim()).map(a => a.trim())
+      ? amenitiesMatch[1].split('\n').filter(a => a.trim()).map(a => a.trim().replace('- ', ''))
       : [];
+
+    // Extract garage spaces
+    const garageRegex = /Garage Spaces:\s*(\d+)/;
+    const garageMatch = markdown.match(garageRegex);
+    const garage_spaces = garageMatch ? parseInt(garageMatch[1]) : null;
+
+    // Extract completion year
+    const completionRegex = /Completion Year:\s*(\d{4})/;
+    const completionMatch = markdown.match(completionRegex);
+    const completion_year = completionMatch ? parseInt(completionMatch[1]) : null;
 
     console.log("Parsed property data:", {
       title,
@@ -128,7 +163,14 @@ export class FirecrawlService {
       square_feet_max,
       construction_status,
       image_url: images.join(','),
-      amenities
+      floorplan_url: floorplans.join(','),
+      amenities,
+      home_type,
+      deposit_structure,
+      incentives,
+      features_and_finishes,
+      garage_spaces,
+      completion_year
     });
 
     return {
@@ -146,9 +188,15 @@ export class FirecrawlService {
       price_range_max,
       construction_status,
       image_url: images.join(','),
+      floorplan_url: floorplans.join(','),
       amenities,
-      home_type: ['Detached'],
+      home_type,
       ownership_type: 'Freehold',
+      deposit_structure,
+      incentives,
+      features_and_finishes,
+      garage_spaces,
+      completion_year,
       featured: false
     };
   }
