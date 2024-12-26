@@ -42,10 +42,24 @@ export const BulkUploadForm = () => {
   const mapOwnershipType = (type: string | null | undefined): string => {
     if (!type) return 'Freehold';
     
+    console.log('Mapping ownership type:', type);
     const lowercaseType = type.toLowerCase().trim();
-    if (lowercaseType.includes('condo')) return 'Condo';
-    if (lowercaseType.includes('co-op')) return 'Co-op';
-    if (lowercaseType.includes('condop')) return 'Condop';
+    
+    // Exact matches for the constraint
+    if (lowercaseType.includes('condo')) {
+      console.log('Mapped to: Condo');
+      return 'Condo';
+    }
+    if (lowercaseType.includes('co-op') || lowercaseType.includes('coop')) {
+      console.log('Mapped to: Co-op');
+      return 'Co-op';
+    }
+    if (lowercaseType.includes('condop')) {
+      console.log('Mapped to: Condop');
+      return 'Condop';
+    }
+    
+    console.log('Mapped to: Freehold (default)');
     return 'Freehold';
   };
 
