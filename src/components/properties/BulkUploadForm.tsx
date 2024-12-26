@@ -93,7 +93,7 @@ export const BulkUploadForm = () => {
       console.log('Starting crawl for URL:', url);
       const result = await FirecrawlService.crawlWebsite(url);
       
-      if (result.success && result.data) {
+      if (result.success) {
         console.log('Crawl successful, data:', result.data);
         setScrapedData(result.data);
         await processAndUploadData(result.data);
