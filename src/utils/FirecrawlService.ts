@@ -1,4 +1,45 @@
+import { supabase } from "@/integrations/supabase/client";
+import FirecrawlApp from '@mendable/firecrawl-js';
+
 export class FirecrawlService {
+  private static async getFirecrawlKey(): Promise<string> {
+    try {
+      const { data, error } = await supabase.functions.invoke('get-firecrawl-key');
+      if (error) throw error;
+      return data.key;
+    } catch (error) {
+      console.error('Error getting Firecrawl key:', error);
+      throw new Error('Failed to get Firecrawl API key');
+    }
+  }
+
+  static async crawlWebsite(url: string) {
+    try {
+      console.log('Getting Firecrawl API key...');
+      const apiKey = await this.getFirecrawlKey();
+      
+      console.log('Initializing Firecrawl with API key');
+      const firecrawl = new FirecrawlApp({ apiKey });
+      
+      console.log('Starting website crawl for URL:', url);
+      const response = await firecrawl.crawlUrl(url, {
+        limit: 100,
+        scrapeOptions: {
+          formats: ['markdown', 'html'],
+        }
+      });
+
+      console.log('Crawl response:', response);
+      return response;
+    } catch (error) {
+      console.error('Error during crawl:', error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to crawl website'
+      };
+    }
+  }
+
   static parseMarkdownContent(markdown: string) {
     try {
       console.log("Parsing markdown content:", markdown);
