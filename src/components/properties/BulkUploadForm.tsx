@@ -55,7 +55,7 @@ export const BulkUploadForm = () => {
         floorplan_url: Array.isArray(item.floorplans) ? item.floorplans.join(',') : null,
         home_type: mapHomeType(item.propertyType || ''),
         construction_status: item.constructionStatus?.toLowerCase() || 'preconstruction',
-        ownership_type: 'freehold', // Set a default valid ownership type
+        ownership_type: 'freehold',
         completion_year: cleanNumber(item.completionYear) || null,
         featured: false,
         amenities: item.features ? item.features.split(',').map((f: string) => f.trim()) : [],
@@ -98,11 +98,11 @@ export const BulkUploadForm = () => {
         setScrapedData(result.data);
         await processAndUploadData(result.data);
       } else {
-        console.error('Crawl failed:', result.error);
+        console.error('Crawl failed:', result);
         toast({
           variant: "destructive",
           title: "Error",
-          description: result.error || "Failed to crawl website",
+          description: "Failed to crawl website",
         });
       }
     } catch (error: any) {
