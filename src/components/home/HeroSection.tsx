@@ -64,19 +64,19 @@ export const HeroSection = () => {
         </p>
 
         <div
-          className="mt-10 max-w-3xl mx-auto animate-fade-up"
+          className="mt-10 max-w-4xl mx-auto animate-fade-up"
           style={{ animationDelay: "0.2s" }}
         >
           <form
             onSubmit={handleSearch}
             className="glass-card p-8 flex flex-col sm:flex-row gap-4 shadow-lg"
           >
-            <div className="flex-1 flex items-center gap-2 bg-white rounded-lg px-6 py-4 border shadow-sm relative transition-all duration-200 hover:shadow-md focus-within:shadow-md focus-within:border-accent">
-              <Search className="h-5 w-5 text-muted-foreground" />
+            <div className="flex-1 flex items-center gap-2 bg-white rounded-lg px-6 py-5 border shadow-sm relative transition-all duration-200 hover:shadow-md focus-within:shadow-md focus-within:border-accent">
+              <Search className="h-6 w-6 text-muted-foreground" />
               <input
                 type="text"
-                placeholder="Search by city, neighborhood, or address..."
-                className="flex-1 outline-none bg-transparent text-lg placeholder:text-muted-foreground/70"
+                placeholder="Search by City..."
+                className="flex-1 outline-none bg-transparent text-xl placeholder:text-muted-foreground/70"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -94,7 +94,7 @@ export const HeroSection = () => {
               type="submit" 
               size="lg" 
               disabled={isSearching}
-              className="shrink-0 text-lg px-8 bg-accent hover:bg-accent/90 text-white h-[3.5rem] transition-all duration-200 hover:shadow-lg disabled:opacity-70"
+              className="shrink-0 text-lg px-8 bg-accent hover:bg-accent/90 text-white h-[3.75rem] transition-all duration-200 hover:shadow-lg disabled:opacity-70"
             >
               {isSearching ? (
                 <Loader2 className="h-5 w-5 animate-spin mr-2" />

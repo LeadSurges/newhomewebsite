@@ -62,12 +62,34 @@ const AdminProperties = () => {
 
     try {
       console.log("Deleting property:", deletingProperty.id);
+      
+      // First delete any associated files from storage if they exist
+      if (deletingProperty.image_url) {
+        const imageUrls = deletingProperty.image_url.split(',');
+        for (const url of imageUrls) {
+          const filePath = url.split('/').pop();
+          if (filePath) {
+            const { error: storageError } = await supabase.storage
+              .from('property-images')
+              .remove([filePath]);
+            
+            if (storageError) {
+              console.error("Error deleting image:", storageError);
+            }
+          }
+        }
+      }
+
+      // Then delete the property record
       const { error } = await supabase
         .from("properties")
         .delete()
         .eq("id", deletingProperty.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error deleting property:", error);
+        throw error;
+      }
 
       // Invalidate the properties query to refetch the list
       queryClient.invalidateQueries({ queryKey: ["admin-properties"] });
