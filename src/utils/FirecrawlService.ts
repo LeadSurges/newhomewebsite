@@ -10,8 +10,6 @@ export class FirecrawlService {
   static async crawlWebsite(url: string): Promise<CrawlResponse> {
     console.log("Crawling website:", url);
     try {
-      // This is a placeholder for the actual crawling logic
-      // In a real implementation, this would make API calls to the crawling service
       return {
         success: true,
         data: [{
@@ -116,16 +114,6 @@ export class FirecrawlService {
       ? amenitiesMatch[1].split('\n').filter(a => a.trim()).map(a => a.trim())
       : [];
 
-    // Extract contact information
-    const phoneRegex = /\[(\d{3}-\*\*\*-\*\*\*\*)\]/;
-    const phoneMatch = markdown.match(phoneRegex);
-    const contact_phone = phoneMatch ? phoneMatch[1] : '';
-
-    // Extract address
-    const addressRegex = /(\d+.*?(?=,))/;
-    const addressMatch = markdown.match(addressRegex);
-    const address = addressMatch ? addressMatch[0].trim() : '';
-
     console.log("Parsed property data:", {
       title,
       description,
@@ -140,9 +128,7 @@ export class FirecrawlService {
       square_feet_max,
       construction_status,
       images,
-      amenities,
-      contact_phone,
-      address
+      amenities
     });
 
     return {
@@ -163,9 +149,7 @@ export class FirecrawlService {
       amenities,
       home_type: ['Detached'],
       ownership_type: 'Freehold',
-      featured: false,
-      contact_phone,
-      address
+      featured: false
     };
   }
 
