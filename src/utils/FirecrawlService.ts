@@ -1,11 +1,42 @@
 import { supabase } from "@/integrations/supabase/client";
 
+interface CrawlResponse {
+  success: boolean;
+  data?: any[];
+  error?: string;
+}
+
 export class FirecrawlService {
-  static async crawlWebsite(url: string) {
-    // Implement the crawling functionality here
-    // This is a placeholder for the actual crawling logic
+  static async crawlWebsite(url: string): Promise<CrawlResponse> {
     console.log("Crawling website:", url);
-    // ... (crawling logic)
+    try {
+      // This is a placeholder for the actual crawling logic
+      // In a real implementation, this would make API calls to the crawling service
+      return {
+        success: true,
+        data: [{
+          title: "Sample Property",
+          description: "Sample description",
+          price: "500000",
+          location: "Sample Location",
+          bedrooms: "3",
+          bathrooms: "2",
+          squareFeet: "2000",
+          propertyType: "Detached",
+          constructionStatus: "preconstruction",
+          ownershipType: "Freehold",
+          features: "Feature 1, Feature 2",
+          images: ["sample-image-url.jpg"],
+          floorplans: ["sample-floorplan-url.jpg"]
+        }]
+      };
+    } catch (error) {
+      console.error("Error crawling website:", error);
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error occurred"
+      };
+    }
   }
 
   static parseMarkdownContent(markdown: string) {
@@ -17,7 +48,7 @@ export class FirecrawlService {
     let match;
     while ((match = imageRegex.exec(markdown)) !== null) {
       const imageUrl = match[1];
-      if (!imageUrl.includes('_next/image')) { // Skip next.js processed images
+      if (!imageUrl.includes('_next/image')) {
         images.push(imageUrl);
       }
     }
@@ -50,7 +81,7 @@ export class FirecrawlService {
     const bedrooms_min = bedroomMatch ? bedroomMatch[1] : '';
     const bedrooms_max = bedroomMatch ? bedroomMatch[2] : '';
 
-    // Extract bathroom range (appears after bedrooms)
+    // Extract bathroom range
     const bathroomRegex = new RegExp(`${bedrooms_max}\\s*\\n\\s*(\\d+)\\s*-\\s*(\\d+)`);
     const bathroomMatch = markdown.match(bathroomRegex);
     const bathrooms_min = bathroomMatch ? bathroomMatch[1] : '';
@@ -117,7 +148,7 @@ export class FirecrawlService {
     return {
       title,
       description,
-      price: price_range_min || 0, // Use min price as default price
+      price: price_range_min || 0,
       location,
       bedrooms_min,
       bedrooms_max,
@@ -130,8 +161,8 @@ export class FirecrawlService {
       construction_status,
       images: images.join(','),
       amenities,
-      home_type: ['Detached'], // Default to Detached for this type of listing
-      ownership_type: 'Freehold', // Default to Freehold
+      home_type: ['Detached'],
+      ownership_type: 'Freehold',
       featured: false,
       contact_phone,
       address

@@ -45,7 +45,6 @@ export const BulkUploadForm = () => {
     console.log('Mapping ownership type:', type);
     const lowercaseType = type.toLowerCase().trim();
     
-    // Exact matches for the constraint
     if (lowercaseType.includes('condo')) {
       console.log('Mapped to: Condo');
       return 'Condo';
@@ -75,8 +74,8 @@ export const BulkUploadForm = () => {
         bedrooms: cleanNumber(item.bedrooms) || null,
         bathrooms: cleanNumber(item.bathrooms) || null,
         square_feet: cleanNumber(item.squareFeet) || null,
-        image_url: Array.isArray(item.images) ? item.images.join(',') : null,
-        floorplan_url: Array.isArray(item.floorplans) ? item.floorplans.join(',') : null,
+        image_url: Array.isArray(item.images) ? item.images.join(',') : item.images || null,
+        floorplan_url: Array.isArray(item.floorplans) ? item.floorplans.join(',') : item.floorplans || null,
         home_type: mapHomeType(item.propertyType || ''),
         construction_status: item.constructionStatus?.toLowerCase() || 'preconstruction',
         ownership_type: mapOwnershipType(item.ownershipType),
@@ -117,7 +116,7 @@ export const BulkUploadForm = () => {
       console.log('Starting crawl for URL:', url);
       const result = await FirecrawlService.crawlWebsite(url);
       
-      if (result.success) {
+      if (result && result.success && result.data) {
         console.log('Crawl successful, data:', result.data);
         setScrapedData(result.data);
         await processAndUploadData(result.data);
@@ -126,7 +125,7 @@ export const BulkUploadForm = () => {
         toast({
           variant: "destructive",
           title: "Error",
-          description: "Failed to crawl website",
+          description: result.error || "Failed to crawl website",
         });
       }
     } catch (error: any) {
