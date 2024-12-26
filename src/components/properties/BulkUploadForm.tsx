@@ -39,6 +39,16 @@ export const BulkUploadForm = () => {
     return isNaN(num) ? null : num;
   };
 
+  const mapOwnershipType = (type: string | null | undefined): string => {
+    if (!type) return 'Freehold';
+    
+    const lowercaseType = type.toLowerCase().trim();
+    if (lowercaseType.includes('condo')) return 'Condo';
+    if (lowercaseType.includes('co-op')) return 'Co-op';
+    if (lowercaseType.includes('condop')) return 'Condop';
+    return 'Freehold';
+  };
+
   const processAndUploadData = async (data: any[]) => {
     console.log('Processing scraped data for upload:', data);
     
@@ -55,7 +65,7 @@ export const BulkUploadForm = () => {
         floorplan_url: Array.isArray(item.floorplans) ? item.floorplans.join(',') : null,
         home_type: mapHomeType(item.propertyType || ''),
         construction_status: item.constructionStatus?.toLowerCase() || 'preconstruction',
-        ownership_type: 'freehold',
+        ownership_type: mapOwnershipType(item.ownershipType),
         completion_year: cleanNumber(item.completionYear) || null,
         featured: false,
         amenities: item.features ? item.features.split(',').map((f: string) => f.trim()) : [],
