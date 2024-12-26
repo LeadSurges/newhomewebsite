@@ -24,7 +24,7 @@ export class FirecrawlService {
           constructionStatus: "preconstruction",
           ownershipType: "Freehold",
           features: "Feature 1, Feature 2",
-          images: ["sample-image-url.jpg"],
+          image_url: "sample-image-url.jpg",
           floorplans: ["sample-floorplan-url.jpg"]
         }]
       };
@@ -127,7 +127,7 @@ export class FirecrawlService {
       square_feet_min,
       square_feet_max,
       construction_status,
-      images,
+      image_url: images.join(','),
       amenities
     });
 
@@ -145,7 +145,7 @@ export class FirecrawlService {
       price_range_min,
       price_range_max,
       construction_status,
-      images: images.join(','),
+      image_url: images.join(','),
       amenities,
       home_type: ['Detached'],
       ownership_type: 'Freehold',
