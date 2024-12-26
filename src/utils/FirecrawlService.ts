@@ -1,11 +1,17 @@
 import { supabase } from "@/integrations/supabase/client";
 import FirecrawlApp from '@mendable/firecrawl-js';
 
-interface CrawlResult {
-  success: boolean;
-  data?: any[];
-  error?: string;
+interface ErrorResponse {
+  success: false;
+  error: string;
 }
+
+interface CrawlStatusResponse {
+  success: true;
+  data: any[];
+}
+
+type CrawlResult = CrawlStatusResponse | ErrorResponse;
 
 export class FirecrawlService {
   private static async getFirecrawlKey(): Promise<string> {
