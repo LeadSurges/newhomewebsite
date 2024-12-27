@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +12,11 @@ interface ImageOrderManagerProps {
 
 export const ImageOrderManager = ({ images, onChange, propertyId }: ImageOrderManagerProps) => {
   const [orderedImages, setOrderedImages] = useState<string[]>(images);
+
+  // Update orderedImages when images prop changes
+  useEffect(() => {
+    setOrderedImages(images);
+  }, [images]);
 
   const moveImage = async (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= orderedImages.length) return;
