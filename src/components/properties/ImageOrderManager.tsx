@@ -21,7 +21,7 @@ export const ImageOrderManager = ({ images, onChange, propertyId }: ImageOrderMa
 
       const { data, error } = await supabase
         .from('properties')
-        .select('image_order')
+        .select('image_order, image_url')
         .eq('id', propertyId)
         .single();
 
@@ -30,53 +30,67 @@ export const ImageOrderManager = ({ images, onChange, propertyId }: ImageOrderMa
         return;
       }
 
-      if (data?.image_order) {
-        console.log("Loaded image order from DB:", data.image_order);
+      // If there's a saved order, use it
+      if (data?.image_order?.length) {
+        console.log("Using saved image order:", data.image_order);
         setOrderedImages(data.image_order);
         onChange(data.image_order);
+      } else if (data?.image_url) {
+        // If no saved order but we have images, create initial order
+        const initialImages = data.image_url.split(',');
+        console.log("Creating initial image order:", initialImages);
+        setOrderedImages(initialImages);
+        onChange(initialImages);
+        // Save this initial order
+        await saveImageOrder(initialImages);
       }
     };
 
     loadImageOrder();
   }, [propertyId]);
 
-  // Update orderedImages when images prop changes and no saved order exists
-  useEffect(() => {
-    if (!propertyId) {
-      setOrderedImages(images);
+  const saveImageOrder = async (newOrder: string[]) => {
+    if (!propertyId) return;
+    
+    setIsSaving(true);
+    console.log("Saving new image order:", newOrder);
+    
+    const { error } = await supabase
+      .from('properties')
+      .update({ image_order: newOrder })
+      .eq('id', propertyId);
+
+    if (error) {
+      console.error("Error saving image order:", error);
+      toast.error("Failed to save image order");
+      return false;
     }
-  }, [images, propertyId]);
+    
+    console.log("Image order saved successfully");
+    toast.success("Image order saved");
+    setIsSaving(false);
+    return true;
+  };
 
   const moveImage = async (fromIndex: number, toIndex: number) => {
-    if (toIndex < 0 || toIndex >= orderedImages.length) return;
+    if (toIndex < 0 || toIndex >= orderedImages.length || isSaving) return;
     
     const newOrder = [...orderedImages];
     const [movedImage] = newOrder.splice(fromIndex, 1);
     newOrder.splice(toIndex, 0, movedImage);
     
+    // Update local state immediately for responsive UI
     setOrderedImages(newOrder);
-    onChange(newOrder);
-
-    // Save the new order to the database if we have a property ID
-    if (propertyId) {
-      setIsSaving(true);
-      console.log("Saving new image order:", newOrder);
-      const { error } = await supabase
-        .from('properties')
-        .update({ image_order: newOrder })
-        .eq('id', propertyId);
-
-      if (error) {
-        console.error("Error saving image order:", error);
-        toast.error("Failed to save image order");
-        // Revert to previous order on error
-        setOrderedImages(orderedImages);
-        onChange(orderedImages);
-      } else {
-        console.log("Image order saved successfully");
-        toast.success("Image order saved");
-      }
-      setIsSaving(false);
+    
+    // Attempt to save to database
+    const success = await saveImageOrder(newOrder);
+    
+    if (success) {
+      // If save was successful, update parent
+      onChange(newOrder);
+    } else {
+      // If save failed, revert to previous order
+      setOrderedImages(orderedImages);
     }
   };
 

@@ -10,7 +10,7 @@ interface ImageGalleryProps {
 }
 
 export const ImageGallery = ({ images, title, imageOrder }: ImageGalleryProps) => {
-  // Use imageOrder if provided, otherwise use original images array
+  // Use imageOrder if provided and valid, otherwise use original images array
   const orderedImages = imageOrder?.length ? 
     // Filter out any ordered images that don't exist in the images array
     imageOrder.filter(orderedUrl => images.includes(orderedUrl)).concat(
@@ -110,7 +110,7 @@ export const ImageGallery = ({ images, title, imageOrder }: ImageGalleryProps) =
                   className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white"
                   onClick={previousImage}
                 >
-                  <ChevronLeft className="h-5 w-5" />
+                  <ChevronLeft className="h-5 w-4" />
                 </Button>
                 <Button
                   variant="ghost"
@@ -118,7 +118,7 @@ export const ImageGallery = ({ images, title, imageOrder }: ImageGalleryProps) =
                   className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white"
                   onClick={nextImage}
                 >
-                  <ChevronRight className="h-5 w-5" />
+                  <ChevronRight className="h-5 w-4" />
                 </Button>
               </>
             )}

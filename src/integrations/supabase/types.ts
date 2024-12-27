@@ -142,6 +142,7 @@ export type Database = {
       properties: {
         Row: {
           amenities: string[] | null
+          Architect: string | null
           bathrooms: number | null
           bathrooms_max: string | null
           bathrooms_min: string | null
@@ -149,12 +150,15 @@ export type Database = {
           bedrooms_max: string | null
           bedrooms_min: string | null
           builder_id: string | null
+          Ceilings: string | null
           completion_year: number | null
+          "construction started": string | null
           construction_status: string | null
           created_at: string
           deposit_structure: Json | null
           description: string | null
           featured: boolean | null
+          "Features and finishes": string | null
           features_and_finishes: string | null
           floorplan_status: string | null
           floorplan_url: string | null
@@ -164,6 +168,7 @@ export type Database = {
           image_order: string[] | null
           image_url: string | null
           incentives: Json | null
+          "Interior designer": string | null
           keywords: string[] | null
           location: string
           maintenance_fee_per_sqft: number | null
@@ -171,20 +176,25 @@ export type Database = {
           ownership_type: string | null
           parking_cost: number | null
           price: number
+          "Price Per Sq Ft": string | null
           price_range_max: number | null
           price_range_min: number | null
+          "pricing and fees": string | null
           quick_move_in: boolean | null
+          "Sales Center Hours": string | null
+          selling_status: string | null
           square_feet: number | null
           square_feet_max: string | null
           square_feet_min: string | null
           storage_cost: number | null
           title: string
-          total_homes: number | null
+          total_homes: string | null
           updated_at: string
           user_id: string | null
         }
         Insert: {
           amenities?: string[] | null
+          Architect?: string | null
           bathrooms?: number | null
           bathrooms_max?: string | null
           bathrooms_min?: string | null
@@ -192,12 +202,15 @@ export type Database = {
           bedrooms_max?: string | null
           bedrooms_min?: string | null
           builder_id?: string | null
+          Ceilings?: string | null
           completion_year?: number | null
+          "construction started"?: string | null
           construction_status?: string | null
           created_at?: string
           deposit_structure?: Json | null
           description?: string | null
           featured?: boolean | null
+          "Features and finishes"?: string | null
           features_and_finishes?: string | null
           floorplan_status?: string | null
           floorplan_url?: string | null
@@ -207,6 +220,7 @@ export type Database = {
           image_order?: string[] | null
           image_url?: string | null
           incentives?: Json | null
+          "Interior designer"?: string | null
           keywords?: string[] | null
           location: string
           maintenance_fee_per_sqft?: number | null
@@ -214,20 +228,25 @@ export type Database = {
           ownership_type?: string | null
           parking_cost?: number | null
           price: number
+          "Price Per Sq Ft"?: string | null
           price_range_max?: number | null
           price_range_min?: number | null
+          "pricing and fees"?: string | null
           quick_move_in?: boolean | null
+          "Sales Center Hours"?: string | null
+          selling_status?: string | null
           square_feet?: number | null
           square_feet_max?: string | null
           square_feet_min?: string | null
           storage_cost?: number | null
           title: string
-          total_homes?: number | null
+          total_homes?: string | null
           updated_at?: string
           user_id?: string | null
         }
         Update: {
           amenities?: string[] | null
+          Architect?: string | null
           bathrooms?: number | null
           bathrooms_max?: string | null
           bathrooms_min?: string | null
@@ -235,12 +254,15 @@ export type Database = {
           bedrooms_max?: string | null
           bedrooms_min?: string | null
           builder_id?: string | null
+          Ceilings?: string | null
           completion_year?: number | null
+          "construction started"?: string | null
           construction_status?: string | null
           created_at?: string
           deposit_structure?: Json | null
           description?: string | null
           featured?: boolean | null
+          "Features and finishes"?: string | null
           features_and_finishes?: string | null
           floorplan_status?: string | null
           floorplan_url?: string | null
@@ -250,6 +272,7 @@ export type Database = {
           image_order?: string[] | null
           image_url?: string | null
           incentives?: Json | null
+          "Interior designer"?: string | null
           keywords?: string[] | null
           location?: string
           maintenance_fee_per_sqft?: number | null
@@ -257,15 +280,19 @@ export type Database = {
           ownership_type?: string | null
           parking_cost?: number | null
           price?: number
+          "Price Per Sq Ft"?: string | null
           price_range_max?: number | null
           price_range_min?: number | null
+          "pricing and fees"?: string | null
           quick_move_in?: boolean | null
+          "Sales Center Hours"?: string | null
+          selling_status?: string | null
           square_feet?: number | null
           square_feet_max?: string | null
           square_feet_min?: string | null
           storage_cost?: number | null
           title?: string
-          total_homes?: number | null
+          total_homes?: string | null
           updated_at?: string
           user_id?: string | null
         }
