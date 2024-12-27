@@ -1,16 +1,19 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowUp, ArrowDown } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface ImageOrderManagerProps {
   images: string[];
   onChange: (newOrder: string[]) => void;
+  propertyId?: string;
 }
 
-export const ImageOrderManager = ({ images, onChange }: ImageOrderManagerProps) => {
+export const ImageOrderManager = ({ images, onChange, propertyId }: ImageOrderManagerProps) => {
   const [orderedImages, setOrderedImages] = useState<string[]>(images);
 
-  const moveImage = (fromIndex: number, toIndex: number) => {
+  const moveImage = async (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= orderedImages.length) return;
     
     const newOrder = [...orderedImages];
@@ -19,6 +22,23 @@ export const ImageOrderManager = ({ images, onChange }: ImageOrderManagerProps) 
     
     setOrderedImages(newOrder);
     onChange(newOrder);
+
+    // Save the new order to the database if we have a property ID
+    if (propertyId) {
+      console.log("Saving new image order:", newOrder);
+      const { error } = await supabase
+        .from('properties')
+        .update({ image_order: newOrder })
+        .eq('id', propertyId);
+
+      if (error) {
+        console.error("Error saving image order:", error);
+        toast.error("Failed to save image order");
+      } else {
+        console.log("Image order saved successfully");
+        toast.success("Image order saved");
+      }
+    }
   };
 
   return (

@@ -148,6 +148,7 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
               <ImageOrderManager
                 images={previews}
                 onChange={setImageOrder}
+                propertyId={initialData?.id}
               />
             </div>
           )}
