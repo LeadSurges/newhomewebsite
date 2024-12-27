@@ -12,11 +12,40 @@ interface ImageOrderManagerProps {
 
 export const ImageOrderManager = ({ images, onChange, propertyId }: ImageOrderManagerProps) => {
   const [orderedImages, setOrderedImages] = useState<string[]>(images);
+  const [isSaving, setIsSaving] = useState(false);
 
-  // Update orderedImages when images prop changes
+  // Load initial image order from database
   useEffect(() => {
-    setOrderedImages(images);
-  }, [images]);
+    const loadImageOrder = async () => {
+      if (!propertyId) return;
+
+      const { data, error } = await supabase
+        .from('properties')
+        .select('image_order')
+        .eq('id', propertyId)
+        .single();
+
+      if (error) {
+        console.error("Error loading image order:", error);
+        return;
+      }
+
+      if (data?.image_order) {
+        console.log("Loaded image order from DB:", data.image_order);
+        setOrderedImages(data.image_order);
+        onChange(data.image_order);
+      }
+    };
+
+    loadImageOrder();
+  }, [propertyId]);
+
+  // Update orderedImages when images prop changes and no saved order exists
+  useEffect(() => {
+    if (!propertyId) {
+      setOrderedImages(images);
+    }
+  }, [images, propertyId]);
 
   const moveImage = async (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= orderedImages.length) return;
@@ -30,6 +59,7 @@ export const ImageOrderManager = ({ images, onChange, propertyId }: ImageOrderMa
 
     // Save the new order to the database if we have a property ID
     if (propertyId) {
+      setIsSaving(true);
       console.log("Saving new image order:", newOrder);
       const { error } = await supabase
         .from('properties')
@@ -39,10 +69,14 @@ export const ImageOrderManager = ({ images, onChange, propertyId }: ImageOrderMa
       if (error) {
         console.error("Error saving image order:", error);
         toast.error("Failed to save image order");
+        // Revert to previous order on error
+        setOrderedImages(orderedImages);
+        onChange(orderedImages);
       } else {
         console.log("Image order saved successfully");
         toast.success("Image order saved");
       }
+      setIsSaving(false);
     }
   };
 
@@ -62,7 +96,7 @@ export const ImageOrderManager = ({ images, onChange, propertyId }: ImageOrderMa
                 variant="outline"
                 size="icon"
                 onClick={() => moveImage(index, index - 1)}
-                disabled={index === 0}
+                disabled={index === 0 || isSaving}
               >
                 <ArrowUp className="h-4 w-4" />
               </Button>
@@ -70,7 +104,7 @@ export const ImageOrderManager = ({ images, onChange, propertyId }: ImageOrderMa
                 variant="outline"
                 size="icon"
                 onClick={() => moveImage(index, index + 1)}
-                disabled={index === orderedImages.length - 1}
+                disabled={index === orderedImages.length - 1 || isSaving}
               >
                 <ArrowDown className="h-4 w-4" />
               </Button>

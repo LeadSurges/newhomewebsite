@@ -11,13 +11,16 @@ interface PropertyHeroProps {
 export const PropertyHero = ({ imageUrl, title, featured, imageOrder }: PropertyHeroProps) => {
   // Split image URLs if multiple images exist
   const images = imageUrl ? imageUrl.split(',') : ['/placeholder.svg'];
+  
+  // Use imageOrder if available, otherwise use the original image order
+  const orderedImages = imageOrder?.length ? imageOrder : images;
 
   return (
     <div className="relative">
       <ImageGallery 
         images={images} 
         title={title} 
-        imageOrder={imageOrder}
+        imageOrder={orderedImages}
       />
       {featured && (
         <div className="absolute top-4 left-4 z-10">
