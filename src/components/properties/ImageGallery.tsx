@@ -6,29 +6,39 @@ import { ChevronLeft, ChevronRight, X } from "lucide-react";
 interface ImageGalleryProps {
   images: string[];
   title: string;
+  imageOrder?: string[];
 }
 
-export const ImageGallery = ({ images, title }: ImageGalleryProps) => {
+export const ImageGallery = ({ images, title, imageOrder }: ImageGalleryProps) => {
+  // Use imageOrder if provided, otherwise use original images array
+  const orderedImages = imageOrder?.length ? 
+    // Filter out any ordered images that don't exist in the images array
+    imageOrder.filter(orderedUrl => images.includes(orderedUrl)).concat(
+      // Add any images that aren't in the order
+      images.filter(url => !imageOrder.includes(url))
+    ) : 
+    images;
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showFullscreen, setShowFullscreen] = useState(false);
 
   const nextImage = () => {
-    setCurrentIndex((prev) => (prev + 1) % images.length);
+    setCurrentIndex((prev) => (prev + 1) % orderedImages.length);
   };
 
   const previousImage = () => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+    setCurrentIndex((prev) => (prev - 1 + orderedImages.length) % orderedImages.length);
   };
 
   return (
     <div className="space-y-4">
       <div className="relative h-[500px] rounded-xl overflow-hidden cursor-pointer" onClick={() => setShowFullscreen(true)}>
         <img
-          src={images[currentIndex]}
+          src={orderedImages[currentIndex]}
           alt={`${title} - Image ${currentIndex + 1}`}
           className="w-full h-full object-cover"
         />
-        {images.length > 1 && (
+        {orderedImages.length > 1 && (
           <>
             <Button
               variant="ghost"
@@ -56,9 +66,9 @@ export const ImageGallery = ({ images, title }: ImageGalleryProps) => {
         )}
       </div>
 
-      {images.length > 1 && (
+      {orderedImages.length > 1 && (
         <div className="grid grid-cols-4 gap-4">
-          {images.map((image, index) => (
+          {orderedImages.map((image, index) => (
             <div
               key={index}
               className={`relative h-24 rounded-lg overflow-hidden cursor-pointer ${
@@ -80,7 +90,7 @@ export const ImageGallery = ({ images, title }: ImageGalleryProps) => {
         <DialogContent className="max-w-[90vw] h-[90vh] p-0">
           <div className="relative w-full h-full">
             <img
-              src={images[currentIndex]}
+              src={orderedImages[currentIndex]}
               alt={`${title} - Fullscreen ${currentIndex + 1}`}
               className="w-full h-full object-contain"
             />
@@ -92,7 +102,7 @@ export const ImageGallery = ({ images, title }: ImageGalleryProps) => {
             >
               <X className="h-5 w-5" />
             </Button>
-            {images.length > 1 && (
+            {orderedImages.length > 1 && (
               <>
                 <Button
                   variant="ghost"
