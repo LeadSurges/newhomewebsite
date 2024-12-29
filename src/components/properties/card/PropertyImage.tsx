@@ -1,7 +1,6 @@
-import { FavoriteButton } from "./FavoriteButton";
-
 interface PropertyImageProps {
   imageUrl?: string;
+  imageOrder?: string[];
   title: string;
   size?: "default" | "small";
   featured?: boolean;
@@ -12,6 +11,7 @@ interface PropertyImageProps {
 
 export const PropertyImage = ({
   imageUrl,
+  imageOrder,
   title,
   size = "default",
   featured = false,
@@ -19,12 +19,17 @@ export const PropertyImage = ({
   isFavorite = false,
   onFavoriteClick
 }: PropertyImageProps) => {
+  // Use the first image from imageOrder if available, otherwise use the first image from imageUrl
+  const mainImage = imageOrder?.length ? 
+    imageOrder[0] : 
+    (imageUrl?.split(',')[0] || "/placeholder.svg");
+
   return (
     <div className={`relative overflow-hidden ${
       size === "small" ? "aspect-[4/3]" : "aspect-[16/9]"
     }`}>
       <img
-        src={imageUrl || "/placeholder.svg"}
+        src={mainImage}
         alt={title}
         className="object-cover w-full h-full"
       />

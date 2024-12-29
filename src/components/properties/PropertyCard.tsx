@@ -27,6 +27,7 @@ export const PropertyCard = ({
       <Link to={propertyUrl} className="block">
         <PropertyImage 
           imageUrl={property.image_url} 
+          imageOrder={property.image_order}
           title={property.title} 
           size={size}
           featured={property.featured}

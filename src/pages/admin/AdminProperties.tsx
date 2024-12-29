@@ -1,6 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useNavigate } from "react-router-dom";
@@ -10,27 +9,17 @@ import { BulkUploadForm } from "@/components/properties/BulkUploadForm";
 import { MarkdownUploadForm } from "@/components/properties/MarkdownUploadForm";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Helmet } from "react-helmet-async";
-
-type Property = Database['public']['Tables']['properties']['Row'];
+import { PropertyList } from "@/components/properties/admin/PropertyList";
+import { DeletePropertyDialog } from "@/components/properties/admin/DeletePropertyDialog";
+import type { Property } from "@/types/property";
 
 const AdminProperties = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const [editingProperty, setEditingProperty] = useState<Property | null>(null);
   const [deletingProperty, setDeletingProperty] = useState<Property | null>(null);
 
   const { data: properties, isLoading } = useQuery({
@@ -142,49 +131,10 @@ const AdminProperties = () => {
           </TabsList>
 
           <TabsContent value="properties">
-            <div className="grid gap-4">
-              {properties?.map((property) => (
-                <div
-                  key={property.id}
-                  className="border rounded-lg p-4 flex justify-between items-center bg-background"
-                >
-                  <div>
-                    <h3 className="font-semibold">{property.title}</h3>
-                    <p className="text-sm text-gray-600">{property.location}</p>
-                    <p className="text-sm font-medium">
-                      ${property.price.toLocaleString()}
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button
-                          variant="outline"
-                          onClick={() => setEditingProperty(property)}
-                        >
-                          Edit
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-                        <DialogHeader>
-                          <DialogTitle>Edit Property</DialogTitle>
-                        </DialogHeader>
-                        {editingProperty && (
-                          <PropertyUploadForm initialData={editingProperty} />
-                        )}
-                      </DialogContent>
-                    </Dialog>
-
-                    <Button
-                      variant="destructive"
-                      onClick={() => setDeletingProperty(property)}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
+            <PropertyList 
+              properties={properties || []} 
+              onDelete={setDeletingProperty}
+            />
           </TabsContent>
 
           <TabsContent value="bulk-upload">
@@ -196,21 +146,11 @@ const AdminProperties = () => {
           </TabsContent>
         </Tabs>
 
-        <AlertDialog open={!!deletingProperty} onOpenChange={(open) => !open && setDeletingProperty(null)}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete the property
-                and all associated data.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteProperty}>Delete</AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <DeletePropertyDialog
+          property={deletingProperty}
+          onOpenChange={(open) => !open && setDeletingProperty(null)}
+          onConfirm={handleDeleteProperty}
+        />
       </main>
     </div>
   );
