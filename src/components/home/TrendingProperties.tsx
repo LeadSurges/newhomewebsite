@@ -10,11 +10,13 @@ export const TrendingProperties = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("properties")
-        .select("*, builders(id, name)")
+        .select("*, builders(id, name), image_order")  // Added image_order to the select
         .eq("featured", true)
         .limit(3);
 
       if (error) throw error;
+      
+      console.log("TrendingProperties - Fetched properties with image order:", data);
       return data;
     },
   });
