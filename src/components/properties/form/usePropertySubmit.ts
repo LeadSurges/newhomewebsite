@@ -15,80 +15,22 @@ export const usePropertySubmit = (initialData?: Property) => {
   const handleSubmit = async (formData: FormData) => {
     try {
       console.log("Starting property submission with data:", formData);
-      console.log("Current image order:", imageOrder);
       
-      // Get existing image URLs if updating
-      let image_urls: string[] = initialData?.image_url ? initialData.image_url.split(',') : [];
-      
-      // Upload main images if selected
-      if (selectedFiles.length > 0) {
-        const uploadPromises = selectedFiles.map(async (file) => {
-          const { data: uploadData, error: uploadError } = await supabase.storage
-            .from("property-images")
-            .upload(`${Date.now()}-${file.name}`, file);
-
-          if (uploadError) throw uploadError;
-
-          const { data: { publicUrl } } = supabase.storage
-            .from("property-images")
-            .getPublicUrl(uploadData.path);
-
-          return publicUrl;
-        });
-
-        const newUrls = await Promise.all(uploadPromises);
-        // For updates, combine existing and new URLs
-        image_urls = initialData ? [...image_urls, ...newUrls] : newUrls;
-        console.log("Updated image URLs:", image_urls);
-      }
-
-      // Upload floorplans if selected
-      let floorplan_urls: string[] = initialData?.floorplan_url ? initialData.floorplan_url.split(',') : [];
-      if (selectedFloorplans.length > 0) {
-        const uploadPromises = selectedFloorplans.map(async (file) => {
-          const { data: floorplanData, error: floorplanError } = await supabase.storage
-            .from("property-images")
-            .upload(`floorplans/${Date.now()}-${file.name}`, file);
-
-          if (floorplanError) throw floorplanError;
-
-          const { data: { publicUrl } } = supabase.storage
-            .from("property-images")
-            .getPublicUrl(floorplanData.path);
-
-          return publicUrl;
-        });
-
-        const newUrls = await Promise.all(uploadPromises);
-        floorplan_urls = newUrls;
-      }
-
-      // Process image order
-      let finalImageOrder = [...imageOrder];
-      
-      // Remove any URLs that no longer exist in image_urls
-      finalImageOrder = finalImageOrder.filter(url => image_urls.includes(url));
-      
-      // Add any new images that aren't in the order
-      image_urls.forEach(url => {
-        if (!finalImageOrder.includes(url)) {
-          finalImageOrder.push(url);
-        }
-      });
-
-      console.log("Final image order:", finalImageOrder);
-
+      // Convert string values to numbers where needed
       const propertyData = {
         ...formData,
-        image_url: image_urls.join(','),
-        floorplan_url: floorplan_urls.join(','),
-        image_order: finalImageOrder,
         price: parseFloat(formData.price),
         completion_year: formData.completion_year ? parseInt(formData.completion_year) : null,
-        garage_spaces: formData.garage_spaces ? parseInt(formData.garage_spaces) : null
+        garage_spaces: formData.garage_spaces ? parseInt(formData.garage_spaces) : null,
+        maintenance_fee_per_sqft: formData.maintenance_fee_per_sqft ? parseFloat(formData.maintenance_fee_per_sqft) : null,
+        parking_cost: formData.parking_cost ? parseFloat(formData.parking_cost) : null,
+        storage_cost: formData.storage_cost ? parseFloat(formData.storage_cost) : null,
+        price_range_min: formData.price_range_min ? parseFloat(formData.price_range_min) : null,
+        price_range_max: formData.price_range_max ? parseFloat(formData.price_range_max) : null,
+        image_url: previews.join(','),
+        floorplan_url: floorplanPreviews.join(','),
+        image_order: imageOrder
       };
-
-      console.log("Final property data being submitted:", propertyData);
 
       if (initialData) {
         const { error: updateError } = await supabase

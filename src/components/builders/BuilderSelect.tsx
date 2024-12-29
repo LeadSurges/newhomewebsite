@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import type { Builder } from "@/components/properties/types";
+import type { Builder } from "@/types/builder";
 
 interface BuilderSelectProps {
   value: string;

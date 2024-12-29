@@ -1,4 +1,5 @@
 import type { Json } from "@/integrations/supabase/types";
+import type { Builder } from "@/types/builder";
 
 export interface PropertyMainInfoProps {
   title: string;
@@ -11,10 +12,7 @@ export interface PropertyMainInfoProps {
   bathrooms?: number;
   square_feet?: number;
   created_at: string;
-  builder?: {
-    name: string;
-    id: string;
-  } | null;
+  builder?: Pick<Builder, "name" | "id"> | null;
   maintenance_fee_per_sqft?: number;
   parking_cost?: number;
   storage_cost?: number;
