@@ -20,7 +20,15 @@ export const PropertyCard = ({
   className = "",
 }: PropertyCardProps) => {
   const propertyUrl = generatePropertyUrl(property.id, property.title);
-  const mainImage = property.image_url?.split(',')[0] || '/placeholder.svg';
+  
+  // Use image_order if available, otherwise fallback to first image from image_url
+  const images = property.image_url?.split(',') || [];
+  const mainImage = property.image_order?.length ? 
+    property.image_order[0] : 
+    images[0] || '/placeholder.svg';
+
+  console.log('PropertyCard - Image Order:', property.image_order);
+  console.log('PropertyCard - Selected Main Image:', mainImage);
 
   return (
     <Card className={`group overflow-hidden ${className}`}>

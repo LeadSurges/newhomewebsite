@@ -9,16 +9,19 @@ interface PropertyListItemProps {
 }
 
 export const PropertyListItem = ({ property, onDelete }: PropertyListItemProps) => {
-  const mainImage = property.image_url?.split(',')[0] || '/placeholder.svg';
-  const orderedImages = property.image_order?.length ? 
+  const images = property.image_url?.split(',') || [];
+  const mainImage = property.image_order?.length ? 
     property.image_order[0] : 
-    mainImage;
+    images[0] || '/placeholder.svg';
+
+  console.log('PropertyListItem - Image Order:', property.image_order);
+  console.log('PropertyListItem - Selected Main Image:', mainImage);
 
   return (
     <div className="border rounded-lg p-4 flex justify-between items-center bg-background">
       <div className="flex gap-4 items-center flex-grow">
         <img 
-          src={orderedImages} 
+          src={mainImage} 
           alt={property.title} 
           className="w-24 h-24 object-cover rounded-lg"
         />
