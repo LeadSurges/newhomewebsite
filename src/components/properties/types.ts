@@ -33,7 +33,6 @@ export interface PropertyMainInfoProps {
   Architect?: string;
   "Interior designer"?: string;
   "Price Per Sq Ft"?: string;
-  "construction started"?: string;
 }
 
 export interface FormData {
@@ -50,7 +49,7 @@ export interface FormData {
   featured: boolean;
   builder_id?: string;
   home_type: string[];
-  construction_status: "preconstruction" | "under_construction" | "complete";
+  construction_status: "pre-construction" | "under-construction" | "completed";
   ownership_type: string;
   quick_move_in: boolean;
   master_planned: boolean;
@@ -61,7 +60,7 @@ export interface FormData {
   incentives: string;
   amenities: string[];
   features_and_finishes: string;
-  floorplan_status?: string;
+  floorplan_status?: "available" | "pending" | "unavailable";
   maintenance_fee_per_sqft?: string;
   parking_cost?: string;
   storage_cost?: string;

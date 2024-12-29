@@ -43,7 +43,7 @@ export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFields
         <Label>Construction Status</Label>
         <Select
           value={formData.construction_status}
-          onValueChange={(value: "preconstruction" | "under_construction" | "complete") => 
+          onValueChange={(value: "pre-construction" | "under-construction" | "completed") => 
             setFormData({ ...formData, construction_status: value })
           }
         >
@@ -51,9 +51,9 @@ export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFields
             <SelectValue placeholder="Select construction status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="preconstruction">Pre-construction</SelectItem>
-            <SelectItem value="under_construction">Under Construction</SelectItem>
-            <SelectItem value="complete">Complete</SelectItem>
+            <SelectItem value="pre-construction">Pre-construction</SelectItem>
+            <SelectItem value="under-construction">Under Construction</SelectItem>
+            <SelectItem value="completed">Completed</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -68,10 +68,10 @@ export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFields
             <SelectValue placeholder="Select ownership type" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Freehold">Freehold</SelectItem>
-            <SelectItem value="Condominium">Condominium</SelectItem>
-            <SelectItem value="Leasehold">Leasehold</SelectItem>
-            <SelectItem value="Co-op">Co-op</SelectItem>
+            <SelectItem value="freehold">Freehold</SelectItem>
+            <SelectItem value="condo">Condominium</SelectItem>
+            <SelectItem value="leasehold">Leasehold</SelectItem>
+            <SelectItem value="co-op">Co-op</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -79,15 +79,16 @@ export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFields
       <div>
         <Label>Floorplan Status</Label>
         <Select
-          value={formData.floorplan_status || "For Sale"}
+          value={formData.floorplan_status || "available"}
           onValueChange={(value) => setFormData({ ...formData, floorplan_status: value })}
         >
           <SelectTrigger>
             <SelectValue placeholder="Select floorplan status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="For Sale">For Sale</SelectItem>
-            <SelectItem value="Sold">Sold</SelectItem>
+            <SelectItem value="available">Available</SelectItem>
+            <SelectItem value="pending">Pending</SelectItem>
+            <SelectItem value="unavailable">Unavailable</SelectItem>
           </SelectContent>
         </Select>
       </div>
