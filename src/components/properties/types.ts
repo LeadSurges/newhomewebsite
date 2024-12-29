@@ -72,5 +72,4 @@ export interface FormData {
   architect?: string;
   interior_designer?: string;
   price_per_sqft?: string;
-  construction_started?: string;
 }

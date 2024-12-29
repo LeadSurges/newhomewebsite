@@ -28,7 +28,7 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     featured: initialData?.featured || false,
     builder_id: initialData?.builder_id || undefined,
     home_type: initialData?.home_type || [],
-    construction_status: (initialData?.construction_status as "preconstruction" | "under_construction" | "complete") || "preconstruction",
+    construction_status: (initialData?.construction_status as "pre-construction" | "under-construction" | "completed") || "pre-construction",
     ownership_type: initialData?.ownership_type || "",
     quick_move_in: initialData?.quick_move_in || false,
     master_planned: initialData?.master_planned || false,
@@ -39,7 +39,7 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     incentives: initialData?.incentives?.toString() || "",
     amenities: initialData?.amenities || [],
     features_and_finishes: initialData?.features_and_finishes || "",
-    floorplan_status: initialData?.floorplan_status || "For Sale",
+    floorplan_status: initialData?.floorplan_status || "available",
   });
 
   const {
@@ -75,7 +75,7 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
         square_feet_max: "",
         featured: false,
         home_type: [],
-        construction_status: "preconstruction",
+        construction_status: "pre-construction",
         ownership_type: "",
         quick_move_in: false,
         master_planned: false,
@@ -86,7 +86,7 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
         incentives: "",
         amenities: [],
         features_and_finishes: "",
-        floorplan_status: "For Sale",
+        floorplan_status: "available",
       });
       setSelectedFiles([]);
       setSelectedFloorplans([]);

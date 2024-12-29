@@ -1,48 +1,36 @@
+import { Link } from "react-router-dom";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { FavoriteButton } from "./FavoriteButton";
+
 interface PropertyImageProps {
-  imageUrl?: string;
-  imageOrder?: string[];
+  id: string;
+  imageUrl: string;
   title: string;
-  size?: "default" | "small";
   featured?: boolean;
-  showFavorite?: boolean;
-  isFavorite?: boolean;
-  onFavoriteClick?: (e: React.MouseEvent) => void;
 }
 
-export const PropertyImage = ({
-  imageUrl,
-  imageOrder,
-  title,
-  size = "default",
-  featured = false,
-  showFavorite = false,
-  isFavorite = false,
-  onFavoriteClick
-}: PropertyImageProps) => {
-  // Use the first image from imageOrder if available, otherwise use the first image from imageUrl
-  const mainImage = imageOrder?.length ? 
-    imageOrder[0] : 
-    (imageUrl?.split(',')[0] || "/placeholder.svg");
-
+export const PropertyImage = ({ id, imageUrl, title, featured }: PropertyImageProps) => {
   return (
-    <div className={`relative overflow-hidden ${
-      size === "small" ? "aspect-[4/3]" : "aspect-[16/9]"
-    }`}>
-      <img
-        src={mainImage}
-        alt={title}
-        className="object-cover w-full h-full"
-      />
+    <div className="relative">
+      <Link to={`/properties/${id}`}>
+        <AspectRatio ratio={16 / 9}>
+          <img
+            src={imageUrl || "/placeholder.svg"}
+            alt={title}
+            className="object-cover w-full h-full rounded-t-lg"
+          />
+        </AspectRatio>
+      </Link>
       {featured && (
-        <div className="absolute top-2 left-2 bg-accent text-white px-3 py-1 rounded-md text-sm font-medium">
-          Featured
+        <div className="absolute top-2 left-2">
+          <span className="bg-primary text-white text-xs px-2 py-1 rounded">
+            Featured
+          </span>
         </div>
       )}
-      {showFavorite && onFavoriteClick && (
-        <FavoriteButton
-          propertyId={title} // Using title as a temporary ID for the example
-        />
-      )}
+      <div className="absolute top-2 right-2">
+        <FavoriteButton propertyId={id} />
+      </div>
     </div>
   );
 };

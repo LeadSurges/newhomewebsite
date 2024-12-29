@@ -39,7 +39,6 @@ export const PropertyMainInfo = ({
   Architect: architect,
   "Interior designer": interior_designer,
   "Price Per Sq Ft": price_per_sqft,
-  "construction started": construction_started,
 }: PropertyMainInfoProps) => {
   const formatJsonValue = (value: any): string => {
     if (typeof value === 'string' || typeof value === 'number') {
@@ -118,7 +117,6 @@ export const PropertyMainInfo = ({
           architect={architect}
           interior_designer={interior_designer}
           price_per_sqft={price_per_sqft}
-          construction_started={construction_started}
         />
 
         {amenities && amenities.length > 0 && (
