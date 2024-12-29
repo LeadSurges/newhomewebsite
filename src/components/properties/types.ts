@@ -60,7 +60,7 @@ export interface FormData {
   incentives: string;
   amenities: string[];
   features_and_finishes: string;
-  floorplan_status?: "available" | "pending" | "unavailable";
+  floorplan_status: "available" | "pending" | "unavailable";
   maintenance_fee_per_sqft?: string;
   parking_cost?: string;
   storage_cost?: string;

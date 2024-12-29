@@ -21,15 +21,15 @@ export const PropertyCard = ({
   className = "",
 }: PropertyCardProps) => {
   const propertyUrl = generatePropertyUrl(property.id, property.title);
+  const mainImage = property.image_url?.split(',')[0] || '/placeholder.svg';
 
   return (
     <Card className={`group overflow-hidden ${className}`}>
       <Link to={propertyUrl} className="block">
         <PropertyImage 
-          imageUrl={property.image_url} 
-          imageOrder={property.image_order}
+          id={property.id}
+          imageUrl={mainImage}
           title={property.title} 
-          size={size}
           featured={property.featured}
         />
       </Link>

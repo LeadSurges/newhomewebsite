@@ -80,7 +80,9 @@ export const PropertyTypeFields = ({ formData, setFormData }: PropertyTypeFields
         <Label>Floorplan Status</Label>
         <Select
           value={formData.floorplan_status || "available"}
-          onValueChange={(value) => setFormData({ ...formData, floorplan_status: value })}
+          onValueChange={(value: "available" | "pending" | "unavailable") => 
+            setFormData({ ...formData, floorplan_status: value })
+          }
         >
           <SelectTrigger>
             <SelectValue placeholder="Select floorplan status" />
