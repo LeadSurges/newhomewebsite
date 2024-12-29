@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { FavoriteButton } from "./FavoriteButton";
+import { generatePropertyUrl } from "@/utils/formatters";
 
 interface PropertyImageProps {
   id: string;
@@ -10,9 +11,11 @@ interface PropertyImageProps {
 }
 
 export const PropertyImage = ({ id, imageUrl, title, featured }: PropertyImageProps) => {
+  const propertyUrl = generatePropertyUrl(id, title);
+
   return (
     <div className="relative">
-      <Link to={`/properties/${id}`}>
+      <Link to={propertyUrl}>
         <AspectRatio ratio={16 / 9}>
           <img
             src={imageUrl || "/placeholder.svg"}

@@ -5,7 +5,6 @@ import { PropertyTitle } from "./card/PropertyTitle";
 import { PropertyStats } from "./card/PropertyStats";
 import { PriceDisplay } from "./card/PriceDisplay";
 import { BuilderInfo } from "./card/BuilderInfo";
-import { FavoriteButton } from "./card/FavoriteButton";
 import { generatePropertyUrl } from "@/utils/formatters";
 import type { Property } from "@/types/property";
 
@@ -25,14 +24,12 @@ export const PropertyCard = ({
 
   return (
     <Card className={`group overflow-hidden ${className}`}>
-      <Link to={propertyUrl} className="block">
-        <PropertyImage 
-          id={property.id}
-          imageUrl={mainImage}
-          title={property.title} 
-          featured={property.featured}
-        />
-      </Link>
+      <PropertyImage 
+        id={property.id}
+        imageUrl={mainImage}
+        title={property.title} 
+        featured={property.featured}
+      />
 
       <div className="p-4">
         <div className="flex justify-between items-start mb-2">
@@ -43,7 +40,6 @@ export const PropertyCard = ({
               size={size} 
             />
           </Link>
-          <FavoriteButton propertyId={property.id} />
         </div>
 
         <PriceDisplay price={property.price} size={size} />
