@@ -33,6 +33,13 @@ export const PropertyMainInfo = ({
   features_and_finishes,
   price_range_min,
   price_range_max,
+  total_homes,
+  "Sales Center Hours": sales_center_hours,
+  Ceilings: ceilings,
+  Architect: architect,
+  "Interior designer": interior_designer,
+  "Price Per Sq Ft": price_per_sqft,
+  "construction started": construction_started,
 }: PropertyMainInfoProps) => {
   const formatJsonValue = (value: any): string => {
     if (typeof value === 'string' || typeof value === 'number') {
@@ -99,6 +106,21 @@ export const PropertyMainInfo = ({
 
         <Separator className="my-8" />
 
+        <PropertyPricing
+          maintenance_fee_per_sqft={maintenance_fee_per_sqft}
+          parking_cost={parking_cost}
+          storage_cost={storage_cost}
+          price_range_min={price_range_min}
+          price_range_max={price_range_max}
+          total_homes={total_homes}
+          sales_center_hours={sales_center_hours}
+          ceilings={ceilings}
+          architect={architect}
+          interior_designer={interior_designer}
+          price_per_sqft={price_per_sqft}
+          construction_started={construction_started}
+        />
+
         {amenities && amenities.length > 0 && (
           <>
             <PropertyAmenities amenities={amenities} />
@@ -117,14 +139,6 @@ export const PropertyMainInfo = ({
             <Separator className="my-8" />
           </>
         )}
-
-        <PropertyPricing
-          maintenance_fee_per_sqft={maintenance_fee_per_sqft}
-          parking_cost={parking_cost}
-          storage_cost={storage_cost}
-          price_range_min={price_range_min}
-          price_range_max={price_range_max}
-        />
 
         {deposit_structure && (
           <>
