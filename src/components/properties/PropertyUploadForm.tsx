@@ -39,7 +39,18 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     incentives: initialData?.incentives?.toString() || "",
     amenities: initialData?.amenities || [],
     features_and_finishes: initialData?.features_and_finishes || "",
-    floorplan_status: initialData?.floorplan_status || "available",
+    floorplan_status: (initialData?.floorplan_status as "available" | "pending" | "unavailable") || "available",
+    maintenance_fee_per_sqft: initialData?.maintenance_fee_per_sqft?.toString() || "",
+    parking_cost: initialData?.parking_cost?.toString() || "",
+    storage_cost: initialData?.storage_cost?.toString() || "",
+    price_range_min: initialData?.price_range_min?.toString() || "",
+    price_range_max: initialData?.price_range_max?.toString() || "",
+    total_homes: initialData?.total_homes || "",
+    sales_center_hours: initialData?.sales_center_hours || "",
+    ceilings: initialData?.ceilings || "",
+    architect: initialData?.architect || "",
+    interior_designer: initialData?.interior_designer || "",
+    price_per_sqft: initialData?.price_per_sqft || "",
   });
 
   const {
