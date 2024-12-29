@@ -46,11 +46,11 @@ export const PropertyUploadForm = ({ initialData }: PropertyUploadFormProps) => 
     price_range_min: initialData?.price_range_min?.toString() || "",
     price_range_max: initialData?.price_range_max?.toString() || "",
     total_homes: initialData?.total_homes || "",
-    sales_center_hours: initialData?.sales_center_hours || "",
-    ceilings: initialData?.ceilings || "",
-    architect: initialData?.architect || "",
-    interior_designer: initialData?.interior_designer || "",
-    price_per_sqft: initialData?.price_per_sqft || "",
+    "Sales Center Hours": initialData?.["Sales Center Hours"] || "",
+    "Ceilings": initialData?.["Ceilings"] || "",
+    "Architect": initialData?.["Architect"] || "",
+    "Interior designer": initialData?.["Interior designer"] || "",
+    "Price Per Sq Ft": initialData?.["Price Per Sq Ft"] || "",
   });
 
   const {

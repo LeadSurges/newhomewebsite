@@ -29,8 +29,8 @@ export interface PropertyMainInfoProps {
   features_and_finishes?: string;
   total_homes?: string;
   "Sales Center Hours"?: string;
-  Ceilings?: string;
-  Architect?: string;
+  "Ceilings"?: string;
+  "Architect"?: string;
   "Interior designer"?: string;
   "Price Per Sq Ft"?: string;
 }
@@ -67,9 +67,9 @@ export interface FormData {
   price_range_min?: string;
   price_range_max?: string;
   total_homes?: string;
-  sales_center_hours?: string;
-  ceilings?: string;
-  architect?: string;
-  interior_designer?: string;
-  price_per_sqft?: string;
+  "Sales Center Hours"?: string;
+  "Ceilings"?: string;
+  "Architect"?: string;
+  "Interior designer"?: string;
+  "Price Per Sq Ft"?: string;
 }
